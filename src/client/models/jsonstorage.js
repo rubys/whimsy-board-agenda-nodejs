@@ -1,5 +1,6 @@
 import { retrieve } from "../utils.js";
-import { clock_counter } from "../store.js";
+import Store from "../store.js";
+import * as Actions from "../../actions.js";
 
 //
 // Originally defined to simplify access to sessionStorage for JSON objects.
@@ -57,7 +58,7 @@ class JSONStorage {
     if (typeof fetch !== 'undefined' && typeof caches !== 'undefined' && (window.location.protocol === "https:" || window.location.hostname === "localhost")) {
       caches.open("board/agenda").then((cache) => {
         let fetched = null;
-        clock_counter++;
+        Store.dispatch(Actions.clockIncrement());
 
         // construct request
         let request = new Request(`../json/${name}`, {
@@ -72,7 +73,7 @@ class JSONStorage {
 
           response.json().then((json) => {
             if (!fetched || JSON.stringify(fetched) !== JSON.stringify(json)) {
-              if (!fetched) clock_counter--;
+              if (!fetched) Store.dispatch(Actions.clockDecrement());
               fetched = json;
               if (json) block(json)
             }
@@ -83,7 +84,7 @@ class JSONStorage {
         cache.match(`../json/${name}`).then((response) => {
           if (response && !fetched) {
             response.json().then((json) => {
-              clock_counter--;
+              Store.dispatch(Actions.clockDecrement());
               fetched = json;
               if (json) block(json)
             })

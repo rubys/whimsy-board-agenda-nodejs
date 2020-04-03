@@ -1,9 +1,11 @@
 import Agenda from "../models/agenda.js";
-import Header from "../layout/header.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
 import { Server, post, retrieve } from "../utils.js";
 import { jQuery } from 'jquery';
+import Store from "../store.js";
+import * as Actions from "../../actions.js";
+import { connect } from 'react-redux'
 
 //
 // Secretary Roll Call update form
@@ -159,7 +161,7 @@ class Attendee extends React.Component {
 
   // perform initialization on first rendering
   get status() {
-    if (Header.clock_counter > 0) return this.state.saved_status;
+    if (this.props.clock_counter > 0) return this.state.saved_status;
     return this.setState({saved_status: Minutes.attendees[this.props.person.name] || {}})
   };
 
@@ -216,10 +218,10 @@ class Attendee extends React.Component {
     };
 
     this.setState({disabled: true});
-    Header.clock_counter++;
+    Store.dispatch(Actions.clockIncrement());
 
     post("minute", data, (minutes) => {
-      Header.clock_counter--;
+      Store.dispatch(Actions.clockDecrement());;
       Minutes.load(minutes);
       if (this.props.walkon) RollCall.clear_guest();
       this.setState({disabled: false})
@@ -227,4 +229,8 @@ class Attendee extends React.Component {
   }
 };
 
-export default RollCall
+function mapStateToProps(state) {
+  return { clock_counter: state.clock_counter }
+};
+
+export default connect(mapStateToProps)(RollCall)

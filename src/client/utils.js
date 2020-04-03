@@ -1,4 +1,5 @@
-import { clock_counter } from "./store";
+import Store from "./store.js";
+import * as Actions from "../actions.js"
 
 // A convenient place to stash server data
 export const Server = {};
@@ -97,7 +98,7 @@ export function retrieve(target, type, block) {
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 1) {
-      clock_counter++
+      Store.dispatch(Actions.clockIncrement())
     } else if (xhr.readyState === 4) {
       let data = null;
 
@@ -133,7 +134,7 @@ export function retrieve(target, type, block) {
       };
 
       block(data);
-      clock_counter--
+      Store.dispatch(Actions.clockDecrement())
     }
   };
 

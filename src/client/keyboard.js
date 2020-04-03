@@ -1,11 +1,12 @@
 import Agenda from "./models/agenda.js";
 import Chat from "./models/chat.js";
-import Header from "./layout/header.js";
 import Main from "./layout/main.js";
 import Minutes from "./models/minutes.js";
 import User from "./models/user.js";
 import { jQuery } from "jquery";
 import { post } from "./utils.js";
+import Store from './store.js';
+import * as Actions from "../actions.js";
 
 //
 // Respond to keyboard events
@@ -95,11 +96,11 @@ class Keyboard {
         Main.navigate("help");
         return false
       } else if (event.keyCode === 82) {
-        Header.clock_counter++;
+        Store.dispatch(Actions.clockIncrement());
         Main.refresh();
 
         post("refresh", {agenda: Agenda.file}, (response) => {
-          Header.clock_counter--;
+          Store.dispatch(Actions.clockDecrement());
           Agenda.load(response.agenda, response.digest);
           Main.refresh()
         });

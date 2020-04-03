@@ -1,5 +1,3 @@
-
-    
 import Agenda from "../models/agenda.js";
 import Info from "../elements/info.js";
 import Link from "../elements/link.js";
@@ -7,6 +5,7 @@ import Pending from "../models/pending.js";
 import PodlingNameSearch from "../elements/pns.js";
 import React from "react";
 import { Server } from "../utils.js";
+import { connect } from 'react-redux';
 
 //
 // Header: title on the left, dropdowns on the right
@@ -15,17 +14,17 @@ import { Server } from "../utils.js";
 //
 // Finally: make info dropdown status 'sticky'
 class Header extends React.Component {
-  static #$item;
   #infodropdown = null;
 
   get render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
-    let summary, shepherd;
+    let summary = this.props.item.summary || Agenda.summary;
 
-    return <header className={"navbar navbar_fixed_top " + Header.#$item.color}>
-      <div className="navbar_brand">{Header.#$item.title}</div>
-      {/^7/m.test(Header.#$item.attach) && /^Establish .* Project/m.test(Header.#$item.fulltitle) ? <PodlingNameSearch item={Header.#$item} /> : null}
-      {Header.clock_counter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
+
+    return <header className={"navbar navbar_fixed_top " + this.props.item.color}>
+      <div className="navbar_brand">{this.props.item.title}</div>
+      {/^7/m.test(this.props.item.attach) && /^Establish .* Project/m.test(this.props.item.fulltitle) ? <PodlingNameSearch item={this.props.item} /> : null}
+      {this.props.clock_counter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
 
       <ul className="nav nav_pills navbar_right">
         {Pending.count > 0 || Server.offline ? <li className="label label_danger">
@@ -33,33 +32,33 @@ class Header extends React.Component {
           <Link text={Pending.count} href="queue" />
         </li> : null}
 
-        {Header.#$item.attach ? <li className={"report_info dropdown " + this.#infodropdown}>
-          <a id="info" className="dropdown_toggle" onClick={this.toggleInfo}>
-            <>info</>
-            <b className="caret" />
-          </a>
+        {this.props.item.attach ?
+          <li className={"report_info dropdown " + this.#infodropdown}>
+            <a id="info" className="dropdown_toggle" onClick={this.toggleInfo}>
+              <>info</>
+              <b className="caret" />
+            </a>
 
-          <Info item={Header.#$item} position="dropdown-menu" />
-        </li> : Header.#$item.online ? <li className="dropdown">
-          <a id="info" className="dropdown_toggle" data_toggle="dropdown">
-            <>online</>
-            <b className="caret" />
-          </a>
+            <Info item={this.props.item} position="dropdown-menu" />
+          </li> : this.props.item.online ? <li className="dropdown">
+            <a id="info" className="dropdown_toggle" data_toggle="dropdown">
+              <>online</>
+              <b className="caret" />
+            </a>
 
-          <ul className="online dropdown_menu">
-            {Header.#$item.online.map(id =>
-              <li>
-                <a href={`/roster/committer/${id}`}>{id}</a>
-              </li>
-            )}
-          </ul>
-        </li> : <li className="dropdown">
+            <ul className="online dropdown_menu">
+              {this.props.item.online.map(id =>
+                <li>
+                  <a href={`/roster/committer/${id}`}>{id}</a>
+                </li>
+              )}
+            </ul>
+          </li> :
+            <li className="dropdown">
               <a id="info" className="dropdown_toggle" data_toggle="dropdown">
                 summary
                 <b className="caret" />
               </a>
-
-              {summary = Header.#$item.summary || Agenda.summary}
 
               <table className="table_bordered online dropdown_menu">{summary.map((status) => {
                 let text = status.text;
@@ -108,10 +107,8 @@ class Header extends React.Component {
               <Link text="Comments" href="comments" />
             </li>
 
-            {shepherd = Agenda.shepherd}
-
-            {shepherd ? <li>
-              <Link id="shepherd" text="Shepherd" href={`shepherd/${shepherd}`} />
+            {Agenda.shepherd ? <li>
+              <Link id="shepherd" text="Shepherd" href={`shepherd/${Agenda.shepherd}`} />
             </li> : null}
 
             <li>
@@ -134,10 +131,13 @@ class Header extends React.Component {
   };
 
   // toggle info dropdown
-  toggleInfo() {
+  toggleInfo = () => {
     this.#infodropdown = this.#infodropdown ? null : "open"
   }
 };
 
-Header.clock_counter = 0;
-export default Header
+function mapStateToProps(state) {
+  return { clock_counter: state.clock_counter }
+};
+
+export default connect(mapStateToProps)(Header)

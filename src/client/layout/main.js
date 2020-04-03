@@ -12,7 +12,7 @@ import Router from "../router.js";
 import Touch from "../touch.js";
 import { Server } from "../utils.js";
 import { jQuery } from "jquery";
-
+import store from "../store.js";
 //
 // Main component, responsible for:
 //
@@ -24,27 +24,27 @@ import { jQuery } from "jquery";
 //
 class Main extends React.Component {
   // dummy exported refresh method (replaced on client side)
-  static refresh() {};
+  static refresh() { };
 
   // common layout for all pages: header, main, footer, and forms
   render() {
-    if (!this.props.item) return <p>Not found</p>; 
-    
+    if (!this.props.item) return <p>Not found</p>;
+
     return <>
-      <Header item={this.props.item}/>
+      <Header item={this.props.item} />
 
       <main>{Agenda.index[0].text ? React.createElement(
         this.props.item.view,
-        {props: {item: this.props.item}, ref: "view"}
+        { props: { item: this.props.item }, ref: "view" }
       ) : null}</main>
 
-      <Footer item={this.props.item} buttons={this.state.buttons} options={this.state.options}/>
+      <Footer item={this.props.item} buttons={this.state.buttons} options={this.state.options} />
 
       {this.state.buttons ? this.state.buttons.map((button) => {
         if (button.form) {
           return React.createElement(
             button.form,
-            {item: this.props.item, server: Server, button}
+            { item: this.props.item, server: Server, button }
           )
         } else {
           return null
@@ -52,6 +52,11 @@ class Main extends React.Component {
       }) : null}
     </>
   };
+
+  componentDidMount() {
+    setInterval(() => store.dispatch({ type: 'CLOCK_INCREMENT' }), 5000);
+    
+  }
 
   // initial load of the agenda, and route first request
   created() {
@@ -99,7 +104,7 @@ class Main extends React.Component {
     history.replaceState(history.state, null, history.path);
     Main.scrollTo = 0;
     this.route(path, query);
-    history.pushState({path, query}, null, path);
+    history.pushState({ path, query }, null, path);
     window.onresize();
     if (path) Main.latest = false
   };
@@ -134,7 +139,7 @@ class Main extends React.Component {
         }
       };
 
-      window.history.replaceState({path}, null, path)
+      window.history.replaceState({ path }, null, path)
     };
 
     // listen for back button, and re-route/re-render when it occcurs
@@ -172,7 +177,7 @@ class Main extends React.Component {
       if (Main.scrollTo === 0 || Main.scrollTo) {
         if (Main.scrollTo === -1) {
           jQuery("html, body").animate(
-            {scrollTop: document.documentElement.scrollHeight},
+            { scrollTop: document.documentElement.scrollHeight },
             "fast"
           )
         } else {
