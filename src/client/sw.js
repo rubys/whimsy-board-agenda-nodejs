@@ -25,6 +25,7 @@
 //      is for the initial installation, as the pages will have already been
 //      loaded by the browser.
 // 
+/* eslint-disable no-restricted-globals */
 let timeout = 500;
 
 // install immediately
@@ -34,7 +35,7 @@ this.addEventListener("install", () => this.skipWaiting());
 // https://developer.mozilla.org/en-US/docs/Web/API/Clients/claim
 this.addEventListener(
   "activate",
-  event => event.waitUntil(this.clients.claim())
+  event => event.waitUntil(self.clients.claim())
 );
 
 // insert or replace a response into the cache.  Delete other responses
@@ -55,7 +56,7 @@ function cache_replace(cache, request, response) {
 
 // broadcast a message to all clients
 function broadcast(message) {
-  clients.matchAll().then((clients) => {
+  self.clients.matchAll().then((clients) => {
     for (let client of clients) {
       client.postMessage(message)
     }
@@ -63,13 +64,14 @@ function broadcast(message) {
 };
 
 // look for css and js files and in HTML response ensure that each are cached
+/* eslint-disable no-loop-func */
 function preload(cache, base, text, toolate) {
-  let pattern = /"[-.\w+\/]+\.(css|js)\?\d+"/g;
+  let pattern = /"[-.\w+/]+\.(css|js)\?\d+"/g;
   let count = 0;
   let changed = false;
   let match;
 
-  while (match = pattern.exec(text)) {
+  while ((match = pattern.exec(text))) {
     count++;
     let path = match[0].split("\"")[1];
     let request = new Request(new URL(path, base));
