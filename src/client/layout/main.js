@@ -13,6 +13,9 @@ import Touch from "../touch.js";
 import { Server } from "../utils.js";
 import { jQuery } from "jquery";
 import store from "../store.js";
+import logo from "../react-logo.svg";
+import "../App.css";
+
 //
 // Main component, responsible for:
 //
@@ -28,7 +31,18 @@ class Main extends React.Component {
 
   // common layout for all pages: header, main, footer, and forms
   render() {
-    if (!this.props.item) return <p>Not found</p>;
+    if (!this.props.item) {
+      if (this.props.server) {
+        return <p>Page not found</p>
+      } else {
+        return <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo"/>
+            <p>Fetching board agenda...</p>
+          </header>
+        </div>
+      }
+    };
 
     return <>
       <Header item={this.props.item} />
