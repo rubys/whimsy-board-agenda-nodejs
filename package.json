@@ -8,10 +8,13 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "async-mutex": "^0.1.4",
+    "concurrently": "^5.1.0",
+    "express": "^4.17.1",
     "jquery": "^3.4.1",
     "ldapjs": "^1.0.2",
     "md5": "^2.2.1",
     "moment-timezone": "^0.5.28",
+    "nodemon": "^2.0.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
@@ -19,10 +22,14 @@
     "redux": "^4.0.5"
   },
   "scripts": {
+    "dev": "NODE_ENV=development concurrently --kill-others-on-fail npm:server npm:client",
+    "client": "react-scripts start",
+    "server": "nodemon --ignore work -w src/server.js -w src/api src/server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "eslint": "node ./node_modules/eslint/bin/eslint.js src"
   },
   "eslintConfig": {
     "extends": "react-app"
