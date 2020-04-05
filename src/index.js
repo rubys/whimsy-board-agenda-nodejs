@@ -9,6 +9,7 @@ import store from './client/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './client/agenda.css';
 
 ReactDOM.render(
