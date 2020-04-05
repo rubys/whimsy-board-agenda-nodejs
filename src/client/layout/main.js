@@ -12,7 +12,6 @@ import Router from "../router.js";
 import Touch from "../touch.js";
 import { Server } from "../utils.js";
 import { jQuery } from "jquery";
-import store from "../store.js";
 import logo from "../react-logo.svg";
 import "../App.css";
 
@@ -37,19 +36,19 @@ class Main extends React.Component {
       } else {
         return <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
+            <img src={logo} className="App-logo" alt="logo" />
             <p>Fetching board agenda...</p>
           </header>
         </div>
       }
     };
-
+    
     return <>
       <Header item={this.props.item} />
 
       <main>{Agenda.index[0] && Agenda.index[0].text ? React.createElement(
         this.props.item.view,
-        { props: { item: this.props.item }, ref: "view" }
+        { item: this.props.item }
       ) : null}</main>
 
       <Footer item={this.props.item} buttons={this.props.buttons} options={this.props.options} />
@@ -58,7 +57,7 @@ class Main extends React.Component {
         if (button.form) {
           return React.createElement(
             button.form,
-            { item: this.props.item, server: Server, button }
+            { item: this.props.item, server: Server, key: button.form.name, button }
           )
         } else {
           return null
@@ -66,11 +65,6 @@ class Main extends React.Component {
       }) : null}
     </>
   };
-
-  componentDidMount() {
-    setInterval(() => store.dispatch({ type: 'CLOCK_INCREMENT' }), 5000);
-    
-  }
 
   // initial load of the agenda, and route first request
   created() {

@@ -10,7 +10,7 @@ class ModalDialog extends React.Component {
   collateSlots() {
     let sections = {header: [], body: [], footer: []};
 
-    for (let slot of this.refs.slots.default) {
+    React.Children.forEach(this.children, slot => {
       if (slot.tag === "h4") {
         // place h4 elements into the header, adding a modal-title class
         slot = this.addClass(slot, "modal-title");
@@ -54,7 +54,7 @@ class ModalDialog extends React.Component {
         // place all other elements into the body
         sections.body.push(slot)
       }
-    };
+    });
 
     return sections
   };

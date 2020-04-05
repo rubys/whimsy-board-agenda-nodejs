@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Router from './client/router.js';
+import { Server } from "./client/utils.js";
 import * as serviceWorker from './serviceWorker';
 import store from './client/store';
 import { Provider } from 'react-redux';
@@ -19,10 +20,11 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+Server.pending.firstname = '';
+
 (async () => {
   let response = await fetch('/api/latest.json');
   let json = await response.json();
-  console.log(Actions.postAgenda(json));
   store.dispatch(Actions.postAgenda(json));
 })();
 

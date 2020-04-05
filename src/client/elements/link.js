@@ -14,27 +14,27 @@ class Link extends React.Component {
     )
   };
 
-  element() {
+  get element() {
     return this.props.href ? "a" : "span"
   };
 
-  options() {
-    let result = {attrs: {}};
+  get options() {
+    let result = {};
 
     if (this.props.href) {
-      result.attrs.href = this.props.href.replace(
+      result.href = this.props.href.replace(
         /(^|\/)\w+\/\.\.(\/|$)/g,
         "$1"
       )
     };
 
-    if (this.props.rel) result.attrs.rel = this.props.rel;
-    if (this.props.id) result.attrs.id = this.props.id;
-    result.on = {click: this.click};
+    if (this.props.rel) result.rel = this.props.rel;
+    if (this.props.id) result.id = this.props.id;
+    result.onClick = this.click;
     return result
   };
 
-  click(event) {
+  click = (event) => {
     if (event.ctrlKey || event.shiftKey || event.metaKey) return;
     let href = event.target.getAttribute("href");
 

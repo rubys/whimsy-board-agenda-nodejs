@@ -28,17 +28,17 @@ export async function parse(agenda) {
   ])).flat();
 
   // merge sections
-  let sections = {};
+  let sections = new Map();
   items.forEach(section => {
     let attach = section.attach;
-    if (!sections[attach]) sections[attach] = {};
-    Object.assign(sections[attach], section);
+    if (!sections.has(attach)) sections.set(attach, {});
+    Object.assign(sections.get(attach), section);
   });
 
-  items = Object.values(sections);
+  items = Array.from(sections.values());
   
   // cleanup
-  items.forEach(section => {
+  for (let section of items) {
     // parse approved into invididual approvals
     if (section.approved) {
       section.approved = section.approved.trim().split(/, ?/);
@@ -51,7 +51,7 @@ export async function parse(agenda) {
       text = text.replace(new RegExp(`^ {${unindent - 1}}`, "gm"), "").trim();
       section.text ? section.text = text : section.report = text;
     };
-  });
+  };
 
   return items;
 }

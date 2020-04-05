@@ -6,19 +6,19 @@ import { Server } from "../utils.js";
 //
 class User {
   static get id() {
-    return Server.pending.userid || Server.userid
+    return Server.pending.userid
   };
 
   static get initials() {
-    return Server.pending.initials || Server.initials
+    return Server.pending.initials
   };
 
   static get firstname() {
-    return Server.pending.firstname || Server.firstname
+    return Server.pending.firstname
   };
 
   static get username() {
-    return Server.pending.username || Server.username
+    return Server.pending.username
   };
 
   static get role() {

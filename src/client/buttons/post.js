@@ -30,7 +30,8 @@ class Post extends React.Component {
     edited: false,
     pmcs: [],
     roster: [],
-    parent: null
+    parent: null,
+    search: ''
   }
 
   render() {

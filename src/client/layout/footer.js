@@ -14,32 +14,30 @@ import User from "../models/user.js";
 //  last flagged/unapproved/missing <-> first Special order)
 //
 class Footer extends React.Component {
-  state = { meeting_day: Minutes.started || Agenda.meeting_day };
-
   render() {
     return <footer className={"navbar-fixed-bottom navbar " + this.props.item.color}>
-      <PrevLink item={this.props.item} />
+      <PrevLink item={this.props.item} options={this.props.options} />
 
       <span>{this.props.buttons ? this.props.buttons.map((button) => {
         let props;
 
         if (button.text) {
-          props = { attrs: button.attrs };
+          props = { ...button.attrs, key: button.text };
 
           if (button.attrs.class) {
-            props.class = button.attrs.class.split(" ");
-            delete button.attrs.class
+            props.className = button.attrs.class.split(" ");
+            delete props.class;
           };
 
           return React.createElement("button", props, button.text)
         } else if (button.type) {
-          return React.createElement(button.type, { props: button.attrs })
+          return React.createElement(button.type, { ...button.attrs, key: button.type.name })
         }
 
         return null
       }) : null}</span>
 
-      <NextLink item={this.props.item} />
+      <NextLink item={this.props.item} options={this.props.options} />
     </footer>
   }
 };
@@ -50,6 +48,7 @@ class PrevLink extends React.Component {
   render() {
     let link = this.props.item.prev;
     let prefix = "";
+    let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (this.props.options.traversal === "queue") {
       prefix = "queue/";
@@ -83,14 +82,14 @@ class PrevLink extends React.Component {
       };
 
       if (!link) {
-        if (this.state.meeting_day) {
+        if (meetingDay) {
           link = Agenda.index.find(item => item.next && /^\d+$/m.test(item.next.attach));
           prefix = ""
         };
 
         link = link || { href: "flagged", title: "Flagged" }
       }
-    } else if (this.state.meeting_day && /\d/.test(this.props.item.attach) && link && /^[A-Z]/m.test(link.attach)) {
+    } else if (meetingDay && /\d/.test(this.props.item.attach) && link && /^[A-Z]/m.test(link.attach)) {
       for (let item of Agenda.index) {
         if (!item.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
           prefix = "flagged/";
@@ -113,6 +112,7 @@ class NextLink extends React.Component {
   render() {
     let link = this.props.item.next;
     let prefix = '';
+    let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (this.props.options.traversal === "queue") {
       while (link && !link.ready_for_review(User.initials)) {
@@ -133,7 +133,7 @@ class NextLink extends React.Component {
       prefix = "flagged/";
 
       while (link && link.skippable) {
-        if (this.state.meeting_day && !/^(\d+|[A-Z]+)$/m.test(link.attach)) {
+        if (meetingDay && !/^(\d+|[A-Z]+)$/m.test(link.attach)) {
           prefix = "";
           break
         } else {
@@ -142,7 +142,7 @@ class NextLink extends React.Component {
       };
 
       link = link || { href: "flagged", title: "Flagged" }
-    } else if (this.state.meeting_day && link && /^\d[A-Z]/m.test(this.props.item.attach) && /^\d/m.test(link.attach)) {
+    } else if (meetingDay && link && /^\d[A-Z]/m.test(this.props.item.attach) && /^\d/m.test(link.attach)) {
       while (link && link.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
         link = link.next
       };

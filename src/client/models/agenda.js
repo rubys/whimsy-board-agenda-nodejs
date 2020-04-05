@@ -204,98 +204,98 @@ class Agenda {
 
   // provide read-only access to a number of properties 
   get attach() {
-    return this.#attach
+    return this._attach
   };
 
   get title() {
-    return this.#title
+    return this._title
   };
 
   get owner() {
-    return this.#owner
+    return this._owner
   };
 
   get shepherd() {
-    return this.#shepherd
+    return this._shepherd
   };
 
   get timestamp() {
-    return this.#timestamp
+    return this._timestamp
   };
 
   get digest() {
-    return this.#digest
+    return this._digest
   };
 
   get mtime() {
-    return this.#mtime
+    return this._mtime
   };
 
   get approved() {
-    return this.#approved
+    return this._approved
   };
 
   get roster() {
-    return this.#roster
+    return this._roster
   };
 
   get prior_reports() {
-    return this.#prior_reports
+    return this._prior_reports
   };
 
   get stats() {
-    return this.#stats
+    return this._stats
   };
 
   get people() {
-    return this.#people
+    return this._people
   };
 
   get notes() {
-    return this.#notes
+    return this._notes
   };
 
   get chair_email() {
-    return this.#chair_email
+    return this._chair_email
   };
 
   get mail_list() {
-    return this.#mail_list
+    return this._mail_list
   };
 
   get warnings() {
-    return this.#warnings
+    return this._warnings
   };
 
   get flagged_by() {
-    return this.#flagged_by
+    return this._flagged_by
   };
 
   // provide read/write access to other properties
   get index() {
-    return this.#index
+    return this._index
   };
 
   set index(index) {
-    this.#index = index
+    this._index = index
   };
 
   set color(color) {
-    this.#color = color
+    this._color = color
   };
 
   get fulltitle() {
-    return this.#fulltitle || this.#title
+    return this._fulltitle || this._title
   };
 
   // override missing if minutes aren't present
   get missing() {
-    if (this.#missing) {
+    if (this._missing) {
       return true
-    } else if (/^3\w$/m.test(this.#attach)) {
-      if (Server.drafts.includes((this.#text.match(/board_minutes_\w+.txt/) || [])[0])) {
+    } else if (/^3\w$/m.test(this._attach)) {
+      if (Server.drafts.includes((this._text.match(/board_minutes_\w+.txt/) || [])[0])) {
         return false
-      } else if (Minutes.get(this.#title) === "approved" || /^Action/m.test(this.#title)) {
+      } else if (Minutes.get(this._title) === "approved" || /^Action/m.test(this._title)) {
         return false
       } else {
         return true
@@ -307,12 +307,12 @@ class Agenda {
 
   // report was marked as NOT accepted during the meeting
   get rejected() {
-    return Minutes.rejected && Minutes.rejected.includes(this.#title)
+    return Minutes.rejected && Minutes.rejected.includes(this._title)
   };
 
   // PMC has missed two consecutive months
   get nonresponsive() {
-    return this.#notes && this.#notes.includes("missing") && this.#notes.replace(
+    return this._notes && this._notes.includes("missing") && this._notes.replace(
       /^.*missing/m,
       ""
     ).split(",").length >= 2
@@ -320,29 +320,29 @@ class Agenda {
 
   // extract (new) chair name from resolutions
   get chair_name() {
-    return this.#chair ? this.#people[this.#chair].name : null
+    return this._chair ? this._people[this._chair].name : null
   };
 
   // compute href by taking the title and replacing all non alphanumeric
   // characters with dashes
   get href() {
-    return this.#title.replace(/[^a-zA-Z0-9]+/g, "-")
+    return this._title.replace(/[^a-zA-Z0-9]+/g, "-")
   };
 
   // return the text or report for the agenda item
   get text() {
-    return this.#text || this.#report
+    return this._text || this._report
   };
 
   // return comments as an array of individual comments
   get comments() {
-    return splitComments(this.#comments)
+    return splitComments(this._comments)
   };
 
   // item's comments excluding comments that have been seen before
   get unseen_comments() {
     let visible = [];
-    let seen = Pending.seen[this.#attach] || [];
+    let seen = Pending.seen[this._attach] || [];
 
     for (let comment of this.comments) {
       if (!seen.includes(comment)) visible.push(comment)
@@ -353,22 +353,22 @@ class Agenda {
 
   // retrieve the pending comment (if any) associated with this agenda item
   get pending() {
-    return Pending.comments && Pending.comments[this.#attach]
+    return Pending.comments && Pending.comments[this._attach]
   };
 
   // retrieve the action items associated with this agenda item
   get actions() {
     let item, list;
 
-    if (this.#title === "Action Items") {
-      return this.#actions
+    if (this._title === "Action Items") {
+      return this._actions
     } else {
       item = Agenda.find("Action-Items");
       list = [];
 
       if (item) {
         for (let action of item.actions) {
-          if (action.pmc === this.#title) list.push(action)
+          if (action.pmc === this._title) list.push(action)
         }
       };
 
@@ -379,9 +379,9 @@ class Agenda {
   get special_orders() {
     let items = [];
 
-    if (/^[A-Z]+$/m.test(this.#attach)) {
+    if (/^[A-Z]+$/m.test(this._attach)) {
       for (let item of Agenda.index) {
-        if (/^7\w/m.test(item.attach) && item.roster === this.#roster) {
+        if (/^7\w/m.test(item.attach) && item.roster === this._roster) {
           items.push(item)
         }
       }
@@ -391,7 +391,7 @@ class Agenda {
   };
 
   ready_for_review(initials) {
-    return typeof this.#approved !== 'undefined' && !this.missing && !this.#approved.includes(initials) && !(this.#flagged_by && this.#flagged_by.includes(initials))
+    return typeof this._approved !== 'undefined' && !this.missing && !this._approved.includes(initials) && !(this._flagged_by && this._flagged_by.includes(initials))
   };
 
   // determine if this agenda was approved in a later meeting
@@ -665,11 +665,11 @@ class Agenda {
   //
   // default view for an individual agenda item
   get view() {
-    if (this.#title === "Action Items") {
-      return this.#text || Minutes.started ? ActionItems : SelectActions
-    } else if (this.#title === "Roll Call" && User.role === "secretary") {
+    if (this._title === "Action Items") {
+      return this._text || Minutes.started ? ActionItems : SelectActions
+    } else if (this._title === "Roll Call" && User.role === "secretary") {
       return RollCall
-    } else if (this.#title === "Adjournment" && User.role === "secretary") {
+    } else if (this._title === "Adjournment" && User.role === "secretary") {
       return Adjournment
     } else {
       return Report
@@ -680,7 +680,7 @@ class Agenda {
   get buttons() {
     let list = [];
 
-    if (!(!/^\d+$/m.test(this.#attach) && this.#comments === undefined) && !Minutes.complete) {
+    if (!(!/^\d+$/m.test(this._attach) && this._comments === undefined) && !Minutes.complete) {
       // some reports don't have comments
       if (this.pending) {
         list.push({form: AddComment, text: "edit comment"})
@@ -689,22 +689,22 @@ class Agenda {
       }
     };
 
-    if (this.#title === "Roll Call") list.push({button: Attend});
+    if (this._title === "Roll Call") list.push({button: Attend});
 
-    if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(this.#attach)) {
+    if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(this._attach)) {
       if (User.role === "secretary" || !Minutes.complete) {
         if (!Minutes.draft_posted) {
-          if (/^8[.A-Z]/m.test(this.#attach)) {
-            if (/^8[A-Z]/m.test(this.#attach)) {
+          if (/^8[.A-Z]/m.test(this._attach)) {
+            if (/^8[A-Z]/m.test(this._attach)) {
               list.push({form: Post, text: "edit item"})
-            } else if (!this.text || this.#text.trim().length === 0) {
+            } else if (!this.text || this._text.trim().length === 0) {
               list.push({form: Post, text: "post item"})
             } else {
               list.push({form: Post, text: "edit items"})
             }
           } else if (this.missing) {
             list.push({form: Post, text: "post report"})
-          } else if (/^7\w/m.test(this.#attach)) {
+          } else if (/^7\w/m.test(this._attach)) {
             list.push({form: Post, text: "edit resolution"})
           } else {
             list.push({form: Post, text: "edit report"})
@@ -714,27 +714,27 @@ class Agenda {
     };
 
     if (User.role === "director") {
-      if (!this.missing && this.#comments !== undefined && !Minutes.complete) {
-        if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(this.#attach)) list.push({button: Approve})
+      if (!this.missing && this._comments !== undefined && !Minutes.complete) {
+        if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(this._attach)) list.push({button: Approve})
       }
     } else if (User.role === "secretary") {
       if (!Minutes.draft_posted) {
-        if (/^7\w/m.test(this.#attach)) {
+        if (/^7\w/m.test(this._attach)) {
           list.push({form: Vote})
-        } else if (Minutes.get(this.#title)) {
+        } else if (Minutes.get(this._title)) {
           list.push({form: AddMinutes, text: "edit minutes"})
-        } else if (["Call to order", "Adjournment"].includes(this.#title)) {
+        } else if (["Call to order", "Adjournment"].includes(this._title)) {
           list.push({button: Timestamp})
         } else {
           list.push({form: AddMinutes, text: "add minutes"})
         }
       };
 
-      if (/^3\w/m.test(this.#attach)) {
-        if (Minutes.get(this.#title) === "approved" && Server.drafts.includes((this.#text.match(/board_minutes_\w+\.txt/) || [])[0])) {
+      if (/^3\w/m.test(this._attach)) {
+        if (Minutes.get(this._title) === "approved" && Server.drafts.includes((this._text.match(/board_minutes_\w+\.txt/) || [])[0])) {
           list.push({form: PublishMinutes})
         }
-      } else if (this.#title === "Adjournment") {
+      } else if (this._title === "Adjournment") {
         if (Minutes.ready_to_post_draft) list.push({form: DraftMinutes})
       }
     };
@@ -744,22 +744,22 @@ class Agenda {
 
   // determine if this item is flagged, accounting for pending actions
   get flagged() {
-    if (Pending.flagged && Pending.flagged.includes(this.#attach)) return true;
-    if (!this.#flagged_by) return false;
+    if (Pending.flagged && Pending.flagged.includes(this._attach)) return true;
+    if (!this._flagged_by) return false;
 
-    if (this.#flagged_by.length === 1 && this.#flagged_by[0] === User.initials && Pending.unflagged.includes(this.#attach)) {
+    if (this._flagged_by.length === 1 && this._flagged_by[0] === User.initials && Pending.unflagged.includes(this._attach)) {
       return false
     };
 
-    return this.#flagged_by.length !== 0
+    return this._flagged_by.length !== 0
   };
 
   // determine if this report can be skipped during the course of the meeting
   get skippable() {
     if (this.flagged) return false;
-    if (this.missing && Agenda.meeting_day) return this.#to === "president";
+    if (this.missing && Agenda.meeting_day) return this._to === "president";
 
-    if (this.#approved && this.#approved.length < 5 && Agenda.meeting_day) {
+    if (this._approved && this._approved.length < 5 && Agenda.meeting_day) {
       return false
     };
 
@@ -770,16 +770,16 @@ class Agenda {
   get color() {
     if (this.flagged) {
       return "commented"
-    } else if (this.#color) {
-      return this.#color
-    } else if (!this.#title) {
+    } else if (this._color) {
+      return this._color
+    } else if (!this._title) {
       return "blank"
-    } else if (this.#warnings) {
+    } else if (this._warnings) {
       return "missing"
     } else if (this.missing || this.rejected) {
       return "missing"
-    } else if (this.#approved) {
-      return this.#approved.length < 5 ? "ready" : "reviewed"
+    } else if (this._approved) {
+      return this._approved.length < 5 ? "ready" : "reviewed"
     } else if (this.title === "Action Items") {
       if (this.actions.length === 0) {
         return "missing"
@@ -788,9 +788,9 @@ class Agenda {
       } else {
         return "reviewed"
       }
-    } else if (this.#text || this.#report) {
+    } else if (this._text || this._report) {
       return "available"
-    } else if (this.#text === undefined) {
+    } else if (this._text === undefined) {
       return "missing"
     } else {
       return "reviewed"
@@ -799,7 +799,7 @@ class Agenda {
 
   // who to copy on emails
   get cc() {
-    return this.#to === "president" ? "operations@apache.org" : "board@apache.org"
+    return this._to === "president" ? "operations@apache.org" : "board@apache.org"
   }
 };
 

@@ -16,7 +16,7 @@ import { connect } from 'react-redux';
 class Header extends React.Component {
   #infodropdown = null;
 
-  get render() {
+  render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
     let summary = this.props.item.summary || Agenda.summary;
 
@@ -60,20 +60,22 @@ class Header extends React.Component {
                 <b className="caret" />
               </a>
 
-              <table className="table_bordered online dropdown_menu">{summary.map((status) => {
-                let text = status.text;
-                if (status.count === 1) text = text.replace(/s$/m, "");
+              <table className="table_bordered online dropdown_menu">
+                <tbody>{summary.map((status) => {
+                  let text = status.text;
+                  if (status.count === 1) text = text.replace(/s$/m, "");
 
-                return <tr className={status.color}>
-                  <td>
-                    <Link text={status.count} href={status.href} />
-                  </td>
+                  return <tr className={status.color} key={text}>
+                    <td>
+                      <Link text={status.count} href={status.href} />
+                    </td>
 
-                  <td>
-                    <Link text={text} href={status.href} />
-                  </td>
-                </tr>
-              })}</table>
+                    <td>
+                      <Link text={text} href={status.href} />
+                    </td>
+                  </tr>
+                })}</tbody>
+              </table>
             </li>}
 
         <li className="dropdown">
