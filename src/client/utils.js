@@ -2,7 +2,7 @@ import Store from "./store.js";
 import * as Actions from "../actions.js"
 
 // A convenient place to stash server data
-export const Server = {};
+export const Server = {pending: {}};
 
 //
 // function to assist with production of HTML and regular expressions

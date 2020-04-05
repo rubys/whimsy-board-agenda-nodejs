@@ -47,14 +47,14 @@ class Main extends React.Component {
     return <>
       <Header item={this.props.item} />
 
-      <main>{Agenda.index[0].text ? React.createElement(
+      <main>{Agenda.index[0] && Agenda.index[0].text ? React.createElement(
         this.props.item.view,
         { props: { item: this.props.item }, ref: "view" }
       ) : null}</main>
 
-      <Footer item={this.props.item} buttons={this.state.buttons} options={this.state.options} />
+      <Footer item={this.props.item} buttons={this.props.buttons} options={this.props.options} />
 
-      {this.state.buttons ? this.state.buttons.map((button) => {
+      {this.props.buttons ? this.props.buttons.map((button) => {
         if (button.form) {
           return React.createElement(
             button.form,

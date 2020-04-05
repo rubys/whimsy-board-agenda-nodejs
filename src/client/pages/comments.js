@@ -13,11 +13,11 @@ class Comments extends React.Component {
   static buttons() {
     let buttons = [];
 
-    if (MarkSeen.undo || Agenda.index.any(item => !item.unseen_comments.empty)) {
+    if (MarkSeen.undo || Agenda.index.some(item => !item.unseen_comments.empty)) {
       buttons.push({ button: MarkSeen })
     };
 
-    if (Pending.seen && !Pending.seen.keys().empty) {
+    if (Pending.seen && Object.keys(Pending.seen).length === 0) {
       buttons.push({ button: ShowSeen })
     };
 
