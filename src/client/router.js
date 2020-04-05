@@ -31,6 +31,8 @@ import { Switch, Route } from "react-router-dom";
 
 function Router(props) {
 
+  Agenda.load(props.agenda);
+
   // helper to construct a call to <Main> with the proper buttons and options
   function main(item, options = {}) {
     // bail unless an item was found
@@ -260,7 +262,7 @@ function Router(props) {
 }
 
 function mapStateToProps(state) {
-  return { agenda: state.cagenda }
+  return { agenda: state.agenda }
 };
 
 export default connect(mapStateToProps)(Router)

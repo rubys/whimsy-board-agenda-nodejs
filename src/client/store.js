@@ -7,13 +7,15 @@ export let date = '';
 
 // now for the real stuff
 function reduce(state, action) {
-  console.log(state);
   switch (action.type) {
     case Actions.CLOCK_INCREMENT:
-      return { ...state, clock_counter: state.clock_counter + 1 }
+      return { ...state, clock_counter: state.clock_counter + 1 };
 
     case Actions.CLOCK_DECREMENT:
-      return { ...state, clock_counter: state.clock_counter - 1 }
+      return { ...state, clock_counter: state.clock_counter - 1 };
+
+    case Actions.POST_AGENDA:
+      return { ...state, agenda: action.index };
 
     default:
       return state;
