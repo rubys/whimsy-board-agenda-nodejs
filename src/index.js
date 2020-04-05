@@ -8,6 +8,8 @@ import * as serviceWorker from './serviceWorker';
 import store from './client/store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import 'bootstrap';
+import './client/agenda.css';
 
 ReactDOM.render(
   <React.StrictMode>

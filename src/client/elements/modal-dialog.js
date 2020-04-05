@@ -7,52 +7,52 @@ import React from "react";
 // distributed to header, body, and footer sections.
 //
 class ModalDialog extends React.Component {
-  collateSlots() {
+  collateChildren() {
     let sections = {header: [], body: [], footer: []};
 
-    React.Children.forEach(this.children, slot => {
-      if (slot.tag === "h4") {
+    React.Children.forEach(this.children, child => {
+      if (child.tag === "h4") {
         // place h4 elements into the header, adding a modal-title class
-        slot = this.addClass(slot, "modal-title");
-        sections.header.push(slot)
-      } else if (slot.tag === "button") {
+        child = this.addClass(child, "modal-title");
+        sections.header.push(child)
+      } else if (child.tag === "button") {
         // place button elements into the footer, adding a btn class
-        slot = this.addClass(slot, "btn");
-        sections.footer.push(slot)
-      } else if (slot.tag === "input" || slot.tag === "textarea") {
+        child = this.addClass(child, "btn");
+        sections.footer.push(child)
+      } else if (child.tag === "input" || child.tag === "textarea") {
         // wrap input and textarea elements in a form-control, 
         // add label if present
-        slot = this.addClass(slot, "form-control");
+        child = this.addClass(child, "form-control");
         let label = null;
 
-        if (slot.data.attrs.label && slot.data.attrs.id) {
-          let props = {attrs: {for: slot.data.attrs.id}};
+        if (child.data.attrs.label && child.data.attrs.id) {
+          let props = {attrs: {for: child.data.attrs.id}};
 
-          if (slot.data.attrs.type === "checkbox") {
+          if (child.data.attrs.type === "checkbox") {
             props.class = ["checkbox"];
 
             label = React.createElement(
               "label",
               props,
-              [slot, React.createElement("span", slot.data.attrs.label)]
+              [child, React.createElement("span", child.data.attrs.label)]
             );
 
-            delete slot.data.attrs.label;
-            slot = null
+            delete child.data.attrs.label;
+            child = null
           } else {
-            label = React.createElement("label", props, slot.data.attrs.label);
-            delete slot.data.attrs.label
+            label = React.createElement("label", props, child.data.attrs.label);
+            delete child.data.attrs.label
           }
         };
 
         sections.body.push(React.createElement(
           "div",
           {class: "form-group"},
-          [label, slot]
+          [label, child]
         ))
       } else {
         // place all other elements into the body
-        sections.body.push(slot)
+        sections.body.push(child)
       }
     });
 
@@ -60,7 +60,7 @@ class ModalDialog extends React.Component {
   };
 
   render() {
-    let sections = this.collateSlots();
+    let sections = this.collateChildren();
 
     return <>
       <div className={"fade modal " + this.props.className} id={this.props.id}>
