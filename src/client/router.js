@@ -161,21 +161,21 @@ function Router(props) {
     </Route>
 
     <Route path="/flagged/:path">
-      {({ match: { params: { path } } }) => {
+      {({ match: { params: { path } } }) => (
         main(Agenda.find(path), { traversal: "flagged" })
-      }}
+      )}
     </Route>
 
     <Route path="/queue/:path">
-      {({ match: { params: { path } } }) => {
+      {({ match: { params: { path } } }) => (
         main(Agenda.find(path), { traversal: "queue" })
-      }}
+      )}
     </Route>
 
     <Route path="/shepherd/queue/:path">
-      {({ match: { params: { path } } }) => {
+      {({ match: { params: { path } } }) => (
         main(Agenda.find(path), { traversal: "shepherd" })
-      }}
+      )}
     </Route>
 
     <Route path="/shepherd/:shepherd">
@@ -254,9 +254,9 @@ function Router(props) {
     </Route>
 
     <Route path="/:path">
-      {({ match: { params: { path } } }) => {
+      {({ match: { params: { path } } }) => (
         main(Agenda.find(path))
-      }}
+      )}
     </Route>
   </Switch>
 }
