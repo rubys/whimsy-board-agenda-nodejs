@@ -1,8 +1,8 @@
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
 import User from "../models/user.js";
+import { Link } from "react-router-dom";
 
 //
 // Layout footer consisting of a previous link, any number of buttons,
@@ -99,7 +99,7 @@ class PrevLink extends React.Component {
     };
 
     if (link) {
-      return <Link className={"navbar-brand backlink " + link.color} text={link.title} rel="prev" href={`${prefix}${link.href}`} />
+      return <Link className={"navbar-brand backlink " + link.color} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
     } else if (this.props.item.prev || this.props.item.next) {
       return <a className="navbar-brand" />
     } else {
@@ -151,7 +151,7 @@ class NextLink extends React.Component {
     };
 
     if (link) {
-      return <Link className={"navbar-brand nextlink " + link.color} text={link.title} rel="next" href={`${prefix}${link.href}`} />
+      return <Link className={"navbar-brand nextlink " + link.color} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
     } else if (this.props.item.prev || this.props.item.next) {
       return <a className="navbar-brand" />
     } else {

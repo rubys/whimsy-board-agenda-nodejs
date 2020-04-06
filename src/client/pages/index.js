@@ -1,7 +1,7 @@
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
+import { Link } from "react-router-dom";
 
 //
 // Overall Agenda page: simple table with one row for each item in the index
@@ -31,13 +31,15 @@ class Index extends React.Component {
               <td>{row.attach}</td>
 
               {started && /^(\d+|[A-Z]+)$/m.test(row.attach) && !row.skippable ? <td>
-                <Link text={row.title} href={"flagged/" + row.href} />
+                <Link to={"flagged/" + row.href}>{row.title}</Link>
               </td> : <td>
-                  <Link text={row.title} href={row.href} />
+                  <Link to={row.href}>{row.title}</Link>
                 </td>}
 
               <td>{row.owner || row.chair_name}</td>
-              <td>{row.shepherd ? <Link text={row.shepherd} href={`shepherd/${row.shepherd.split(" ")[0]}`} /> : null}</td>
+              <td>{row.shepherd ?
+                <Link to={`shepherd/${row.shepherd.split(" ")[0]}`}>{row.shepherd}</Link>
+                : null}</td>
             </tr>
           ))}
         </tbody>
