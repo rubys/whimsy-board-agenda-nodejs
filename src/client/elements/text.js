@@ -6,10 +6,10 @@ import { htmlEscape } from "../utils.js";
 //
 class Text extends React.Component {
   render() {
-    return <span domPropsInnerHTML={this.text}/>
+    return <span dangerouslySetInnerHTML={{__html: this.text()}}/>
   };
 
-  text() {
+  text = () => {
     let result = htmlEscape(this.props.raw || "");
 
     if (this.props.filters) {

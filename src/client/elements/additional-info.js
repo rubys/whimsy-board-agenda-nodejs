@@ -1,4 +1,4 @@
-import ActionItems from "../pages/action-items.js";
+// import ActionItems from "../pages/action-items.js"; TODO
 import Agenda from "../models/agenda.js";
 import HistoricalComments from "../models/comments.js";
 import Link from "./link.js";
@@ -27,6 +27,8 @@ import { hotlink, Flow, splitComments } from "../utils.js";
 //       are unique.
 //
 class AdditionalInfo extends React.Component {
+  state = { prefix: '' };
+
   render() {
     let minutes = Minutes.get(this.props.item.title);
     let draft = Reporter.find(this.props.item);
@@ -50,7 +52,7 @@ class AdditionalInfo extends React.Component {
 
           <ul className="posted-reports">
             {posted.map(post =>
-              <li>
+              <li key={post.link}>
                 <a href={post.link}>{post.subject}</a>
               </li>
             )}
@@ -68,14 +70,14 @@ class AdditionalInfo extends React.Component {
           <Link text="Action Items" href="Action-Items" />
         </h4>
 
-        <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} />
+            {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} /> TODO */}
       </> : null}
 
       {this.props.item.special_orders.length !== 0 ? <>
         <h4 id={`${this.state.prefix}orders`}>Special Orders</h4>
 
         <ul>{this.props.item.special_orders.map(resolution => (
-          <li>
+          <li key={resolution.href}>
             <Link text={resolution.title} href={resolution.href} />
           </li>
         ))}</ul>
@@ -154,15 +156,16 @@ class AdditionalInfo extends React.Component {
   };
 
   // determine prefix (if any)
-  created() {
-    if (this.props.prefix === true) {
-      this.setState({ prefix: this.props.item.title.toLowerCase() + "-" })
-    } else if (this.props.prefix) {
-      this.setState({ prefix: this.props.prefix })
+  static getDerivedStateFromProps(props) {
+    if (props.prefix === true) {
+      return { prefix: props.item.title.toLowerCase() + "-" }
+    } else if (props.prefix) {
+      return { prefix: props.prefix }
     } else {
-      this.setState({ prefix: "" })
+      return { prefix: "" }
     }
   }
 
 };
+
 export default AdditionalInfo

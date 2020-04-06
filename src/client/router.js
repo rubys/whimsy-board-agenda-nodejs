@@ -102,7 +102,7 @@ function Router(props) {
       })
     };
 
-    props = Object.assign({ item, buttons, options }, props);
+    props = {...props, item, buttons, options };
 
     return <Main {...props}/>
   }

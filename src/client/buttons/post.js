@@ -31,7 +31,9 @@ class Post extends React.Component {
     pmcs: [],
     roster: [],
     parent: null,
-    search: ''
+    search: '',
+    indent: 0,
+    report: ''
   }
 
   render() {

@@ -37,10 +37,10 @@ class Search extends React.Component {
 
             {item.text.split(/\n\s*\n/).map((paragraph) => {
               if (paragraph.toLowerCase().includes(text)) {
-                return <pre className="report" domPropsInnerHTML={htmlEscape(paragraph).replace(
+                return <pre className="report" dangerouslySetInnerHTML={{__html: htmlEscape(paragraph).replace(
                   new RegExp(`(${text})`, "gi"),
                   "<span class='hilite'>$1</span>"
-                )}/>
+                )}}/>
               } else {
                 return null
               }

@@ -34,56 +34,54 @@ class Report extends React.Component {
           <li>{warning}</li>
         </ul> : null}
 
-        <pre className="report">{this.props.item.text ? <Text raw={this.props.item.text} filters={this.filters}/> : this.props.item.missing ? <>
-          {draft = Reporter.find(this.props.item)}
+        <pre className="report">{
+          this.props.item.text ?
+            <Text raw={this.props.item.text} filters={this.filters} /> :
+            this.props.item.missing ? <>
+              {draft = Reporter.find(this.props.item)}
 
-          {draft ? <>
-            <p>
-              <em>Unposted draft being prepared at </em>
-              <a href={`https://reporter.apache.org/wizard?${draft.project}`}>reporter.apache.org</a>
-              <span>:</span>
-            </p>
+              {draft ? <>
+                <p>
+                  <em>Unposted draft being prepared at </em>
+                  <a href={`https://reporter.apache.org/wizard?${draft.project}`}>reporter.apache.org</a>
+                  <span>:</span>
+                </p>
 
-            <Text raw={draft.text} filters={[this.draft]}/>
-          </> : <p>
-            <em>Missing</em>
-          </p>}
-        </> : <p>
-          <em>Empty</em>
-        </p>}</pre>
+                <Text raw={draft.text} filters={[this.draft]} />
+              </> : <p><em>Missing</em></p>}
+            </> : <p><em>Empty</em></p>}</pre>
 
         {(this.props.item.missing || this.props.item.comments) && this.props.item.mail_list ? <section className="reminder">
           {this.props.item.missing && Posted.get(this.props.item.title).length !== 0 ? <button className="btn-primary btn" data_toggle="modal" data_target="#post-report-form">post report</button> : /^[A-Z]/m.test(this.props.item.attach) && User.firstname && this.props.item.shepherd && User.firstname.startsWith(this.props.item.shepherd.toLowerCase()) ? <p className="comment">
-            No report was found on 
+            No report was found on
             <a href="https://lists.apache.org/list.html?board@apache.org">board@apache.org</a>
              archives since the last board report.  If/when a report
-             is posted there with a 
-            <tt>[Report]</tt>
-             tag in the subject line a POST button will appear here 
+             is posted there with a <tt>[Report]</tt>
+             tag in the subject line a POST button will appear here
              to assist with the posting the report.
-          </p> : null ? null : null}
+          </p> : null }
 
-          <Email item={this.props.item}/>
+          <Email item={this.props.item} />
         </section> : null}
 
         {this.minutes ? <pre className="comment">{this.minutes === "missing" ? <p>
           <em>missing</em>
-        </p> : <Text raw={this.minutes} filters={[hotlink]}/>}</pre> : null}
+        </p> : <Text raw={this.minutes} filters={[hotlink]} />}</pre> : null}
       </section>
 
       <section>
-        <AdditionalInfo item={this.props.item}/>
+        <AdditionalInfo item={this.props.item} />
 
         <div className="report-info">
           <h4>Report Info</h4>
-          <Info item={this.props.item}/>
+          <Info item={this.props.item} />
         </div>
       </section>
     </section>
   };
 
   // determine what text filters to run
-  filters() {
+  get filters() {
     let list = [
       this.linebreak,
       this.todo,
@@ -107,7 +105,7 @@ class Report extends React.Component {
   };
 
   // special processing for Minutes from previous meetings
-  minutes() {
+  get minutes() {
     if (/^3[A-Z]$/m.test(this.props.item.attach)) {
       // if draft is available, fetch minutes for display
       let date = (this.props.item.text.match(/board_minutes_(\d+_\d+_\d+)\.txt/) || [])[1];
@@ -115,7 +113,7 @@ class Report extends React.Component {
       if (date && typeof this.props.item.minutes === 'undefined' && typeof XMLHttpRequest !== 'undefined') {
         if (this.props.item.mtime) {
           React.set(this.props.item, "minutes", "");
- 
+
           retrieve(
             `minutes/${date}?${this.props.item.mtime}`,
             "text",
