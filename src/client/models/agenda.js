@@ -107,7 +107,6 @@ class Agenda {
     };
 
     Agenda.#$date = (new Date(Agenda.#$index[0].timestamp).toISOString().match(/(.*?)T/) || [])[1];
-    Main.refresh();
     Chat.agenda_change(before, Agenda.#$index);
     return Agenda.#$index
   };

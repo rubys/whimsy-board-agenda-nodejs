@@ -1,5 +1,5 @@
 import Agenda from "../models/agenda.js";
-import Events from "../models/events.js";
+// import Events from "../models/events.js"; TODO
 import Footer from "./footer.js";
 import Header from "./header.js";
 import Keyboard from "../keyboard.js";
@@ -28,6 +28,8 @@ class Main extends React.Component {
   // dummy exported refresh method (replaced on client side)
   static refresh() { };
 
+  static view = React.createRef();
+
   // common layout for all pages: header, main, footer, and forms
   render() {
     if (!this.props.item) {
@@ -42,13 +44,13 @@ class Main extends React.Component {
         </div>
       }
     };
-    
+
     return <>
       <Header item={this.props.item} />
 
       <main>{Agenda.index[0] && Agenda.index[0].text ? React.createElement(
         this.props.item.view,
-        { item: this.props.item }
+        { item: this.props.item, ref: Main.view }
       ) : null}</main>
 
       <Footer item={this.props.item} buttons={this.props.buttons} options={this.props.options} />
@@ -84,7 +86,7 @@ class Main extends React.Component {
   };
 
   // encapsulate calls to the router
-  route(path, query) {
+  route = (path, query) => {
     let route = Router.route(path, query);
 
     this.setState({
@@ -106,12 +108,12 @@ class Main extends React.Component {
   };
 
   // navigation method that updates history (back button) information
-  navigate(path, query) {
+  navigate = (path, query) => {
     let history = window.history;
     history.state.scrollY = window.scrollY;
     history.replaceState(history.state, null, history.path);
     Main.scrollTo = 0;
-    this.route(path, query);
+    // this.route(path, query);
     history.pushState({ path, query }, null, path);
     window.onresize();
     if (path) Main.latest = false
@@ -123,17 +125,16 @@ class Main extends React.Component {
   };
 
   // additional client side initialization
-  mounted() {
+  componentDidMount() {
     // export navigate and refresh methods as well as view
     Main.navigate = this.navigate;
     Main.refresh = this.refresh;
-    Main.view = this.refs.refs.view;
     Main.item = Agenda;
 
     // store initial state in history, taking care not to overwrite
     // history set by the Search component.
     if (!window.history.state || !window.history.state.query) {
-      let path = this.props.page.path;
+      let path = this.props.page ? this.props.page.path : '/';
 
       if (path === "bootstrap.html") {
         path = document.location.href;
@@ -200,13 +201,15 @@ class Main extends React.Component {
     window.onresize();
 
     // if agenda is stale, fetch immediately; otherwise save etag
-    Agenda.fetch(this.props.page.etag, this.props.page.digest);
+    if (this.props.page) {
+      Agenda.fetch(this.props.page.etag, this.props.page.digest);
+    }
 
     // start Service Worker
-    if (PageCache.enabled) PageCache.register();
+    // if (PageCache.enabled) PageCache.register(); TODO!
 
     // start backchannel
-    Events.monitor()
+    // Events.monitor() TODO!
   };
 
   // after each subsequent re-rendering, resize main window
