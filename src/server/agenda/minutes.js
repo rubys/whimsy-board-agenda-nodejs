@@ -2,7 +2,7 @@ import * as svn from '../svn.js'
 
 const OFFICER_SEPARATOR = /^\s*4. (Executive )?Officer Reports/m;
 
-export default async function (agenda, { quick = false } = {}) {
+export default async function (agenda, { request, quick = false } = {}) {
   let minutes = agenda.split(/^ 3. Minutes from previous meetings/m, 2)
     .pop().split(OFFICER_SEPARATOR)[0];
 
@@ -17,12 +17,12 @@ export default async function (agenda, { quick = false } = {}) {
 
     let file = (attrs.text.match(/board_minutes[_\d]+\.txt/) || [])[0];
 
-    if (file && await svn.agendaExist(file)) {
+    if (file && await svn.agendaExist(file, request)) {
       // unpublished minutes
-      attrs.mtime = await svn.agendaMtime(file);
-    } else if (file && await svn.minutesExist(file)) {
+      attrs.mtime = await svn.agendaMtime(file, request);
+    } else if (file && await svn.minutesExist(file, request)) {
       // published minutes
-      attrs.mtime = await svn.minutesMtime(file);
+      attrs.mtime = await svn.minutesMtime(file, request);
     }
 
     return attrs;

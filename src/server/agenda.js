@@ -15,16 +15,18 @@ export async function parse(agenda, request) {
   // replace tabs with spaces
   agenda = agenda.replace(/^(\t+)/gm, function (tabs) { return new Array((8 * tabs.length) + 1).join(" ") });
 
+  let options = { request };
+
   // run each of the scanners
   let items = (await Promise.all([
-    front(agenda),
-    minutes(agenda),
-    execOfficer(agenda),
-    attachments(agenda),
-    committee(agenda),
-    special(agenda),
-    discussion(agenda),
-    back(agenda)
+    front(agenda, options),
+    minutes(agenda, options),
+    execOfficer(agenda, options),
+    attachments(agenda, options),
+    committee(agenda, options),
+    special(agenda, options),
+    discussion(agenda, options),
+    back(agenda, options)
   ])).flat();
 
   // merge sections
