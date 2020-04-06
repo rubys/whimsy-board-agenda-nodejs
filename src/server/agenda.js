@@ -11,7 +11,7 @@ export function minutesLink(title) {
   return "https://whimsy.apache.org/board/minutes/" + title.replace(/\W/g, "_")
 }
 
-export async function parse(agenda) {
+export async function parse(agenda, request) {
   // replace tabs with spaces
   agenda = agenda.replace(/^(\t+)/gm, function (tabs) { return new Array((8 * tabs.length) + 1).join(" ") });
 

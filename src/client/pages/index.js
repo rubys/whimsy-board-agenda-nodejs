@@ -7,7 +7,6 @@ import React from "react";
 // Overall Agenda page: simple table with one row for each item in the index
 //
 class Index extends React.Component {
-
   render() {
     let started = Minutes.started;
 

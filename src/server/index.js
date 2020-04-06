@@ -29,8 +29,8 @@ app.use(basicAuth({
   }
 }));
 
-app.get('/api/latest.json', async (req, res) => {
-  res.json(await parse(await read((await agendas()).pop())));
+app.get('/api/latest.json', async (request, response) => {
+  response.json(await parse(await read((await agendas(request)).pop())));
 });
 
 app.listen(port, () => {
