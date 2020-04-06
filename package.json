@@ -23,7 +23,8 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "shell-escape": "^0.2.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development concurrently --kill-others-on-fail npm:server npm:client",

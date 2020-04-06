@@ -1,5 +1,6 @@
 import credentials from './credentials.js';
 import path from 'path';
+import shellEscape from "shell-escape";
 import { promises as fs } from 'fs';
 import { exec } from 'child_process';
 import { Mutex } from 'async-mutex';
@@ -21,7 +22,8 @@ function svncmd(request) {
   if (!request) return svn;
   let { username, password } = credentials(request);
   if (!password) return svn;
-  return `${svn} --non-interactive --no-auth-cache --username ${username} --password ${password}`;
+  return `${svn} --non-interactive --no-auth-cache ` +
+    shellEscape(['--username', username, '--password', password])
 };
 
 // ensure that there is a fresh checkout of the foundation/board directory
