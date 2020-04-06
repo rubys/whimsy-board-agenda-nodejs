@@ -11,6 +11,7 @@
     "bootstrap": "^4.4.1",
     "concurrently": "^5.1.0",
     "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
     "jquery": "^3.4.1",
     "ldapjs": "^1.0.2",
     "md5": "^2.2.1",
@@ -27,7 +28,7 @@
   "scripts": {
     "dev": "NODE_ENV=development concurrently --kill-others-on-fail npm:server npm:client",
     "client": "react-scripts start",
-    "server": "nodemon --ignore work -w src/server.js -w src/api src/server.js",
+    "server": "nodemon --ignore work -w src/server.js -w src/server src/server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
