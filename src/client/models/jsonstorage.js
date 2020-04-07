@@ -61,7 +61,7 @@ class JSONStorage {
         Store.dispatch(Actions.clockIncrement());
 
         // construct request
-        let request = new Request(`../json/${name}`, {
+        let request = new Request(`../api/${name}`, {
           method: "get",
           credentials: "include",
           headers: {Accept: "application/json"}
@@ -77,6 +77,8 @@ class JSONStorage {
               fetched = json;
               if (json) block(json)
             }
+          }).finally(() => {
+            if (!fetched) Store.dispatch(Actions.clockDecrement());
           })
         });
 
