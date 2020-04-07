@@ -20,7 +20,7 @@ import User from "./models/user.js";
 import { Server } from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
 import { connect } from 'react-redux';
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 
 //
 // Route request based on path and query information in the URL
@@ -29,12 +29,44 @@ import { Switch, Route } from "react-router-dom";
 // determines what buttons are required.
 //
 
-function Router(props) {
+class Router extends React.Component {
 
-  Agenda.load(props.agenda);
+  state = {};
+
+  static getDerivedStateFromProps(props) {
+    Router.history = props.history;
+    Router.navigate = (path, query) => {
+      Router.history.push(path, { path, query })
+    }
+
+    let path = props.location.pathname;
+
+    // store initial state in history
+    if (!props.location.state) {
+      if (path === "/bootstrap.html") {
+        path = document.location.href;
+        let base = document.getElementsByTagName("base")[0].href;
+
+        if (path.startsWith(base)) {
+          path = path.slice(base.length)
+        } else if (path.endsWith("/latest/")) {
+          Main.latest = true;
+          path = "."
+        }
+      };
+
+      props.history.replace(path, { path });
+    };
+
+    window.history.replaceState({path}, null, path);
+
+    Agenda.load(props.agenda);
+
+    return {}
+  }
 
   // helper to construct a call to <Main> with the proper buttons and options
-  function main(item, options = {}) {
+  main = (item, options = {}) => {
     // bail unless an item was found
     if (!item) return <Main />;
 
@@ -102,167 +134,171 @@ function Router(props) {
       })
     };
 
-    props = {...props, item, buttons, options };
+    let props = { ...this.props, item, buttons, options };
 
-    return <Main {...props}/>
+    return <Main {...props} />
   }
 
-  // route request based on path and query from the window location (URL)
-  return <Switch>
+  render() {
+    let main = this.main;
 
-    <Route exact path={['/', '/.']}>
-      {Agenda.index.length === 0 ? main(null) : main(Agenda)}
-    </Route>
+    // route request based on path and query from the window location (URL)
+    return <Switch>
 
-    <Route exact path="/search">
-      {({ history: { location: { search } } }) => (
-        main({ view: Search, query: search })
-      )}
-    </Route>
+      <Route exact path={['/', '/.']}>
+        {Agenda.index.length === 0 ? main(null) : main(Agenda)}
+      </Route>
 
-    <Route exact path="/comments">
-      {main({ view: Comments })}
-    </Route>
+      <Route exact path="/search">
+        {({ history: { location: { search } } }) => (
+          main({ view: Search, query: search })
+        )}
+      </Route>
 
-    <Route exact path="/backchannel">
-      {main({
-        view: Backchannel,
-        title: "Agenda Backchannel",
-        online: Server.online
-      })}
-    </Route>
+      <Route exact path="/comments">
+        {main({ view: Comments })}
+      </Route>
 
-    <Route exact path="/queue">
-      {() => {
-        let item = { view: Queue, title: "Queued approvals and comments" };
-        if (User.role !== "director") item.title = "Queued comments";
-        return main(item)
-      }}
-    </Route>
+      <Route exact path="/backchannel">
+        {main({
+          view: Backchannel,
+          title: "Agenda Backchannel",
+          online: Server.online
+        })}
+      </Route>
 
-    <Route exact path="/flagged">
-      {main({ view: Flagged, title: "Flagged reports" })}
-    </Route>
+      <Route exact path="/queue">
+        {() => {
+          let item = { view: Queue, title: "Queued approvals and comments" };
+          if (User.role !== "director") item.title = "Queued comments";
+          return main(item)
+        }}
+      </Route>
 
-    <Route exact path="/rejected">
-      {main({ view: Rejected, title: "Reports which were NOT accepted" })}
-    </Route>
+      <Route exact path="/flagged">
+        {main({ view: Flagged, title: "Flagged reports" })}
+      </Route>
 
-    <Route exact path="/missing">
-      {() => {
-        let buttons = [{ form: InitialReminder }, { button: FinalReminder }];
+      <Route exact path="/rejected">
+        {main({ view: Rejected, title: "Reports which were NOT accepted" })}
+      </Route>
 
-        if (Agenda.index.some(item => item.nonresponsive)) {
-          buttons.push({ form: ProdReminder })
-        };
+      <Route exact path="/missing">
+        {() => {
+          let buttons = [{ form: InitialReminder }, { button: FinalReminder }];
 
-        return main({ view: Missing, title: "Missing reports", buttons })
-      }}
-    </Route>
+          if (Agenda.index.some(item => item.nonresponsive)) {
+            buttons.push({ form: ProdReminder })
+          };
 
-    <Route path="/flagged/:path">
-      {({ match: { params: { path } } }) => (
-        main(Agenda.find(path), { traversal: "flagged" })
-      )}
-    </Route>
+          return main({ view: Missing, title: "Missing reports", buttons })
+        }}
+      </Route>
 
-    <Route path="/queue/:path">
-      {({ match: { params: { path } } }) => (
-        main(Agenda.find(path), { traversal: "queue" })
-      )}
-    </Route>
+      <Route path="/flagged/:path">
+        {({ match: { params: { path } } }) => (
+          main(Agenda.find(path), { traversal: "flagged" })
+        )}
+      </Route>
 
-    <Route path="/shepherd/queue/:path">
-      {({ match: { params: { path } } }) => (
-        main(Agenda.find(path), { traversal: "shepherd" })
-      )}
-    </Route>
+      <Route path="/queue/:path">
+        {({ match: { params: { path } } }) => (
+          main(Agenda.find(path), { traversal: "queue" })
+        )}
+      </Route>
 
-    <Route path="/shepherd/:shepherd">
-      {({ match: { params: { shepherd } } }) => {
-        let item = {
-          view: Shepherd,
-          shepherd,
-          next: null,
-          prev: null,
-          title: `Shepherded by ${shepherd}`
-        };
+      <Route path="/shepherd/queue/:path">
+        {({ match: { params: { path } } }) => (
+          main(Agenda.find(path), { traversal: "shepherd" })
+        )}
+      </Route>
 
-        // determine next/previous links
-        for (let i of Agenda.index) {
-          if (i.shepherd && i.comments) {
-            if (i.shepherd.includes(" ")) continue;
-            let href = `shepherd/${i.shepherd}`;
+      <Route path="/shepherd/:shepherd">
+        {({ match: { params: { shepherd } } }) => {
+          let item = {
+            view: Shepherd,
+            shepherd,
+            next: null,
+            prev: null,
+            title: `Shepherded by ${shepherd}`
+          };
 
-            if (i.shepherd > shepherd) {
-              if (!item.next || item.next.href > href) {
-                item.next = { title: i.shepherd, href }
-              }
-            } else if (i.shepherd < shepherd) {
-              if (!item.prev || item.prev.href < href) {
-                item.prev = { title: i.shepherd, href }
+          // determine next/previous links
+          for (let i of Agenda.index) {
+            if (i.shepherd && i.comments) {
+              if (i.shepherd.includes(" ")) continue;
+              let href = `shepherd/${i.shepherd}`;
+
+              if (i.shepherd > shepherd) {
+                if (!item.next || item.next.href > href) {
+                  item.next = { title: i.shepherd, href }
+                }
+              } else if (i.shepherd < shepherd) {
+                if (!item.prev || item.prev.href < href) {
+                  item.prev = { title: i.shepherd, href }
+                }
               }
             }
-          }
-        };
+          };
 
-        return Main(item)
-      }}
-    </Route>
+          return Main(item)
+        }}
+      </Route>
 
-    <Route exact path="/feedback">
-      {main({ view: Feedback, title: "Send Feedback" })}
-    </Route>
+      <Route exact path="/feedback">
+        {main({ view: Feedback, title: "Send Feedback" })}
+      </Route>
 
-    <Route exact path="/help">
-      {() => {
-        let item = { view: Help };
+      <Route exact path="/help">
+        {() => {
+          let item = { view: Help };
 
-        // Progressive Web Application 'Add to Home Screen' support
-        if (PageCache.installPrompt) item.buttons = [{ button: Install }];
+          // Progressive Web Application 'Add to Home Screen' support
+          if (PageCache.installPrompt) item.buttons = [{ button: Install }];
 
-        return Main(item)
-      }}
-    </Route>
+          return Main(item)
+        }}
+      </Route>
 
-    <Route exact path="/secrets">
-      {main({ view: InsiderSecrets })}
-    </Route>
+      <Route exact path="/secrets">
+        {main({ view: InsiderSecrets })}
+      </Route>
 
-    <Route exact path="/bootstrap.html">
-      {main({ view: BootStrapPage, title: " " })}
-    </Route>
+      <Route exact path="/bootstrap.html">
+        {main({ view: BootStrapPage, title: " " })}
+      </Route>
 
-    <Route exact path="/cache/">
-      {main({ view: CacheStatus })}
-    </Route>
+      <Route exact path="/cache/">
+        {main({ view: CacheStatus })}
+      </Route>
 
-    <Route path="/^cache/">
-      {main({ view: CachePage })}
-    </Route>
+      <Route path="/^cache/">
+        {main({ view: CachePage })}
+      </Route>
 
-    <Route exact path="Discussion-Items">
-      {() => {
-        let item = null;
+      <Route exact path="Discussion-Items">
+        {() => {
+          let item = null;
 
-        for (let i of Agenda.index) {
-          if (/^8[.A-Z]/m.test(i.attach)) if (!item) item = i
-        };
+          for (let i of Agenda.index) {
+            if (/^8[.A-Z]/m.test(i.attach)) if (!item) item = i
+          };
 
-        return main(item)
-      }}
-    </Route>
+          return main(item)
+        }}
+      </Route>
 
-    <Route path="/:path">
-      {({ match: { params: { path } } }) => (
-        main(Agenda.find(path))
-      )}
-    </Route>
-  </Switch>
+      <Route path="/:path">
+        {({ match: { params: { path } } }) => (
+          main(Agenda.find(path))
+        )}
+      </Route>
+    </Switch>
+  }
 }
 
 function mapStateToProps(state) {
   return { agenda: state.agenda }
 };
 
-export default connect(mapStateToProps)(Router)
+export default connect(mapStateToProps)(withRouter(Router))

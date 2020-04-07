@@ -131,34 +131,6 @@ class Main extends React.Component {
     Main.refresh = this.refresh;
     Main.item = Agenda;
 
-    // store initial state in history, taking care not to overwrite
-    // history set by the Search component.
-    if (!window.history.state || !window.history.state.query) {
-      let path = this.props.page ? this.props.page.path : '/';
-
-      if (path === "bootstrap.html") {
-        path = document.location.href;
-        let base = document.getElementsByTagName("base")[0].href;
-
-        if (path.startsWith(base)) {
-          path = path.slice(base.length)
-        } else if (path.endsWith("/latest/")) {
-          Main.latest = true;
-          path = "."
-        }
-      };
-
-      window.history.replaceState({ path }, null, path)
-    };
-
-    // listen for back button, and re-route/re-render when it occcurs
-    window.addEventListener("popstate", (event) => {
-      if (event.state && typeof event.state.path !== 'undefined') {
-        Main.scrollTo = event.state.scrollY || 0;
-        this.route(event.state.path, event.state.query)
-      }
-    });
-
     // start watching keystrokes and fingers
     Keyboard.initEventHandlers();
     Touch.initEventHandlers();
