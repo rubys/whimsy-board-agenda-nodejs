@@ -112,7 +112,7 @@ class Report extends React.Component {
 
       if (date && typeof this.props.item.minutes === 'undefined' && typeof XMLHttpRequest !== 'undefined') {
         if (this.props.item.mtime) {
-          React.set(this.props.item, "minutes", "");
+          this.props.item.minutes = '';
 
           retrieve(
             `minutes/${date}?${this.props.item.mtime}`,
@@ -165,7 +165,7 @@ class Report extends React.Component {
   };
 
   // Convert start time to local time on Call to order page
-  localtime(text) {
+  localtime = (text) => {
     return text.replace(
       /\n(\s+)(Other Time Zones:.*)/,
 
@@ -177,7 +177,7 @@ class Report extends React.Component {
   };
 
   // replace ids with committer links
-  names(text) {
+  names = (text) => {
     let roster = "/roster/committer/";
 
     for (let [id, person] of Object.entries(this.props.item.people)) {

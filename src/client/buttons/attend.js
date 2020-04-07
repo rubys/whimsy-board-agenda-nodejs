@@ -21,7 +21,7 @@ class Attend extends React.Component {
     if (person) {
       return person.attending
     } else {
-      for (person of this.props.item.people) {
+      for (person of Object.values(this.props.item.people)) {
         if (person.name === User.username) return person.attending
       };
 
