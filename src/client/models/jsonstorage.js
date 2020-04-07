@@ -77,7 +77,11 @@ class JSONStorage {
               fetched = json;
               if (json) block(json)
             }
-          }).finally(() => {
+          })
+          .catch(error => {
+            console.error(`fetch ${request.url}:\n${error}`)
+          })
+          .finally(() => {
             if (!fetched) Store.dispatch(Actions.clockDecrement());
           })
         });
