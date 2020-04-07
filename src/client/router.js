@@ -58,8 +58,6 @@ class Router extends React.Component {
       props.history.replace(path, { path });
     };
 
-    window.history.replaceState({path}, null, path);
-
     Agenda.load(props.agenda);
 
     return {}
