@@ -184,6 +184,10 @@ class Main extends React.Component {
     // Events.monitor() TODO!
   };
 
+  componentDidUpdate() {
+    window.onresize()
+  }
+
   // after each subsequent re-rendering, resize main window
   updated() {
     window.onresize()

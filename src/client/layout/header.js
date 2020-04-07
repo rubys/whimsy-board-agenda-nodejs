@@ -21,7 +21,7 @@ class Header extends React.Component {
     let summary = this.props.item.summary || Agenda.summary;
 
 
-    return <header className={"navbar navbar-fixed-top " + this.props.item.color}>
+    return <header className={"navbar fixed-top " + this.props.item.color}>
       <div className="navbar-brand">{this.props.item.title}</div>
       {/^7/m.test(this.props.item.attach) && /^Establish .* Project/m.test(this.props.item.fulltitle) ? <PodlingNameSearch item={this.props.item} /> : null}
       {this.props.clock_counter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}

@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 //
 class Footer extends React.Component {
   render() {
-    return <footer className={"navbar-fixed-bottom navbar " + this.props.item.color}>
+    return <footer className={"fixed-bottom navbar " + this.props.item.color}>
       <PrevLink item={this.props.item} options={this.props.options} />
 
       <span>{this.props.buttons ? this.props.buttons.map((button) => {
