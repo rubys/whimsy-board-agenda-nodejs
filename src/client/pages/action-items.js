@@ -1,6 +1,6 @@
 import ActionReminder from "../buttons/remind-actions.js";
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Minutes from "../models/minutes.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import Pending from "../models/pending.js";
@@ -218,7 +218,7 @@ class ActionItems extends React.Component {
                 if (match) {
                   return <>
                     {`* ${action.owner}: ${action.text.replace(/\n/g, "\n        ")}\n`}
-                    {action.item ? <Link text={action.item.title} href={action.item.href} className={action.item.color} /> : null}
+                    {action.item ? <Link to={action.item.href} className={action.item.color}>{action.item.title}</Link> : null}
                     {` ${Agenda.title} ]\n\n`}
                   </>
                 }

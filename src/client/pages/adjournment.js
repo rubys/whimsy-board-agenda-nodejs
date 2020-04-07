@@ -1,5 +1,5 @@
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Main from "../layout/main.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
@@ -135,7 +135,7 @@ class Adjournment extends React.Component {
             <ul>
               {completed.feedback_sent.map(pmc =>
                 <li>
-                  <Link text={pmc} href={pmc.replace(/\s+/g, "-")} />
+                  <Link to={pmc.replace(/\s+/g, "-")}>{pmc}</Link>
                 </li>
               )};
             </ul>
@@ -189,11 +189,11 @@ class PMCActions extends React.Component {
               this.refresh()
             }} />
 
-            <Link text={item.title} href={window.Todos.link(item.title)} />
+            <Link to={window.Todos.link(item.title)}>{item.title}</Link>
 
             {item.minutes ? <>
               -
-            <Link text={item.minutes} href={window.Todos.link(item.title)} />
+            <Link to={window.Todos.link(item.title)}>{item.minutes}</Link>
             </> : null}
           </li>
         )}
@@ -338,7 +338,7 @@ class FeedbackReminder extends React.Component {
       <ul className="row list-group">
         {window.Todos.feedback.map(pmc =>
           <li className="col-lg-2 col-md-3 col-sm-4 col-xs-6 list-group-item">
-            <Link text={pmc} href={pmc.replace(/\s+/g, "-")} />
+            <Link to={pmc.replace(/\s+/g, "-")}>{pmc}</Link>
           </li>
         )}
       </ul>

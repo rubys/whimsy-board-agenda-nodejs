@@ -1,7 +1,7 @@
 // import ActionItems from "../pages/action-items.js"; TODO
 import Agenda from "../models/agenda.js";
 import HistoricalComments from "../models/comments.js";
-import Link from "./link.js";
+import { Link } from "react-router-dom";
 import Main from "../layout/main.js";
 import Minutes from "../models/minutes.js";
 import Posted from "../models/posted.js";
@@ -67,7 +67,7 @@ class AdditionalInfo extends React.Component {
 
       {this.props.item.title !== "Action Items" && this.props.item.actions.length !== 0 ? <>
         <h4 id={`${this.state.prefix}actions`}>
-          <Link text="Action Items" href="Action-Items" />
+          <Link to="Action-Items">Action Items</Link>
         </h4>
 
             {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} /> TODO */}
@@ -78,7 +78,7 @@ class AdditionalInfo extends React.Component {
 
         <ul>{this.props.item.special_orders.map(resolution => (
           <li key={resolution.href}>
-            <Link text={resolution.title} href={resolution.href} />
+            <Link to={resolution.href}>{resolution.title}</Link>
           </li>
         ))}</ul>
       </> : null}

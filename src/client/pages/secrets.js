@@ -1,4 +1,4 @@
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import React from "react";
 
 class InsiderSecrets extends React.Component {
@@ -62,7 +62,7 @@ class InsiderSecrets extends React.Component {
         </li>
       </ul>
 
-      <Link text="Back to the agenda" href="." />
+      <Link to=".">Back to the agenda</Link>
     </>
   }
 };

@@ -1,6 +1,6 @@
 import Agenda from "../models/agenda.js";
 import Chat from "../models/chat.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Main from "../layout/main.js";
 import Message from "../buttons/message.js";
 import React from "react";
@@ -54,7 +54,7 @@ class Backchannel extends React.Component {
             {msgs.map(message => <>
               <dt key={`t${message.timestamp}`} className={message.type} title={new Date(message.timestamp).toLocaleTimeString()}>{message.user}</dt>
 
-              <dd key={`d${message.timestamp}`} className={message.type}>{message.link ? <Link text={message.text} href={message.link} /> : <>
+              <dd key={`d${message.timestamp}`} className={message.type}>{message.link ? <Link to={message.link}>{message.text}</Link> : <>
                 {filters = [hotlink, this.mention]}
                 {message.type === "agenda" ? filters << this.agenda_link : null}
                 <Text raw={message.text} filters={filters} />

@@ -1,6 +1,6 @@
 import Agenda from "../models/agenda.js";
 import Info from "../elements/info.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Pending from "../models/pending.js";
 import PodlingNameSearch from "../elements/pns.js";
 import React from "react";
@@ -29,7 +29,7 @@ class Header extends React.Component {
       <ul className="nav nav-pills navbar-right">
         {Pending.count > 0 || Server.offline ? <li className="label label-danger">
           {Server.offline ? <span>OFFLINE: </span> : null}
-          <Link text={Pending.count} href="queue" />
+          <Link to="queue">{Pending.count}</Link>
         </li> : null}
 
         {this.props.item.attach ?
@@ -67,11 +67,11 @@ class Header extends React.Component {
 
                   return <tr className={status.color} key={text}>
                     <td>
-                      <Link text={status.count} href={status.href} />
+                      <Link to={status.href}>{status.count}</Link>
                     </td>
 
                     <td>
-                      <Link text={text} href={status.href} />
+                      <Link to={status.href}>{text}</Link>
                     </td>
                   </tr>
                 })}</tbody>
@@ -86,13 +86,13 @@ class Header extends React.Component {
 
           <ul className="dropdown-menu">
             <li>
-              <Link id="agenda" text="Agenda" href="." />
+              <Link id="agenda" to=".">Agenda</Link>
             </li>
 
             {Agenda.index.map((item) => {
               if (item.index) {
                 return <li>
-                  <Link text={item.index} href={item.href} />
+                  <Link to={item.href}>{item.index}</Link>
                 </li>
               } else {
                 return null
@@ -102,29 +102,29 @@ class Header extends React.Component {
             <li className="divider" />
 
             <li>
-              <Link text="Search" href="search" />
+              <Link to="search">Search</Link>
             </li>
 
             <li>
-              <Link text="Comments" href="comments" />
+              <Link to="comments">Comments</Link>
             </li>
 
             {Agenda.shepherd ? <li>
-              <Link id="shepherd" text="Shepherd" href={`shepherd/${Agenda.shepherd}`} />
+              <Link id="shepherd" to={`shepherd/${Agenda.shepherd}`}>Shepherd</Link>
             </li> : null}
 
             <li>
-              <Link id="queue" text="Queue" href="queue" />
+              <Link id="queue" to="queue">Queue</Link>
             </li>
 
             <li className="divider" />
 
             <li>
-              <Link id="backchannel" text="Backchannel" href="backchannel" />
+              <Link id="backchannel" to="backchannel">Backchannel</Link>
             </li>
 
             <li>
-              <Link id="help" text="Help" href="help" />
+              <Link id="help" to="help">Help</Link>
             </li>
           </ul>
         </li>

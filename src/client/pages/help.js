@@ -1,4 +1,4 @@
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Main from "../layout/main.js";
 import React from "react";
 import User from "../models/user.js";
@@ -66,7 +66,7 @@ class Help extends React.Component {
       ))}</form>
 
       <br/>
-      <Link text="Insider Secrets / Advanced Help" href="secrets"/>
+      <Link to="secrets">Insider Secrets / Advanced Help</Link>
     </>
   };
 

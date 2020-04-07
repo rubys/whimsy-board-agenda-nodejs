@@ -1,4 +1,4 @@
-import Link from "./link.js";
+import { Link } from "react-router-dom";
 import React from "react";
 
 class Info extends React.Component {
@@ -23,7 +23,7 @@ class Info extends React.Component {
 
       {this.props.item.shepherd ? <>
         <dt>Shepherd</dt>
-        <dd>{this.props.item.shepherd ? <Link text={this.props.item.shepherd} href={`shepherd/${this.props.item.shepherd.split(" ")[0]}`}/> : null}</dd>
+        <dd>{this.props.item.shepherd ? <Link to={`shepherd/${this.props.item.shepherd.split(" ")[0]}`}>{this.props.item.shepherd}</Link> : null}</dd>
       </> : null}
 
       {this.props.item.flagged_by && this.props.item.flagged_by.length !== 0 ? <>

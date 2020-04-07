@@ -1,6 +1,6 @@
 import AdditionalInfo from "../elements/additional-info.js";
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Minutes from "../models/minutes.js";
 import Pending from "../models/pending.js";
 import React from "react";
@@ -45,7 +45,7 @@ class Flagged extends React.Component {
 
         if (flagged) return <>
           <h3 className={item.color}>
-            <Link text={item.title} href={`flagged/${item.href}`} className={first ? "default" : null}/>
+            <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
             {flagged_by = Server.directors[item.flagged_by] || item.flagged_by}

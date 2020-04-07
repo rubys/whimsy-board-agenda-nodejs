@@ -1,4 +1,4 @@
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import React from "react";
 
 //
@@ -24,7 +24,7 @@ class CacheStatus extends React.Component {
           if (basename === "bootstrap.html") basename = item.split("/")[item.split("/").length - 2] + ".html";
 
           return <li>
-            <Link text={item} href={`cache/${basename}`} />
+            <Link to={`cache/${basename}`}>{item}</Link>
           </li>
         })}
       </ul>}

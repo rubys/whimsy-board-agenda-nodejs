@@ -1,5 +1,5 @@
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import MarkSeen from "../buttons/markseen.js";
 import Pending from "../models/pending.js";
 import React from "react";
@@ -42,7 +42,7 @@ class Comments extends React.Component {
           found = true;
 
           return <section>
-            <Link text={item.title} href={item.href} className={`h4 ${item.color}`} />
+            <Link to={item.href} className={`h4 ${item.color}`}>{item.title}</Link>
             {visible.map(comment => <pre className="comment">{comment}</pre>)}
           </section>
         } else {

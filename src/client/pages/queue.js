@@ -1,6 +1,6 @@
 import Agenda from "../models/agenda.js";
 import Commit from "../buttons/commit.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Offline from "../buttons/offline.js";
 import Pending from "../models/pending.js";
 import React from "react";
@@ -27,7 +27,7 @@ class Queue extends React.Component {
         <p className="col-xs-12">
           {this.pending.approvals.forEach((item, index) => <>
             {index > 0 ? <span>, </span> : null}
-            <Link text={item.title} href={`queue/${item.href}`} />
+            <Link to={`queue/${item.href}`}>{item.title}</Link>
           </>)}
 
           {this.pending.approvals.length === 0 ? <em>None.</em> : null}
@@ -44,7 +44,7 @@ class Queue extends React.Component {
 
             <p className="col-xs-12">{list.forEach((item, index) => <>
                 {index > 0 ? <span>, </span> : null}
-                <Link text={item.title} href={item.href} />
+                <Link to={item.href}>{item.title}</Link>
               </>)}</p>
             </>
           }
@@ -59,7 +59,7 @@ class Queue extends React.Component {
           {this.pending.comments.map(item => <>
 
             <dt>
-              <Link text={item.title} href={item.href} />
+              <Link to={item.href}>{item.title}</Link>
             </dt>
 
             <dd>{item.pending.split("\n\n").map(paragraph => <p>{paragraph}</p>)}</dd>
@@ -95,7 +95,7 @@ class Queue extends React.Component {
 
         <p className="col-xs-12">{this.pending.ready.forEach((item, index) => <>
           {index > 0 ? <span>, </span> : null}
-          <Link text={item.title} href={`queue/${item.href}`} className={index === 0 ? "default" : null} />
+          <Link to={`queue/${item.href}`} className={index === 0 ? "default" : null}>{item.title}</Link>
         </>)}</p>
       </> : null}
     </div>

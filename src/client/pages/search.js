@@ -1,5 +1,5 @@
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import React from "react";
 import { htmlEscape } from "../utils.js";
 
@@ -32,7 +32,7 @@ class Search extends React.Component {
 
           return <section>
             <h4>
-              <Link text={item.title} href={item.href}/>
+              <Link to={item.href}>{item.title}</Link>
             </h4>
 
             {item.text.split(/\n\s*\n/).map((paragraph) => {

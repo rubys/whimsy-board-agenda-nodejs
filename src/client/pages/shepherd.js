@@ -2,7 +2,7 @@ import ActionItems from "../pages/action-items.js";
 import AdditionalInfo from "../elements/additional-info.js";
 import Agenda from "../models/agenda.js";
 import Email from "../buttons/email.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import Pending from "../models/pending.js";
 import React from "react";
 import User from "../models/user.js";
@@ -40,7 +40,7 @@ class Shepherd extends React.Component {
         let mine = shepherd === User.firstname ? "btn-primary" : "btn-link";
 
         if (item.shepherd && item.shepherd.toLowerCase().startsWith(shepherd)) return <>
-          <Link text={item.title} href={`shepherd/queue/${item.href}`} className={`h3 ${item.color}`} />;
+          <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.color}`}>{item.title}</Link>;
           <AdditionalInfo item={item} prefix={true} />;
 
           {item.missing || item.comments.length !== 0 ?

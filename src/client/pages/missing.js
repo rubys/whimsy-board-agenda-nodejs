@@ -1,6 +1,6 @@
 import AdditionalInfo from "../elements/additional-info.js";
 import Agenda from "../models/agenda.js";
-import Link from "../elements/link.js";
+import { Link } from "react-router-dom";
 import React from "react";
 import { Server } from "../utils.js";
 
@@ -30,7 +30,7 @@ class Missing extends React.Component {
 
           <h3 className={item.color}>
             {/^[A-Z]+/m.test(item.attach) ? <input className="inactive" type="checkbox" name="selected" value={item.title} checked={this.state.checked[item.title]} /> : null}
-            <Link text={item.title} href={`flagged/${item.href}`} className={first ? "default" : null} />
+            <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
 
@@ -50,7 +50,7 @@ class Missing extends React.Component {
         item.missing && item.owner && !item.nonresponsive ? <>
           <h3 className={item.color}>
             {/^[A-Z]+/m.test(item.attach) ? <input className="active" type="checkbox" name="selected" value={item.title} checked={this.state.checked[item.title]} /> : null}
-            <Link text={item.title} href={`flagged/${item.href}`} className={first ? "default" : null} />
+            <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
 
