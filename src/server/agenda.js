@@ -49,7 +49,7 @@ export async function parse(agenda, request) {
     // unindent text or report
     let text = section.text || section.report;
     if (text) {  
-      let unindent = Math.min(...text.match(/^ *\S/gm).map(item => (item.length))) || 1;
+      let unindent = Math.min(...Array.from(text.matchAll(/^ *\S/gm)).map(item => (item[0].length))) || 1;
       text = text.replace(new RegExp(`^ {${unindent - 1}}`, "gm"), "").trim();
       section.text ? section.text = text : section.report = text;
     };
