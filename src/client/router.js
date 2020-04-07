@@ -241,7 +241,7 @@ class Router extends React.Component {
             }
           };
 
-          return Main(item)
+          return main(item)
         }}
       </Route>
 
@@ -256,7 +256,7 @@ class Router extends React.Component {
           // Progressive Web Application 'Add to Home Screen' support
           if (PageCache.installPrompt) item.buttons = [{ button: Install }];
 
-          return Main(item)
+          return main(item)
         }}
       </Route>
 
