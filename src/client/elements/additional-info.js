@@ -1,6 +1,6 @@
 // import ActionItems from "../pages/action-items.js"; TODO
 import Agenda from "../models/agenda.js";
-import HistoricalComments from "../models/comments.js";
+import JSONStorage from "../models/jsonstorage.js";
 import { Link } from "react-router-dom";
 import Main from "../layout/main.js";
 import Minutes from "../models/minutes.js";
@@ -8,9 +8,13 @@ import Posted from "../models/posted.js";
 import React from "react";
 import Reporter from "../models/reporter.js";
 import Responses from "../models/responses.js";
+import Store from '../store.js';
 import Text from "./text.js";
 import User from "../models/user.js";
 import { hotlink, Flow, splitComments } from "../utils.js";
+import * as Actions from "../../actions.js";
+import { connect } from 'react-redux';
+import { Server } from '../utils.js'
 
 //
 // Display information associated with an agenda item:
@@ -32,7 +36,6 @@ class AdditionalInfo extends React.Component {
   render() {
     let minutes = Minutes.get(this.props.item.title);
     let draft = Reporter.find(this.props.item);
-    let history = HistoricalComments.find(this.props.item.title);
     let posted;
 
     return <>
@@ -83,11 +86,11 @@ class AdditionalInfo extends React.Component {
         ))}</ul>
       </> : null}
 
-      {this.props.item.comments.length !== 0 || (history && !this.state.prefix) ? <>
+      {this.props.item.comments.length !== 0 || (this.props.historicalComments.length > 0 && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
         {this.props.item.comments.map(comment => (
-          <pre className="comment" key="comment">
+          <pre className="comment" key={comment}>
             <Text raw={comment} filters={[hotlink]} />
           </pre>
         ))}
@@ -104,14 +107,12 @@ class AdditionalInfo extends React.Component {
           )}</pre>
         </div> : null}
 
-        {history && !this.state.prefix ? Object.entries(history).map(([date, comments]) => <>
+        {this.props.historicalComments.map(([date, comments]) => <React.fragment key={date}>
           {Agenda.file === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>
 
-              <a href={HistoricalComments.link(date, this.props.item.title)}>{
-                date.replace(/_/g, "-")
-              }</a>
+              <a href={this.historicalLink(date)}>{date.replace(/_/g, "-")}</a>
 
               {(() => {
                 // link to mail archive for feedback thread
@@ -147,12 +148,12 @@ class AdditionalInfo extends React.Component {
             </h5>;
 
             {splitComments(comments).map(comment => (
-              <pre className="comment">
+              <pre className="comment" key={comment}>
                 <Text raw={comment} filters={[hotlink]} />
               </pre>
             ))}
           </>}
-        </>) : null}
+        </React.fragment>)}
       </> : this.props.item.pending ? <div className="clickable commented comment" onClick={() => (
         Main.navigate("queue")
       )}>
@@ -168,6 +169,17 @@ class AdditionalInfo extends React.Component {
 
   };
 
+  // find link for historical comments based on date and report title
+  historicalLink = (date) => {
+    let title = this.props.item.title;
+
+    if (Server.agendas.includes(`board_agenda_${date}.txt`)) {
+      return `../${date.replace(/_/g, "-")}/${title}`
+    } else {
+      return `../../minutes/${title}.html#minutes_${date}`
+    }
+  }
+
   // determine prefix (if any)
   static getDerivedStateFromProps(props) {
     if (props.prefix === true) {
@@ -181,4 +193,19 @@ class AdditionalInfo extends React.Component {
 
 };
 
-export default AdditionalInfo
+function mapStateToProps(state, props) {
+  let historicalComments = [];
+
+   if ("historicalComments" in state) {
+     historicalComments = Object.entries(state.historicalComments[props.item.title] || {})
+   } else {
+    Store.dispatch(Actions.historicalComments({}))
+    JSONStorage.fetch("historical-comments", (comments) => {
+      Store.dispatch(Actions.historicalComments(comments || {}))
+    })
+   };
+
+  return { historicalComments }
+};
+
+export default connect(mapStateToProps)(AdditionalInfo)

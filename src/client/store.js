@@ -17,6 +17,9 @@ function reduce(state, action) {
     case Actions.POST_AGENDA:
       return { ...state, agenda: action.index };
 
+    case Actions.HISTORICAL_COMMENTS:
+      return { ...state, historicalComments: action.comments };
+
     default:
       return state;
   }
