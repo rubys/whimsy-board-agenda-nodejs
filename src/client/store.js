@@ -21,6 +21,9 @@ function reduce(state, action) {
     case Actions.HISTORICAL_COMMENTS:
       return { ...state, historicalComments: action.comments };
 
+    case Actions.RESPONSES:
+      return { ...state, responses: action.messages }
+
     default:
       return state;
   }

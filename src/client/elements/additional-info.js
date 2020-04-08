@@ -6,7 +6,6 @@ import Minutes from "../models/minutes.js";
 import Posted from "../models/posted.js";
 import React from "react";
 import Reporter from "../models/reporter.js";
-import Responses from "../models/responses.js";
 import { lookup } from '../store.js';
 import Text from "./text.js";
 import User from "../models/user.js";
@@ -117,7 +116,7 @@ class AdditionalInfo extends React.Component {
                 if (date > "2016_04") { // when feedback emails were first started
                   let dfr = date.replace(/_/g, "-");
                   let dto = new Date(Date.now()).toISOString().slice(0, 10);
-                  let count = Responses.find(dfr, this.props.item.title);
+                  let count = this.props.responses[dfr];
                   let link;
 
                   if (count) {
@@ -131,8 +130,10 @@ class AdditionalInfo extends React.Component {
                     } else {
                       link = `(${count} responses)`
                     }
-                  } else if (Responses.loading) {
+                  } else if (Object.keys(this.props.responses).length === 0) {
                     link = "(loading)"
+                  } else {
+                    link = "(no responses)"
                   };
 
                   return <>
@@ -192,12 +193,23 @@ class AdditionalInfo extends React.Component {
 };
 
 function mapStateToProps(state, props) {
+  let title = props.item.title;
+
   let historicalComments = lookup({
     path: 'historical-comments',
     initialValue: {}
   });
 
-  return { historicalComments: Object.entries(historicalComments[props.item.title] || {}) }
+  let responses = lookup({
+    path: 'responses',
+    initialValue: {}
+  })
+
+  return { 
+    historicalComments: Object.entries(historicalComments[title] || {}),
+    responses: Object.fromEntries(Object.entries(responses)
+      .map(([date, list]) => [date, list[title]]))
+  }
 };
 
 export default connect(mapStateToProps)(AdditionalInfo)
