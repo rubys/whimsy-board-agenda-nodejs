@@ -1,5 +1,6 @@
 import { createStore } from 'redux';
 import * as Actions from '../actions.js';
+import JSONStorage from "./models/jsonstorage.js"
 
 // temporary staging grounds for now, will migrate into the redux store
 export let file = '';
@@ -28,5 +29,29 @@ function reduce(state, action) {
 const store = createStore(reduce, {
   clock_counter: 0
 });
+
+// load data from the server, caching it using JSONStorage, and save
+// the result in the Redux store.
+//
+// Note that this implies that the store may be dispatched twice:
+// once with slightly stale data from the client and possibly once
+// again with fresh data from the server.
+export function lookup({ name, path, action, initialValue }) {
+  let state = store.getState();
+
+  if (!name) name=path.replace(/-\w/g, (data => data[1].toUpperCase()));
+  if (!action) action = Actions[name];
+
+  if (name in state) {
+    return state[name];
+  } else {
+    store.dispatch(action(initialValue));
+    JSONStorage.fetch(path, value => {
+      if (value) store.dispatch(action(value));
+    })
+  };
+
+  return initialValue
+}
 
 export default store;

@@ -1,6 +1,5 @@
 // import ActionItems from "../pages/action-items.js"; TODO
 import Agenda from "../models/agenda.js";
-import JSONStorage from "../models/jsonstorage.js";
 import { Link } from "react-router-dom";
 import Main from "../layout/main.js";
 import Minutes from "../models/minutes.js";
@@ -8,11 +7,10 @@ import Posted from "../models/posted.js";
 import React from "react";
 import Reporter from "../models/reporter.js";
 import Responses from "../models/responses.js";
-import Store from '../store.js';
+import { lookup } from '../store.js';
 import Text from "./text.js";
 import User from "../models/user.js";
 import { hotlink, Flow, splitComments } from "../utils.js";
-import * as Actions from "../../actions.js";
 import { connect } from 'react-redux';
 import { Server } from '../utils.js'
 
@@ -107,7 +105,7 @@ class AdditionalInfo extends React.Component {
           )}</pre>
         </div> : null}
 
-        {this.props.historicalComments.map(([date, comments]) => <React.fragment key={date}>
+        {this.props.historicalComments.map(([date, comments]) => <React.Fragment key={date}>
           {Agenda.file === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>
@@ -143,9 +141,9 @@ class AdditionalInfo extends React.Component {
                   </>
                 } else {
                   return null
-                };
+                }
               })()}
-            </h5>;
+            </h5>
 
             {splitComments(comments).map(comment => (
               <pre className="comment" key={comment}>
@@ -153,7 +151,7 @@ class AdditionalInfo extends React.Component {
               </pre>
             ))}
           </>}
-        </React.fragment>)}
+        </React.Fragment>)}
       </> : this.props.item.pending ? <div className="clickable commented comment" onClick={() => (
         Main.navigate("queue")
       )}>
@@ -194,18 +192,12 @@ class AdditionalInfo extends React.Component {
 };
 
 function mapStateToProps(state, props) {
-  let historicalComments = [];
+  let historicalComments = lookup({
+    path: 'historical-comments',
+    initialValue: {}
+  });
 
-   if ("historicalComments" in state) {
-     historicalComments = Object.entries(state.historicalComments[props.item.title] || {})
-   } else {
-    Store.dispatch(Actions.historicalComments({}))
-    JSONStorage.fetch("historical-comments", (comments) => {
-      Store.dispatch(Actions.historicalComments(comments || {}))
-    })
-   };
-
-  return { historicalComments }
+  return { historicalComments: Object.entries(historicalComments[props.item.title] || {}) }
 };
 
 export default connect(mapStateToProps)(AdditionalInfo)
