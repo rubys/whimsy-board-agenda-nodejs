@@ -7,8 +7,16 @@
 
 import credentials from './credentials.js';
 import https from 'https';
+import { promises as fs } from 'fs';
+import { cachePath } from './config.js';
 
 export default async function historicalComments(request) {
+
+  let cacheFile = `${cachePath}/historical-comments.json`;
+
+  let cache = await fs.readFile(cacheFile, 'utf8').catch(() => null);
+  if (cache) return cache;
+
   let { username, password } = credentials(request);
 
   return new Promise((resolve, reject) => {
@@ -31,6 +39,9 @@ export default async function historicalComments(request) {
 
       res.on('end', () => {
         resolve(body);
+        fs.mkdir(cachePath, { recursive: true }).then(() => {
+          fs.writeFile(cacheFile, body)
+        })
       });
 
       res.on('error', (error) => {
