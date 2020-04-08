@@ -33,7 +33,7 @@ class AdditionalInfo extends React.Component {
     let minutes = Minutes.get(this.props.item.title);
     let draft = Reporter.find(this.props.item);
     let history = HistoricalComments.find(this.props.item.title);
-    let posted, link, dfr, dto, count;
+    let posted;
 
     return <>
       {this.props.item.rejected ? <p className="rejected">Report was not accepted</p> : null}
@@ -70,7 +70,7 @@ class AdditionalInfo extends React.Component {
           <Link to="Action-Items">Action Items</Link>
         </h4>
 
-            {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} /> TODO */}
+        {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} /> TODO */}
       </> : null}
 
       {this.props.item.special_orders.length !== 0 ? <>
@@ -104,33 +104,48 @@ class AdditionalInfo extends React.Component {
           )}</pre>
         </div> : null}
 
-        {history && !this.state.prefix ? Object.entries(history).map((date, comments) => <>
+        {history && !this.state.prefix ? Object.entries(history).map(([date, comments]) => <>
           {Agenda.file === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>
 
-              <a href={HistoricalComments.link(date, this.props.item.title)}>{date.replace(
-                /_/g,
-                "-"
-              )}</a>
+              <a href={HistoricalComments.link(date, this.props.item.title)}>{
+                date.replace(/_/g, "-")
+              }</a>
 
-              {link = null}
+              {(() => {
+                let link;
 
-              {date > "2016_04" ? <>
-                {dfr = date.replace(/_/g, "-")}
-                {dto = new Date(Date.now()).toISOString().slice(0, 10)}
-                {count = Responses.find(dfr, this.props.item.title)}
+                // link to mail archive for feedback thread
+                if (date > "2016_04") { // when feedback emails were first started
+                  let dfr = date.replace(/_/g, "-");
+                  let dto = new Date(Date.now()).toISOString().slice(0, 10);
+                  let count = Responses.find(dfr, this.props.item.title);
+                  let link;
 
-                {count ? <>
-                  {date < "2017_11" ? --count : null}
-                  {count === 0 ? link = "(no responses)" : count === 1 ? link = "(1 response)" : link = `(${count} responses)`}
-                </> : Responses.loading ? link = "(loading)" : link = "(no responses)"}
-              </> : null}
+                  if (count) {
+                    // when board was copied on the initial email
+                    if (date < "2017_11") --count;
 
-              {link ? <>
-                <span>: </span>
-                <a href={`https://lists.apache.org/list.html?board@apache.org&d=dfr=${dfr}|dto=${dto}&header_subject='Board%20feedback%20on%20${dfr}%20${this.props.item.title}%20report'`}>{link}</a>
-              </> : null}
+                    if (count === 0) {
+                      link = "(no responses)"
+                    } else if (count === 1) {
+                      link = "(1 response)"
+                    } else {
+                      link = `(${count} responses)`
+                    }
+                  } else if (Responses.loading) {
+                    link = "(loading)"
+                  };
+
+                  return <>
+                    <span>: </span>
+                    <a href={`https://lists.apache.org/list.html?board@apache.org&d=dfr=${dfr}|dto=${dto}&header_subject='Board%20feedback%20on%20${dfr}%20${this.props.item.title}%20report'`}>{link}</a>
+                  </>
+                } else {
+                  return null
+                };
+              })()}
             </h5>;
 
             {splitComments(comments).map(comment => (

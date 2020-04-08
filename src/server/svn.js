@@ -1,14 +1,13 @@
 import credentials from './credentials.js';
-import path from 'path';
 import shellEscape from "shell-escape";
 import { promises as fs } from 'fs';
 import { exec } from 'child_process';
 import { Mutex } from 'async-mutex';
+import { workPath } from './config.js';
 
 const mutex = new Mutex();
 
-const root = path.resolve(__filename, '../../..');
-const svn = `${root}/work/svn`;
+const svn = `${workPath}/svn`;
 
 const boardDir = `${svn}/foundation_board`;
 const boardUrl = 'https://svn.apache.org/repos/private/foundation/board';

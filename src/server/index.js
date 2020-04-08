@@ -1,5 +1,6 @@
 import express from 'express';
 import compression from 'compression';
+import historicalComments from "./historical-comments.js";
 import { port, buildPath } from './config.js';
 import { agendas, read } from './svn.js';
 import { parse } from './agenda.js';
@@ -31,6 +32,11 @@ app.use(basicAuth({
 
 app.get('/api/latest.json', async (request, response) => {
   response.json(await parse(await read((await agendas(request)).pop())));
+});
+
+app.get('/api/historical-comments', async (request, response) => {
+  response.setHeader('content-type', 'application/json');
+  response.send(await historicalComments(request))  
 });
 
 app.listen(port, () => {
