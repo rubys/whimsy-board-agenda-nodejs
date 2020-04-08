@@ -87,7 +87,7 @@ class AdditionalInfo extends React.Component {
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
         {this.props.item.comments.map(comment => (
-          <pre className="comment">
+          <pre className="comment" key="comment">
             <Text raw={comment} filters={[hotlink]} />
           </pre>
         ))}
@@ -114,8 +114,6 @@ class AdditionalInfo extends React.Component {
               }</a>
 
               {(() => {
-                let link;
-
                 // link to mail archive for feedback thread
                 if (date > "2016_04") { // when feedback emails were first started
                   let dfr = date.replace(/_/g, "-");

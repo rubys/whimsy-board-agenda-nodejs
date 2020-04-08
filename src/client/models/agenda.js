@@ -378,8 +378,9 @@ class Agenda {
   get special_orders() {
     let items = [];
 
-    if (/^[A-Z]+$/m.test(this._attach)) {
+    if (/^[A-Z]+$/m.test(this._attach) && this._roster) {
       for (let item of Agenda.index) {
+        console.log(item.roster)
         if (/^7\w/m.test(item.attach) && item.roster === this._roster) {
           items.push(item)
         }
