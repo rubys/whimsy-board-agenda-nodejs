@@ -65,13 +65,15 @@ class AdditionalInfo extends React.Component {
         <a href={`https://reporter.apache.org/wizard?${draft.project}`}>reporter.apache.org</a>
       </span> : null}
 
+      {/* TODO
       {this.props.item.title !== "Action Items" && this.props.item.actions.length !== 0 ? <>
         <h4 id={`${this.state.prefix}actions`}>
           <Link to="Action-Items">Action Items</Link>
         </h4>
 
-        {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} /> TODO */}
+        {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} />
       </> : null}
+      */}
 
       {this.props.item.special_orders.length !== 0 ? <>
         <h4 id={`${this.state.prefix}orders`}>Special Orders</h4>
@@ -205,7 +207,7 @@ function mapStateToProps(state, props) {
     initialValue: {}
   })
 
-  return { 
+  return {
     historicalComments: Object.entries(historicalComments[title] || {}),
     responses: Object.fromEntries(Object.entries(responses)
       .map(([date, list]) => [date, list[title]]))
