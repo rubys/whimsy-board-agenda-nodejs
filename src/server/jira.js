@@ -5,7 +5,7 @@ import https from 'https';
 import { promises as fs } from 'fs';
 import { cachePath } from './config.js';
 
-export default async function devproxy() {
+export default async function jira() {
 
   let cacheFile = `${cachePath}/jira.json`;
 
