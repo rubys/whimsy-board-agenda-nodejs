@@ -2,6 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import historicalComments from "./sources/historical-comments.js";
 import jira from "./sources/jira.js";
+import postedReports from "./sources/posted-reports.js";
 import reporter from "./sources/reporter.js";
 import responses from "./sources/responses.js";
 import { port, buildPath } from './config.js';
@@ -44,6 +45,11 @@ app.get('/api/jira', async (request, response) => {
 app.get('/api/historical-comments', async (request, response) => {
   response.setHeader('content-type', 'application/json');
   response.send(await historicalComments(request))  
+});
+
+app.get('/api/posted-reports', async (request, response) => {
+  response.setHeader('content-type', 'application/json');
+  response.send(await postedReports(request))  
 });
 
 app.get('/api/reporter', async (request, response) => {
