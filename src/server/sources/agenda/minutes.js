@@ -1,4 +1,4 @@
-import * as svn from '../svn.js'
+import * as svn from '../../svn.js'
 
 const OFFICER_SEPARATOR = /^\s*4. (Executive )?Officer Reports/m;
 

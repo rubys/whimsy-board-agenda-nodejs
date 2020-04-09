@@ -3,7 +3,7 @@
 // * Roll Call
 
 import moment from 'moment-timezone';
-import * as ldap from '../ldap.js';
+import * as ldap from '../../ldap.js';
 
 export default async function (agenda, { quick = false } = {}) {
   let pattern = /^\n\x20(?<attach>[12]\.)\s(?<title>.*?)\n\n+(?<text>.*?)(?=\n\s[23]\.)/msg;

@@ -1,12 +1,12 @@
 import express from 'express';
 import compression from 'compression';
-import historicalComments from "./historical-comments.js";
-import jira from "./jira.js";
-import reporter from "./reporter.js";
-import responses from "./responses.js";
+import historicalComments from "./sources/historical-comments.js";
+import jira from "./sources/jira.js";
+import reporter from "./sources/reporter.js";
+import responses from "./sources/responses.js";
 import { port, buildPath } from './config.js';
 import { agendas, read } from './svn.js';
-import { parse } from './agenda.js';
+import { parse } from './sources/agenda.js';
 import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
 

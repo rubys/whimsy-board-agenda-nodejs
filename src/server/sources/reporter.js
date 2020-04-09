@@ -3,11 +3,11 @@
 // TODOs: a proper project short name to title, and filtering out of abandoned
 // drafts from prior reporting periods
 
-import credentials from './credentials.js';
+import credentials from '../credentials.js';
 import https from 'https';
 import { promises as fs } from 'fs';
-import { cachePath } from './config.js';
-import { agendas } from "./svn.js"
+import { cachePath } from '../config.js';
+import { agendas } from "../svn.js"
 
 export default async function reporter(request) {
 

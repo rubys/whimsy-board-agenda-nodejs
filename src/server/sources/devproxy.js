@@ -1,10 +1,10 @@
 // proxy (and cache) requests to the live whimsy server for
 // development purposes.
 
-import credentials from './credentials.js';
+import credentials from '../credentials.js';
 import https from 'https';
 import { promises as fs } from 'fs';
-import { cachePath } from './config.js';
+import { cachePath } from '../config.js';
 
 export default async function devproxy(request, path) {
 
