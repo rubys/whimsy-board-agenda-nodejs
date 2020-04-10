@@ -35,6 +35,11 @@ class AdditionalInfo extends React.Component {
     let draft = Reporter.find(this.props.item);
     let posted;
 
+    let title = this.props.item.title;
+    let historicalComments = Object.entries(this.props.historicalComments[title] || {});
+    let responses = Object.fromEntries(Object.entries(this.props.responses)
+      .map(([date, list]) => [date, list[title]]))
+
     return <>
       {this.props.item.rejected ? <p className="rejected">Report was not accepted</p> : null}
       {this.props.item.notes ? <p className={!/^new, monthly through/m.test(this.props.item.notes) ? "notes" : null}>{this.props.item.notes}</p> : null}
@@ -85,7 +90,7 @@ class AdditionalInfo extends React.Component {
         ))}</ul>
       </> : null}
 
-      {this.props.item.comments.length !== 0 || (this.props.historicalComments.length > 0 && !this.state.prefix) ? <>
+      {this.props.item.comments.length !== 0 || (historicalComments.length > 0 && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
         {this.props.item.comments.map(comment => (
@@ -106,7 +111,7 @@ class AdditionalInfo extends React.Component {
           )}</pre>
         </div> : null}
 
-        {this.props.historicalComments.map(([date, comments]) => <React.Fragment key={date}>
+        {historicalComments.map(([date, comments]) => <React.Fragment key={date}>
           {Agenda.file === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>
@@ -118,7 +123,7 @@ class AdditionalInfo extends React.Component {
                 if (date > "2016_04") { // when feedback emails were first started
                   let dfr = date.replace(/_/g, "-");
                   let dto = new Date(Date.now()).toISOString().slice(0, 10);
-                  let count = this.props.responses[dfr];
+                  let count = responses[dfr];
                   let link;
 
                   if (count) {
@@ -132,7 +137,7 @@ class AdditionalInfo extends React.Component {
                     } else {
                       link = `(${count} responses)`
                     }
-                  } else if (Object.keys(this.props.responses).length === 0) {
+                  } else if (Object.keys(responses).length === 0) {
                     link = "(loading)"
                   } else {
                     link = "(no responses)"
@@ -194,23 +199,10 @@ class AdditionalInfo extends React.Component {
 
 };
 
-function mapStateToProps(state, props) {
-  let title = props.item.title;
-
-  let historicalComments = lookup({
-    path: 'historical-comments',
-    initialValue: {}
-  });
-
-  let responses = lookup({
-    path: 'responses',
-    initialValue: {}
-  })
-
+function mapStateToProps() {
   return {
-    historicalComments: Object.entries(historicalComments[title] || {}),
-    responses: Object.fromEntries(Object.entries(responses)
-      .map(([date, list]) => [date, list[title]]))
+    historicalComments: lookup({ path: 'historical-comments', initialValue: {} }),
+    responses: lookup({ path: 'responses', initialValue: {}})
   }
 };
 
