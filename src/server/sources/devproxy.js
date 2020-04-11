@@ -3,15 +3,14 @@
 
 import credentials from '../credentials.js';
 import https from 'https';
-import { promises as fs } from 'fs';
-import { cachePath } from '../config.js';
+import * as cache from '../cache.js';
 
 export default async function devproxy(request, path) {
 
-  let cacheFile = `${cachePath}/${path}.json`;
+  let cacheFile = `${path}.json`;
 
-  let cache = await fs.readFile(cacheFile, 'utf8').catch(() => null);
-  if (cache) return cache;
+  let data = await cache.read(cacheFile, 5 * 60 * 1000);
+  if (data) return data;
 
   let { username, password } = credentials(request);
 
@@ -35,9 +34,7 @@ export default async function devproxy(request, path) {
 
       res.on('end', () => {
         resolve(body);
-        fs.mkdir(cachePath, { recursive: true }).then(() => {
-          fs.writeFile(cacheFile, body)
-        })
+        cache.write(cacheFile, body)
       });
 
       res.on('error', (error) => {

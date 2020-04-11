@@ -11,10 +11,10 @@ import { agendas } from "../svn.js"
 
 export default async function reporter(request) {
 
-  let cacheFile = `${cachePath}/reporter.json`;
+  let cacheFile = 'reporter.json';
 
-  let cache = await fs.readFile(cacheFile, 'utf8').catch(() => null);
-  if (cache) return JSON.parse(cache);
+  let data = await cache.read(cacheFile, 5 * 60 * 1000);
+  if (data) return JSON.parse(data);
 
   let { username, password } = credentials(request);
 
@@ -55,9 +55,7 @@ export default async function reporter(request) {
 
         resolve(result);
 
-        fs.mkdir(cachePath, { recursive: true }).then(() => {
-          fs.writeFile(cacheFile, JSON.stringify(result))
-        })
+        cache.write(cacheFile, JSON.stringify(result))
       });
 
       res.on('error', (error) => {

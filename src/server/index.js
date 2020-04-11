@@ -11,6 +11,7 @@ import { agendas, read } from './svn.js';
 import { parse } from './sources/agenda.js';
 import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
+import { digest } from './cache.js';
 
 const app = express();
 app.use(compression());
@@ -61,6 +62,11 @@ app.get('/api/responses', async (request, response) => {
   response.setHeader('content-type', 'application/json');
   response.send(await responses(request))  
 });
+
+app.get('/api/digest', async (request, response) => {
+  console.log(digest);
+  response.json(await digest());
+})
 
 websocket.start(app);
 

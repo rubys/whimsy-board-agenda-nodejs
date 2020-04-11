@@ -2,15 +2,14 @@
 // development purposes.
 
 import https from 'https';
-import { promises as fs } from 'fs';
-import { cachePath } from '../config.js';
+import * as cache from '../cache.js';
 
 export default async function jira() {
 
-  let cacheFile = `${cachePath}/jira.json`;
+  let cacheFile = 'jira.json';
 
-  let cache = await fs.readFile(cacheFile, 'utf8').catch(() => null);
-  if (cache) return JSON.parse(cache);
+  let data = await cache.read(cacheFile, 5 * 60 * 1000);
+  if (data) return JSON.parse(data);
 
   return new Promise((resolve, reject) => {
     let options = {
@@ -29,9 +28,7 @@ export default async function jira() {
       res.on('end', () => {
         let projects = JSON.parse(body).map(project => project.key);
         resolve(projects);
-        fs.mkdir(cachePath, { recursive: true }).then(() => {
-          fs.writeFile(cacheFile, JSON.stringify(projects))
-        })
+        cache.write(cacheFile, JSON.stringify(projects))
       });
 
       res.on('error', (error) => {
