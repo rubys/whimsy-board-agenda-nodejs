@@ -21,12 +21,12 @@ export default async function (agenda, { quick = false } = {}) {
     })
   } else {
     // Separate items for each individual Discussion Item
-    let pattern = /\n+(?<indent>\s{3,5})(?<section>[0-9A-Z])\.\s(?<title>[^]*?)\n(?<text>[^]*?)(?=\n\s{3,5}[0-9A-Z]\.\s|$)/sg;
+    let pattern = /\n+(?<indent>\s{3,5})(?<attach>[0-9A-Z])\.\s(?<title>[^]*?)\n(?<text>[^]*?)(?=\n\s{3,5}[0-9A-Z]\.\s|$)/sg;
 
     sections = [...discussion.matchAll(pattern)].map(match => match.groups);
 
     sections.forEach(attrs => {
-      attrs.section = "8" + attrs.section
+      attrs.attach = "8" + attrs.attach
     });
   }
 
