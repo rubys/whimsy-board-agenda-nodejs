@@ -109,6 +109,8 @@ class Events {
 
       Events.#$ondeck = localStorage.removeItem(`${Events.#$prefix}-ondeck`);
 
+      this.master();
+      /* TODO: remove?
       if (Server.session) {
         this.master()
       } else {
@@ -122,6 +124,7 @@ class Events {
           })
         ))
       }
+      */
     } else if (Events.#$ondeck === null && Events.#$master !== Events.#$timestamp && !localStorage.getItem(`${Events.#$prefix}-ondeck`)) {
       localStorage.setItem(
         `${Events.#$prefix}-ondeck`,
@@ -173,7 +176,7 @@ class Events {
       Events.#$socket = new WebSocket(Server.websocket);
 
       Events.#$socket.onopen = (event) => {
-        Events.#$socket.send(`session: ${Server.session}\n\n`);
+        // Events.#$socket.send(`session: ${Server.session}\n\n`);
         this.log("WebSocket connection established");
 
         if (check_for_updates) {

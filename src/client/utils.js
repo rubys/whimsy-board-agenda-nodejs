@@ -2,7 +2,7 @@ import Store from "./store.js";
 import * as Actions from "../actions.js"
 
 // A convenient place to stash server data
-export const Server = {pending: {}, drafts: [], agendas: []};
+export const Server = {pending: {}, drafts: [], agendas: [], websocket: 'wss://localhost:3001/websocket/'};
 
 //
 // function to assist with production of HTML and regular expressions

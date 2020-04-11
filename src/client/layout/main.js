@@ -1,5 +1,5 @@
 import Agenda from "../models/agenda.js";
-// import Events from "../models/events.js"; TODO
+import Events from "../models/events.js";
 import Footer from "./footer.js";
 import Header from "./header.js";
 import Keyboard from "../keyboard.js";
@@ -181,7 +181,7 @@ class Main extends React.Component {
     // if (PageCache.enabled) PageCache.register(); TODO!
 
     // start backchannel
-    // Events.monitor() TODO!
+    Events.monitor();
   };
 
   componentDidUpdate() {
