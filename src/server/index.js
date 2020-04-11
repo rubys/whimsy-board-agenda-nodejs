@@ -5,6 +5,7 @@ import jira from "./sources/jira.js";
 import postedReports from "./sources/posted-reports.js";
 import reporter from "./sources/reporter.js";
 import responses from "./sources/responses.js";
+import * as websocket from "./websocket.js";
 import { port, buildPath } from './config.js';
 import { agendas, read } from './svn.js';
 import { parse } from './sources/agenda.js';
@@ -60,6 +61,8 @@ app.get('/api/responses', async (request, response) => {
   response.setHeader('content-type', 'application/json');
   response.send(await responses(request))  
 });
+
+websocket.start(app);
 
 app.listen(port, () => {
   console.log(`Whimsy board agenda app listening on port ${port}`);

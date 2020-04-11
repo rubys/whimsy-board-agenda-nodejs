@@ -202,7 +202,7 @@ class AdditionalInfo extends React.Component {
 function mapStateToProps() {
   return {
     historicalComments: lookup({ path: 'historical-comments', initialValue: {} }),
-    responses: lookup({ path: 'responses', initialValue: {}})
+    responses: lookup({ path: 'responses', initialValue: {} })
   }
 };
 
