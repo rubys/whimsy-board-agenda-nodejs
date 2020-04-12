@@ -39,6 +39,14 @@ app.use(basicAuth({
   }
 }));
 
+app.use('/', (request, response, next) => {
+  if (!watcher.active) {
+    watcher.start(request);
+  };
+
+  next();
+});
+
 app.get('/api/session', async (request, response) => {
   response.json({ session: websocket.session });
 });
@@ -73,9 +81,6 @@ app.get('/api/responses', async (request, response) => {
 app.get('/api/digest', async (request, response) => {
   response.json(await digest());
 })
-
-
-watcher.start();
 
 app.listen(port, () => {
   console.log(`Whimsy board agenda app listening on port ${port}`);
