@@ -1,5 +1,6 @@
 import expressWs from 'express-ws';
 import md5 from 'md5';
+import { digest } from './cache.js';
 
 let wss = null;
 let authorized = new Set();
@@ -13,11 +14,12 @@ export function start(app) {
   wss = ws.getWss();
 
   app.ws('/websocket/', (ws, req) => {
-    ws.on('message', message => {
+    ws.on('message', async message => {
       if (message.startsWith('session: ')) {
         let clientToken = message.split(' ')[1].trim();
         if (clientToken === session) {
           authorized.add(ws);
+          ws.send(JSON.stringify({ type: 'digest', files: await digest()}));
         } else {
           ws.send(JSON.stringify({ type: "reload" }));
         }

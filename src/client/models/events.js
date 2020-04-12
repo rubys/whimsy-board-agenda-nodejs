@@ -132,7 +132,7 @@ class Events {
 
   // master logic
   static master() {
-    this.connectToServer(false);
+    this.connectToServer();
 
     // proof of life; maintain connection to the server
     setInterval(
@@ -143,20 +143,20 @@ class Events {
         );
 
         if (!Server.offline) {
-          this.connectToServer(true)
+          this.connectToServer()
         } else if (Events.#$socket) {
           Events.#$socket.close()
         }
       },
 
-      25000
+      (Server.env === 'development' ? 500 : 25000)
     );
 
     window.addEventListener("offlineStatus", (event) => {
       if (event.detail === true) {
         if (Events.#$socket) Events.#$socket.close()
       } else {
-        this.connectToServer(true)
+        this.connectToServer()
       }
     });
 
@@ -167,7 +167,7 @@ class Events {
   };
 
   // establish a connection to the server
-  static connectToServer(check_for_updates) {
+  static connectToServer() {
     try {
       if (Events.#$socket) return;
       Events.#$socket = new WebSocket(Server.websocket);
@@ -175,20 +175,6 @@ class Events {
       Events.#$socket.onopen = (event) => {
         Events.#$socket.send(`session: ${Server.session}\n\n`);
         this.log("WebSocket connection established");
-
-        if (check_for_updates) {
-          // see if the agenda or reporter data changed
-          fetch("/api/digest", { credentials: "include" }).then((response) => {
-            if (response.ok) {
-              response.json().then((json) => {
-                Events.broadcast({ ...json.agenda, type: "agenda" });
-                Events.broadcast({ ...json.reporter, type: "reporter" })
-              })
-            } else {
-              console.error('error fetching digest: ', response)
-            }
-          }).catch(console.error)
-        }
       };
 
       Events.#$socket.onmessage = (event) => {

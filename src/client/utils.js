@@ -6,7 +6,8 @@ export const Server = {
   pending: {},
   drafts: [],
   agendas: [],
-  websocket: 'ws://localhost:3001/websocket/'
+  websocket: 'ws://localhost:3001/websocket/',
+  env: 'development'
 };
 
 //
