@@ -7285,6 +7285,11 @@ node-releases@^1.1.52:
   dependencies:
     semver "^6.3.0"
 
+node-watch@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/node-watch/-/node-watch-0.6.3.tgz#9abf739ae0638435be6c0d1c99d4dc2e53df7317"
+  integrity sha512-InVPsg51EemnMVH3fvrrSVgqVBMlksZ/mK7ZDWx/NuWdNQi28wcVJX1/BP38alraPFXbRi9jZ35OfK4Ra7l8Bg==
+
 nodemon@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.2.tgz#9c7efeaaf9b8259295a97e5d4585ba8f0cbe50b0"

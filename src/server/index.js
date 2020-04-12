@@ -12,11 +12,14 @@ import { parse } from './sources/agenda.js';
 import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
 import { digest } from './cache.js';
+import * as watcher from './watcher.js';
 
 const app = express();
 app.use(compression());
 
 app.use('/', express.static(buildPath, { index: false }));
+
+websocket.start(app);
 
 app.use(basicAuth({
   challenge: true,
@@ -35,6 +38,10 @@ app.use(basicAuth({
     });
   }
 }));
+
+app.get('/api/session', async (request, response) => {
+  response.json({ session: websocket.session });
+});
 
 app.get('/api/latest.json', async (request, response) => {
   response.json(await parse(await read((await agendas(request)).pop())));
@@ -64,11 +71,11 @@ app.get('/api/responses', async (request, response) => {
 });
 
 app.get('/api/digest', async (request, response) => {
-  console.log(digest);
   response.json(await digest());
 })
 
-websocket.start(app);
+
+watcher.start();
 
 app.listen(port, () => {
   console.log(`Whimsy board agenda app listening on port ${port}`);

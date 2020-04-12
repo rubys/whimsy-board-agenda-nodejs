@@ -39,7 +39,7 @@ export default async function (agenda, { quick = false } = {}) {
         words.unshift(words.pop());
         let sort_name = words.join(" ");
 
-        if (quick) {
+        if (!names) {
           attrs.people["_" + name.replace(/\W/g, "_")] = {
             name,
             sortName: sort_name,

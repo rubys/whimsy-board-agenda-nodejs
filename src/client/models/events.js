@@ -109,13 +109,11 @@ class Events {
 
       Events.#$ondeck = localStorage.removeItem(`${Events.#$prefix}-ondeck`);
 
-      this.master();
-      /* TODO: remove?
       if (Server.session) {
         this.master()
       } else {
         let options = { credentials: "include" };
-        let request = new Request("../session.json", options);
+        let request = new Request("../api/session", options);
 
         fetch(request).then(response => (
           response.json().then((json) => {
@@ -124,7 +122,6 @@ class Events {
           })
         ))
       }
-      */
     } else if (Events.#$ondeck === null && Events.#$master !== Events.#$timestamp && !localStorage.getItem(`${Events.#$prefix}-ondeck`)) {
       localStorage.setItem(
         `${Events.#$prefix}-ondeck`,
@@ -176,19 +173,21 @@ class Events {
       Events.#$socket = new WebSocket(Server.websocket);
 
       Events.#$socket.onopen = (event) => {
-        // Events.#$socket.send(`session: ${Server.session}\n\n`);
+        Events.#$socket.send(`session: ${Server.session}\n\n`);
         this.log("WebSocket connection established");
 
         if (check_for_updates) {
           // see if the agenda or reporter data changed
-          fetch("digest.json", { credentials: "include" }).then((response) => {
+          fetch("/api/digest", { credentials: "include" }).then((response) => {
             if (response.ok) {
               response.json().then((json) => {
                 Events.broadcast({ ...json.agenda, type: "agenda" });
                 Events.broadcast({ ...json.reporter, type: "reporter" })
               })
+            } else {
+              console.error('error fetching digest: ', response)
             }
-          })
+          }).catch(console.error)
         }
       };
 
@@ -228,7 +227,14 @@ class Events {
     let message = JSON.parse(data);
     this.log(message);
 
-    if (message.type === "unauthorized") {
+    if (message.type === 'reload') {
+      // ignore requests if any input or textarea element is visible
+      let inputs = document.querySelectorAll("input, textarea");
+
+      if (Math.max(...Array.from(inputs).map(element => element.offsetWidth)) <= 0) {
+        window.location.reload()
+      }
+    } else if (message.type === "unauthorized") {
       let options = { credentials: "include" };
       let request = new Request("../session.json", options);
 

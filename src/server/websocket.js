@@ -1,20 +1,40 @@
 import expressWs from 'express-ws';
+import md5 from 'md5';
 
 let wss = null;
+let authorized = new Set();
+
+// for development purposes, use a single session
+export let session = md5(Date.now().toString());
 
 export function start(app) {
+
   const ws = expressWs(app);
   wss = ws.getWss();
 
   app.ws('/websocket/', (ws, req) => {
-    ws.on('message', message => console.log);
-    ws.on('close', () => { });
+    ws.on('message', message => {
+      if (message.startsWith('session: ')) {
+        let clientToken = message.split(' ')[1].trim();
+        if (clientToken === session) {
+          authorized.add(ws);
+        } else {
+          ws.send(JSON.stringify({ type: "reload" }));
+        }
+      } else {
+        console.log(message);
+      }
+    });
+
+    ws.on('close', () => { authorized.delete(ws) });
   });
 };
 
 export function broadcast(message) {
   if (typeof message === 'object') message = JSON.stringify(message);
   if (wss) wss.clients.forEach(client => {
-    try { client.send(message) } catch { };
+    if (authorized.has(client)) {
+      try { client.send(message) } catch { };
+    }
   });
 }
