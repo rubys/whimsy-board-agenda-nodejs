@@ -29,6 +29,7 @@ function svncmd(request) {
 // in the work/svn directory.
 let lastBoardUpdate = 0;
 export async function updateBoard(request, ttl = 5 * 60 * 1000) {
+  await fs.access(boardDir).catch(() => {ttl = 0});
   if (Date.now() - lastBoardUpdate < ttl) return;
   const release = await mutex.acquire();
 
@@ -50,6 +51,7 @@ export async function updateBoard(request, ttl = 5 * 60 * 1000) {
 // in the work/svn directory.
 let lastMinutesUpdate = 0;
 export async function updateMinutes(request, ttl = 5 * 60 * 1000) {
+  await fs.access(minutesDir).catch(() => {ttl = 0});
   if (Date.now() - lastMinutesUpdate < ttl) return;
   const release = await mutex.acquire();
 
