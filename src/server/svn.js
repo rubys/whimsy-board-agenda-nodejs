@@ -27,7 +27,9 @@ function svncmd(request) {
 
 // ensure that there is a fresh checkout of the foundation/board directory
 // in the work/svn directory.
-export async function updateBoard(request) {
+let lastBoardUpdate = 0;
+export async function updateBoard(request, ttl = 5 * 60 * 1000) {
+  if (Date.now() - lastBoardUpdate < ttl) return;
   const release = await mutex.acquire();
 
   await fs.mkdir(svn, { recursive: true });
@@ -37,6 +39,7 @@ export async function updateBoard(request) {
       { cwd: svn },
       (error, stdout, stderr) => {
         release();
+        lastBoardUpdate = Date.now();
         error ? reject(error) : resolve(stdout + stderr);
       }
     )
@@ -45,7 +48,9 @@ export async function updateBoard(request) {
 
 // ensure that there is a fresh checkout of the foundation/board directory
 // in the work/svn directory.
-export async function updateMinutes(request) {
+let lastMinutesUpdate = 0;
+export async function updateMinutes(request, ttl = 5 * 60 * 1000) {
+  if (Date.now() - lastMinutesUpdate < ttl) return;
   const release = await mutex.acquire();
 
   await fs.mkdir(svn, { recursive: true });
@@ -55,6 +60,7 @@ export async function updateMinutes(request) {
       { cwd: svn },
       (error, stdout, stderr) => {
         release();
+        lastMinutesUpdate = Date.now();
         error ? reject(error) : resolve(stdout + stderr);
       }
     )
@@ -63,33 +69,25 @@ export async function updateMinutes(request) {
 
 // return a list of agendas
 export async function agendas(request) {
-  await fs.access(boardDir).catch(async () => (
-    await updateBoard(request)
-  ))
+  await updateBoard(request);
 
-  return (await fs.readdir(boardDir)).filter(name => /^board_agenda_/.test(name)).sort();
+  return (await fs.readdir(boardDir)).filter(name => /^board_agenda_\d/.test(name)).sort();
 }
 
 export async function agendaExist(file, request) {
-  await fs.access(boardDir).catch(async () => (
-    await updateBoard(request)
-  ));
+  await updateBoard(request);
 
   return await fs.stat(`${boardDir}/${file}`).then(() => true).catch(() => false);
 }
 
 export async function agendaMtime(file, request) {
-  await fs.access(boardDir).catch(async () => (
-    await updateBoard(request)
-  ));
+  await updateBoard(request);
 
   return (await fs.stat(`${boardDir}/${file}`)).mtimeMs;
 }
 
 export async function minutesExist(file, request) {
-  await fs.access(minutesDir).catch(async () => (
-    await updateBoard(request)
-  ));
+  await updateBoard(request);
 
   let year = file.match(/_(\d{4})_/)[1];
 
@@ -97,9 +95,7 @@ export async function minutesExist(file, request) {
 }
 
 export async function minutesMtime(file, request) {
-  await fs.access(minutesDir).catch(async () => (
-    await updateBoard(request)
-  ));
+  await updateBoard(request);
 
   let year = file.match(/_(\d{4})_/)[1];
 
@@ -108,9 +104,7 @@ export async function minutesMtime(file, request) {
 
 // return a list of unpublished minutes
 export async function draftMinutes(request) {
-  await fs.access(boardDir).catch(async () => (
-    await updateBoard(request)
-  ))
+  await updateBoard(request);
 
   return (await fs.readdir(boardDir)).filter(name => /^board_minutes_/.test(name)).sort();
 }

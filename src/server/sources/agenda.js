@@ -6,14 +6,25 @@ import committee from './agenda/committee.js';
 import special from './agenda/special.js';
 import discussion from './agenda/discussion.js';
 import back from './agenda/back.js';
+import * as cache from '../cache.js';
+import * as svn from "../svn.js"
 
 export function minutesLink(title) {
   return "https://whimsy.apache.org/board/minutes/" + title.replace(/\W/g, "_")
 }
 
-export async function parse(agenda, request) {
+export async function parse(filename, request) {
+  // first check cache
+  let cacheFile = filename.replace('.txt', '.json');
+  let agenda = await cache.read(cacheFile, 5 * 60 * 1000);
+  if (agenda) return JSON.parse(agenda);
+
+  // read from local svn working copy
+  agenda = await svn.read(filename);
+  if (!agenda) return null;
+
   // replace tabs with spaces
-  agenda = agenda.replace(/^(\t+)/gm, function (tabs) { return new Array((8 * tabs.length) + 1).join(" ") });
+  agenda = agenda.replace(/^(\t+)/gm, tabs => new Array(8 * tabs.length + 1).join(" "));
 
   let options = { request };
 
@@ -55,5 +66,6 @@ export async function parse(agenda, request) {
     };
   };
 
+  cache.write(cacheFile, JSON.stringify(items));
   return items;
 }

@@ -5,7 +5,7 @@ import md5 from "md5";
 // return contents of cache file if exist and is not stale
 export async function read(file, ttl) {
   try {
-    let stats = await fs.stats(`${cachePath}/${file}`);
+    let stats = await fs.stat(`${cachePath}/${file}`);
     if (ttl && Date.now() - stats.mtimeMs > ttl) return null;
   } catch {
     return null;
