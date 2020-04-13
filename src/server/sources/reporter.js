@@ -5,8 +5,7 @@
 
 import credentials from '../credentials.js';
 import https from 'https';
-import { promises as fs } from 'fs';
-import { cachePath } from '../config.js';
+import * as cache from '../cache.js';
 import { agendas } from "../svn.js"
 
 export default async function reporter(request) {
