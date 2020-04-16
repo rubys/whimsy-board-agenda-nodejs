@@ -3,9 +3,10 @@ import { promises as fs } from 'fs';
 import md5 from "md5";
 
 // return contents of cache file if exist and is not stale
-export async function read(file, ttl) {
+export async function read(file, ttl, mtime) {
   try {
     let stats = await fs.stat(`${cachePath}/${file}`);
+    if (mtime && mtime > stats.mtimeMs) return null;
     if (ttl && Date.now() - stats.mtimeMs > ttl) return null;
   } catch {
     return null;

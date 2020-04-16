@@ -15,8 +15,9 @@ export function minutesLink(title) {
 
 export async function parse(filename, request) {
   // first check cache
+  let mtime = await svn.agendaMtime(filename).catch(() => 0);
   let cacheFile = filename.replace('.txt', '.json');
-  let agenda = await cache.read(cacheFile, 5 * 60 * 1000);
+  let agenda = await cache.read(cacheFile, 5 * 60 * 1000, mtime);
   if (agenda) return JSON.parse(agenda);
 
   // read from local svn working copy

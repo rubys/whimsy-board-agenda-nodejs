@@ -4,6 +4,7 @@ import deepEqual from 'deep-equal';
 import credentials from './credentials.js';
 import { workPath } from './config.js';
 import { broadcast } from './websocket.js';
+import { parse } from './sources/agenda.js';
 import WebSocket from 'faye-websocket';
 
 export let active = false;
@@ -13,10 +14,18 @@ let lastMessage = {};
 
 export async function start(request) {
   // watch the work file system
-  if (fswatch && !fswatch.isClosed()) {
+  if (!fswatch || fswatch.isClosed()) {
     fswatch = watch(workPath, { recursive: true }, (eventType, fileName) => {
       if (fileName.startsWith(workPath + '/')) fileName = fileName.slice(workPath.length + 1);
-      broadcast({ type: 'work-update', eventType, fileName });
+
+      if (fileName.startsWith('svn/foundation_board/')) {
+        let file = fileName.split('/').pop();
+        if (eventType === 'update' && /^board_agenda_\d+_\d+_\d+\.txt$/.test(file)) {
+          parse(file, request);
+        }
+      } else {
+        broadcast({ type: 'work-update', eventType, fileName });
+      }
     });
   }
 
