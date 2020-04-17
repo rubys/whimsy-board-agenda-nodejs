@@ -17,6 +17,7 @@ export async function read(file, ttl, mtime) {
 };
 
 export async function write(file, data) {
+  if (await this.read(file) === data) return;
   await fs.mkdir(cachePath, { recursive: true });
   return fs.writeFile(`${cachePath}/${file}`, data, 'utf8');
 };
@@ -26,9 +27,9 @@ export async function digest() {
   try {
     return Object.fromEntries(
       await Promise.all([
-	...(await fs.readdir(cachePath)).map(async (name) => (
-	  [name.split('.')[0], md5(await fs.readFile(`${cachePath}/${name}`, 'utf8'))]
-	))
+        ...(await fs.readdir(cachePath)).map(async (name) => (
+          [name.split('.')[0], md5(await fs.readFile(`${cachePath}/${name}`, 'utf8'))]
+        ))
       ])
     );
   } catch (error) {

@@ -17,7 +17,7 @@ export async function open() {
 // return a mapping of public names to availids
 let _names = null;
 export async function names() {
-    if (_names) return _members;
+    if (_names) return _names;
     if (!client) await open();
 
     let base = 'ou=people,dc=apache,dc=org';

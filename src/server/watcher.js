@@ -26,6 +26,8 @@ export async function start(request) {
         if (eventType === 'update' && /^board_agenda_\d+_\d+_\d+\.txt$/.test(file)) {
           parse(file, request);
         }
+      } else if (fileName.startsWith('svn/minutes/')) {
+      } else if (fileName.startsWith('cache/')) {
       } else {
         broadcast({ type: 'work-update', eventType, fileName });
       }
