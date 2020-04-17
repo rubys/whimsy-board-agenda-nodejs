@@ -1,6 +1,6 @@
 require('@babel/register')({ 
   plugins: [
-    // '@babel/plugin-proposal-numeric-separator',
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ],
   presets: [
     '@babel/preset-react',

@@ -7,7 +7,7 @@ import reporter from "./sources/reporter.js";
 import responses from "./sources/responses.js";
 import * as websocket from "./websocket.js";
 import { port, buildPath } from './config.js';
-import { agendas } from './svn.js';
+import { Board } from './svn.js';
 import { parse } from './sources/agenda.js';
 import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
@@ -52,7 +52,7 @@ app.get('/api/session', async (request, response) => {
 });
 
 app.get('/api/latest.json', async (request, response) => {
-  response.json(await parse((await agendas(request)).pop()));
+  response.json(await parse((await Board.agendas(request)).pop()));
 });
 
 app.get('/api/jira', async (request, response) => {

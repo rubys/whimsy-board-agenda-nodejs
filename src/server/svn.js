@@ -25,92 +25,83 @@ function svncmd(request) {
     shellEscape(['--username', username, '--password', password])
 };
 
-// ensure that there is a fresh checkout of the foundation/board directory
-// in the work/svn directory.
-let lastBoardUpdate = 0;
-export async function updateBoard(request, ttl = 5 * 60 * 1000) {
-  await fs.access(boardDir).catch(() => {ttl = 0});
-  if (Date.now() - lastBoardUpdate < ttl) return;
-  const release = await mutex.acquire();
+// common methods across all repositories
+class Repository {
+  #lastUpdate = 0;
+  dir = null;
+  url = null;
 
-  await fs.mkdir(svn, { recursive: true });
+  constructor(dir, url) {
+    this.dir = dir;
+    this.url = url;
+  }
 
-  return new Promise((resolve, reject) => (
-    exec(`${svncmd(request)} checkout ${boardUrl} ${boardDir} --depth files`,
-      { cwd: svn },
-      (error, stdout, stderr) => {
-        release();
-        lastBoardUpdate = Date.now();
-        error ? reject(error) : resolve(stdout + stderr);
-      }
-    )
-  ));
+  update = async (request, ttl = 5 * 60 * 1000) => {
+    await fs.access(this.dir).catch(() => { ttl = 0 });
+    if (Date.now() - this.#lastUpdate < ttl) return;
+    const release = await mutex.acquire();
+
+    await fs.mkdir(svn, { recursive: true });
+
+    return new Promise((resolve, reject) => (
+      exec(`${svncmd(request)} checkout ${this.url} ${this.dir} --depth files`,
+        { cwd: svn },
+        (error, stdout, stderr) => {
+          release();
+          this.#lastUpdate = Date.now();
+          error ? reject(error) : resolve(stdout + stderr);
+        }
+      )
+    ));
+  }
+
+  // overrideable filename to path wrapper
+  map = (file) => (
+    `${this.dir}/${file}`
+  )
+
+  exist = async (file, request) => {
+    await this.update(request);
+
+    return await fs.stat(this.map(file)).then(() => true).catch(() => false);
+  }
+
+  mtime = async (file, request) => {
+    await this.update(request);
+
+    try {
+      return (await fs.stat(this.map(file))).mtimeMs;
+    } catch (error) {
+      if (error.code === 'ENOENT') return null;
+      throw error;
+    }
+  }
+
+  read = async (file) => {
+    return fs.readFile(this.map(file), 'utf8');
+  }
 }
 
-// ensure that there is a fresh checkout of the foundation/board directory
-// in the work/svn directory.
-let lastMinutesUpdate = 0;
-export async function updateMinutes(request, ttl = 5 * 60 * 1000) {
-  await fs.access(minutesDir).catch(() => {ttl = 0});
-  if (Date.now() - lastMinutesUpdate < ttl) return;
-  const release = await mutex.acquire();
-
-  await fs.mkdir(svn, { recursive: true });
-
-  return new Promise((resolve, reject) => (
-    exec(`${svncmd(request)} checkout ${minutesUrl} ${minutesDir} --depth files`,
-      { cwd: svn },
-      (error, stdout, stderr) => {
-        release();
-        lastMinutesUpdate = Date.now();
-        error ? reject(error) : resolve(stdout + stderr);
-      }
-    )
-  ));
-}
+export const Board = new Repository(boardDir, boardUrl);
 
 // return a list of agendas
-export async function agendas(request) {
-  await updateBoard(request);
+Board.agendas = async (request) => {
+  await Board.update(request);
 
-  return (await fs.readdir(boardDir)).filter(name => /^board_agenda_\d/.test(name)).sort();
-}
-
-export async function agendaExist(file, request) {
-  await updateBoard(request);
-
-  return await fs.stat(`${boardDir}/${file}`).then(() => true).catch(() => false);
-}
-
-export async function agendaMtime(file, request) {
-  await updateBoard(request);
-
-  return (await fs.stat(`${boardDir}/${file}`)).mtimeMs;
-}
-
-export async function minutesExist(file, request) {
-  await updateBoard(request);
-
-  let year = file.match(/_(\d{4})_/)[1];
-
-  return await fs.stat(`${minutesDir}/${year}/${file}`).then(() => true).catch(() => false);
-}
-
-export async function minutesMtime(file, request) {
-  await updateBoard(request);
-
-  let year = file.match(/_(\d{4})_/)[1];
-
-  return (await fs.stat(`${minutesDir}/${year}/${file}`)).mtimeMs;
+  return (await fs.readdir(Board.dir)).filter(name => /^board_agenda_\d/.test(name)).sort();
 }
 
 // return a list of unpublished minutes
-export async function draftMinutes(request) {
-  await updateBoard(request);
+Board.draftMinutes = async (request) => {
+  await Board.update(request);
 
-  return (await fs.readdir(boardDir)).filter(name => /^board_minutes_/.test(name)).sort();
+  return (await fs.readdir(Board.dir)).filter(name => /^board_minutes_/.test(name)).sort();
 }
 
-export async function read(file) {
-  return fs.readFile(`${boardDir}/${file}`, 'utf8');
+export const Minutes = new Repository(minutesDir, minutesUrl);
+
+Minutes.map = (file) => {
+  let year = file.match(/_(\d{4})_/)[1];
+
+  return `${Minutes.dir}/${year}/${file}`
 }

@@ -1,4 +1,4 @@
-import * as svn from '../../svn.js'
+import { Board, Minutes } from '../../svn.js'
 
 const OFFICER_SEPARATOR = /^\s*4. (Executive )?Officer Reports/m;
 
@@ -17,12 +17,12 @@ export default async function (agenda, { request, quick = false } = {}) {
 
     let file = (attrs.text.match(/board_minutes[_\d]+\.txt/) || [])[0];
 
-    if (file && await svn.agendaExist(file, request)) {
+    if (file && await Board.exist(file, request)) {
       // unpublished minutes
-      attrs.mtime = await svn.agendaMtime(file, request);
-    } else if (file && await svn.minutesExist(file, request)) {
+      attrs.mtime = await Board.mtime(file, request);
+    } else if (file && await Minutes.exist(file, request)) {
       // published minutes
-      attrs.mtime = await svn.minutesMtime(file, request);
+      attrs.mtime = await Minutes.mtime(file, request);
     }
 
     return attrs;
