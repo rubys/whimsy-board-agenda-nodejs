@@ -6,7 +6,7 @@
 import credentials from '../credentials.js';
 import https from 'https';
 import * as cache from '../cache.js';
-import { agendas } from "../svn.js"
+import { Board } from "../svn.js"
 
 export default async function reporter(request) {
 
@@ -17,7 +17,7 @@ export default async function reporter(request) {
 
   let { username, password } = credentials(request);
 
-  let agenda = (await agendas(request)).pop();
+  let agenda = (await Board.agendas(request)).pop();
 
   return new Promise((resolve, reject) => {
     let options = {
