@@ -18,6 +18,9 @@ function reduce(state, action) {
     case Actions.POST_AGENDA:
       return { ...state, agenda: action.index };
 
+    case Actions.POST_SERVER:
+      return { ...state, server: action.server };
+
     case Actions.HISTORICAL_COMMENTS:
       return { ...state, historicalComments: action.comments };
 

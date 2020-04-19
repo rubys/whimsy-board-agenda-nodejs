@@ -1,5 +1,6 @@
 import JSONStorage from "./jsonstorage.js";
-import { Server } from "../utils.js";
+import * as Actions from "../../actions.js";
+import store from "../store.js";
 
 //
 // Motivation: browsers limit the number of open web socket connections to any
@@ -109,16 +110,18 @@ class Events {
 
       Events.#$ondeck = localStorage.removeItem(`${Events.#$prefix}-ondeck`);
 
-      if (Server.session) {
-        this.master()
+      let { server } = store.getState();
+
+      if (server && server.session) {
+        this.master(server)
       } else {
         let options = { credentials: "include" };
-        let request = new Request("../api/session", options);
+        let request = new Request("../api/server", options);
 
         fetch(request).then(response => (
-          response.json().then((json) => {
-            Server.session = json.session;
-            this.master()
+          response.json().then(server => {
+            store.dispatch(Actions.postServer(server));
+            this.master(server)
           })
         ))
       }
@@ -131,8 +134,8 @@ class Events {
   };
 
   // master logic
-  static master() {
-    this.connectToServer();
+  static master(server) {
+    this.connectToServer(server);
 
     // proof of life; maintain connection to the server
     setInterval(
@@ -142,21 +145,24 @@ class Events {
           new Date().getTime()
         );
 
-        if (!Server.offline) {
-          this.connectToServer()
+        let { server } = store.getState();
+
+        if (!server.offline) {
+          this.connectToServer(server);
         } else if (Events.#$socket) {
           Events.#$socket.close()
         }
       },
 
-      (Server.env === 'development' ? 500 : 25000)
+      (server.env === 'development' ? 500 : 25000)
     );
 
     window.addEventListener("offlineStatus", (event) => {
       if (event.detail === true) {
         if (Events.#$socket) Events.#$socket.close()
       } else {
-        this.connectToServer()
+        let { server } = store.getState();
+        this.connectToServer(server)
       }
     });
 
@@ -167,13 +173,13 @@ class Events {
   };
 
   // establish a connection to the server
-  static connectToServer() {
+  static connectToServer({ websocket, session }) {
     try {
       if (Events.#$socket) return;
-      Events.#$socket = new WebSocket(Server.websocket);
+      Events.#$socket = new WebSocket(websocket);
 
       Events.#$socket.onopen = (event) => {
-        Events.#$socket.send(`session: ${Server.session}\n\n`);
+        Events.#$socket.send(`session: ${session}\n\n`);
         this.log("WebSocket connection established");
       };
 
@@ -225,9 +231,9 @@ class Events {
       let request = new Request("../session.json", options);
 
       fetch(request).then(response => (
-        response.json().then((json) => {
-          this.log(json);
-          Server.session = json.session
+        response.json().then((server) => {
+          this.log(server);
+          store.dispatch(Actions.postServer(server));
         })
       ))
     } else if (Events.#$subscriptions[message.type]) {
