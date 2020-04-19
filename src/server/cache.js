@@ -17,7 +17,6 @@ export async function read(file, ttl, mtime) {
 };
 
 export async function write(file, data) {
-  if (await this.read(file) === data) return;
   await fs.mkdir(cachePath, { recursive: true });
   return fs.writeFile(`${cachePath}/${file}`, data, 'utf8');
 };
