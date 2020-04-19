@@ -15,7 +15,7 @@ import './client/agenda.css';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename={window.location.pathname.match(/\/(\d\d\d\d-\d\d-\d\d\/)?/)[0]}>
         <Router />
       </BrowserRouter>
     </Provider>
