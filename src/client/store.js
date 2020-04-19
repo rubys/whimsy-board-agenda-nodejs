@@ -45,15 +45,17 @@ const store = createStore(reduce, {
 export function lookup({ name, path, action, initialValue }) {
   let state = store.getState();
 
-  if (!name) name=path.replace(/-\w/g, (data => data[1].toUpperCase()));
+  if (!name) name = path.replace(/-\w/g, (data => data[1].toUpperCase()));
   if (!action) action = Actions[name];
 
   if (name in state) {
     return state[name];
   } else {
-    store.dispatch(action(initialValue));
-    JSONStorage.fetch(path, value => {
-      if (value) store.dispatch(action(value));
+    Promise.resolve().then(() => {
+      store.dispatch(action(initialValue));
+      JSONStorage.fetch(path, value => {
+        if (value) store.dispatch(action(value));
+      })
     })
   };
 
