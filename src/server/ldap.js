@@ -20,7 +20,6 @@ export async function open() {
 export async function names() {
   let cache_file = 'committers.json';
   let names = await cache.read(cache_file, TTL);
-  console.log(names)
   if (names) return JSON.parse(names);
   if (!client) await open();
 

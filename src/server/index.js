@@ -5,6 +5,7 @@ import jira from "./sources/jira.js";
 import postedReports from "./sources/posted-reports.js";
 import reporter from "./sources/reporter.js";
 import responses from "./sources/responses.js";
+import server from "./sources/server.js";
 import * as websocket from "./websocket.js";
 import { port, buildPath } from './config.js';
 import { Board } from './svn.js';
@@ -76,6 +77,10 @@ app.get('/api/reporter', async (request, response) => {
 app.get('/api/responses', async (request, response) => {
   response.setHeader('content-type', 'application/json');
   response.send(await responses(request))  
+});
+
+app.get('/api/server', async (request, response) => {
+  response.json(await server(request));
 });
 
 app.get('/api/digest', async (request, response) => {

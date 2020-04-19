@@ -8,6 +8,6 @@ import devproxy from './devproxy.js';
 
 export default async function historicalComments(request) {
 
-  return await devproxy(request, 'historical-comments');
+  return await devproxy(request, 'json/historical-comments');
 
 }

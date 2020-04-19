@@ -8,6 +8,6 @@ import devproxy from './devproxy.js';
 
 export default async function responses(request) {
 
-  return await devproxy(request, 'responses');
+  return await devproxy(request, 'json/responses');
 
 }

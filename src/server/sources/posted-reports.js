@@ -8,6 +8,6 @@ import devproxy from './devproxy.js';
 
 export default async function postedReports(request) {
 
-  return await devproxy(request, 'posted-reports');
+  return await devproxy(request, 'json/posted-reports');
 
 }

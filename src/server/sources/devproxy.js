@@ -7,7 +7,7 @@ import * as cache from '../cache.js';
 
 export default async function devproxy(request, path) {
 
-  let cacheFile = `${path}.json`;
+  let cacheFile = `${path.split('/').pop().split('.')[0]}.json`;
 
   let data = await cache.read(cacheFile, 5 * 60 * 1000);
   if (data) return data;
@@ -18,7 +18,7 @@ export default async function devproxy(request, path) {
     let options = {
       host: 'whimsy.apache.org',
       port: 443,
-      path: `/board/agenda/json/${path}`,
+      path: `/board/agenda/${path}`,
       headers: {
         'Authorization': 'Basic ' +
           Buffer.from(username + ':' + password).toString('base64')

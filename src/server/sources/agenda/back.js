@@ -36,7 +36,7 @@ export default async function (agenda, { quick = false } = {}) {
       text = text.replace(new RegExp(`^ {${unindent - 1}}`, "gm"), "");
       attrs.missing = text.length === 0;
 
-      attrs.actions = text.replace(/^\* /m, "").split(/^\n\* /m).map((text) => {
+      attrs.actions = text.replace(/^\* /m, "").split(/^\n\* /m).map(text => {
         let match2, match3, match4;
         let match1 = /(.*?)(\n\s*Status:(.*))/sm.exec(text);
 
