@@ -31,7 +31,7 @@ export default async function (agenda, { quick = false } = {}) {
       // extract action items associated with projects
       let text = attrs.text.replace(/^\s*\n/, "").replace(/\s+$/, "");
 
-      let unindent = Math.min(...text.match(/^ *\S/gm).map(item => (item.length))) || 1;
+      let unindent = Math.min(...(text.match(/^ *\S/gm) || []).map(item => (item.length))) || 1;
 
       text = text.replace(new RegExp(`^ {${unindent - 1}}`, "gm"), "");
       attrs.missing = text.length === 0;
