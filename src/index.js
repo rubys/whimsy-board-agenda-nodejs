@@ -42,8 +42,11 @@ ReactDOM.render(
   } else {
     // fetch and store agenda information
     response = await fetch(`/api/${base.slice(1, -1)}.json`);
-    let agenda = await response.json();
-    store.dispatch(Actions.postAgenda(agenda));
+    if (response.ok) {
+      store.dispatch(Actions.postAgenda(await response.json()));
+    } else {
+      console.error(`fetch agenda ${base}: ${response.statusText}`);
+    }
   }
 })();
 
