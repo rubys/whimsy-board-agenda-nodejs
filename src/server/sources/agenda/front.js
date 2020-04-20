@@ -4,6 +4,7 @@
 
 import moment from 'moment-timezone';
 import * as ldap from '../../ldap.js';
+import { TIMEZONE } from '../../config.js';
 
 export default async function (agenda, { quick = false } = {}) {
   let pattern = /^\n\x20(?<attach>[12]\.)\s(?<title>.*?)\n\n+(?<text>.*?)(?=\n\s[23]\.)/msg;
@@ -79,7 +80,7 @@ export default async function (agenda, { quick = false } = {}) {
       let date = (agenda.match(/\w+ \d+, \d+/) || [])[0];
       let time = (attrs.text.match(/\d+:\d+([ap]m)?/) || [])[0];
       if (date && time) {
-        attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', 'America/Los_Angeles').valueOf();
+        attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', TIMEZONE).valueOf();
       }
     }
   });

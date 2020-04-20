@@ -7,6 +7,7 @@
 
 import moment from 'moment-timezone';
 import { minutesLink } from '../agenda.js';
+import { TIMEZONE } from '../../config.js';
 
 export default async function (agenda, { quick = false } = {}) {
   let pattern = /^(?<attach>(?:\s9|1\d)\.)\s(?<title>.*?)\n(?<text>.*?)(?=\n[\s1]\d\.|\n===)/msg;
@@ -23,7 +24,7 @@ export default async function (agenda, { quick = false } = {}) {
       let date = (agenda.match(/\w+ \d+, \d+/) || [])[0];
       let time = (attrs.text.match(/\d+:\d+([ap]m)?/) || [])[0];
       if (date && time) {
-        attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', 'America/Los_Angeles').valueOf();
+        attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', TIMEZONE).valueOf();
       }
     };
 
