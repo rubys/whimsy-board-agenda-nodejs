@@ -3,7 +3,7 @@ import * as Actions from "../actions.js"
 
 // A convenient place to stash server data
 export const Server = {
-  pending: {},
+  pending: {firstname: ''},
   drafts: [],
   agendas: [],
   websocket: 'ws://localhost:3001/websocket/',

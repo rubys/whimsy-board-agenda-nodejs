@@ -56,6 +56,16 @@ app.get('/api/latest.json', async (request, response) => {
   response.json(await parse((await Board.agendas(request)).pop()));
 });
 
+app.get('/api/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
+  let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
+  try {
+    response.json(await parse(agenda));
+  } catch (error) {
+    if (error.code === 'ENOENT') next();
+    next(error);
+  }
+});
+
 app.get('/api/jira', async (request, response) => {
   response.json(await jira());
 });

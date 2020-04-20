@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Router from './client/router.js';
-import { Server } from "./client/utils.js";
 import * as serviceWorker from './serviceWorker';
 import store from './client/store';
 import { Provider } from 'react-redux';
@@ -27,12 +26,20 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-Server.pending.firstname = '';
-
 (async () => {
-  let response = await fetch('/api/latest.json');
-  let json = await response.json();
-  store.dispatch(Actions.postAgenda(json));
+  // fetch and store server information
+  let options = { credentials: "include" };
+  let request = new Request("../api/server", options);
+  let response = await fetch(request);
+  let server = await response.json();
+  store.dispatch(Actions.postServer(server));
+
+  // fetch and store agenda information
+  let latest = [...server.agendas].sort().pop();
+  let date = latest.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-");
+  response = await fetch(`/api/${date}.json`);
+  let agenda = await response.json();
+  store.dispatch(Actions.postAgenda(agenda));
 })();
 
 // If you want your app to work offline and load faster, you can change
