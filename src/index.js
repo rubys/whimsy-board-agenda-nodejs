@@ -12,10 +12,14 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './client/agenda.css';
 
+let base = window.location.pathname.match(/\/(\d\d\d\d-\d\d-\d\d\/)?/)[0];
+
+document.getElementsByTagName('base')[0].href = base;
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter basename={window.location.pathname.match(/\/(\d\d\d\d-\d\d-\d\d\/)?/)[0]}>
+      <BrowserRouter basename={base}>
         <Router />
       </BrowserRouter>
     </Provider>

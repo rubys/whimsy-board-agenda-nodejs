@@ -71,7 +71,7 @@ class JSONStorage {
         fetch(request).then((response) => {
           cache.put(request, response.clone());
 
-          response.json().then((json) => {
+          response.json().then(json => {
             if (!fetched || JSON.stringify(fetched) !== JSON.stringify(json)) {
               if (!fetched) Store.dispatch(Actions.clockDecrement());
               fetched = json;
@@ -87,9 +87,9 @@ class JSONStorage {
         });
 
         // check cache
-        cache.match(`../json/${name}`).then((response) => {
+        cache.match(`../api/${name}`).then(response => {
           if (response && !fetched) {
-            response.json().then((json) => {
+            response.json().then(json => {
               Store.dispatch(Actions.clockDecrement());
               fetched = json;
               if (json) block(json)
