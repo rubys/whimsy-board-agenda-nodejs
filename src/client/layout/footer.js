@@ -99,7 +99,11 @@ class PrevLink extends React.Component {
     };
 
     if (link) {
-      return <Link className={"navbar-brand backlink " + link.color} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
+      if (!prefix && link.href.startsWith('../')) {
+        return <a className={"navbar-brand backlink " + link.color} rel="prev" href={`${prefix}${link.href}`}>{link.title}</a>
+      } else {
+        return <Link className={"navbar-brand backlink " + link.color} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
+      }
     } else if (this.props.item.prev || this.props.item.next) {
       return <a className="navbar-brand" />
     } else {
@@ -151,7 +155,11 @@ class NextLink extends React.Component {
     };
 
     if (link) {
-      return <Link className={"navbar-brand nextlink " + link.color} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
+      if (!prefix && link.href.startsWith('../')) {
+        return <a className={"navbar-brand nextlink " + link.color} rel="next" href={`${prefix}${link.href}`}>{link.title}</a>
+      } else {
+        return <Link className={"navbar-brand nextlink " + link.color} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
+      }
     } else if (this.props.item.prev || this.props.item.next) {
       return <a className="navbar-brand" />
     } else {

@@ -5,9 +5,14 @@ import * as Actions from "../actions.js"
 export const Server = {
   pending: {firstname: ''},
   drafts: [],
-  agendas: [],
   websocket: 'ws://localhost:3001/websocket/',
-  env: 'development'
+  env: 'development',
+
+  get agendas() {
+    let { server } = Store.getState();
+    if (!server || !server.agendas) return [];
+    return server.agendas;
+  }
 };
 
 //
