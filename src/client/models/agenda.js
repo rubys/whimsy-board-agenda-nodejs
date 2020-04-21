@@ -66,7 +66,7 @@ class Agenda {
   // (re)-load an agenda, creating instances for each item, and linking
   // each instance to their next and previous items.
   static load(list, digest) {
-    if (!list) return;
+    if (!list || list.length === 0) return;
     let before = Agenda.#$index;
     Agenda.#$digest = digest;
     Agenda.#$index = [];

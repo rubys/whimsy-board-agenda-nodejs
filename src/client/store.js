@@ -1,40 +1,19 @@
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import * as Actions from '../actions.js';
+import agenda from './reducers/agenda.js';
+import clockCounter from './reducers/clock-counter.js';
+import historicalComments from './reducers/historical-comments.js';
+import responses from './reducers/responses.js';
+import server from './reducers/server.js';
 import JSONStorage from "./models/jsonstorage.js"
 
 // temporary staging grounds for now, will migrate into the redux store
 export let file = '';
 export let date = '';
 
-// now for the real stuff
-function reduce(state, action) {
-  switch (action.type) {
-    case Actions.CLOCK_INCREMENT:
-      return { ...state, clock_counter: state.clock_counter + 1 };
+let reducer = combineReducers({ agenda, clockCounter, historicalComments, responses, server });
 
-    case Actions.CLOCK_DECREMENT:
-      return { ...state, clock_counter: state.clock_counter - 1 };
-
-    case Actions.POST_AGENDA:
-      return { ...state, agenda: action.index };
-
-    case Actions.POST_SERVER:
-      return { ...state, server: action.server };
-
-    case Actions.HISTORICAL_COMMENTS:
-      return { ...state, historicalComments: action.comments };
-
-    case Actions.RESPONSES:
-      return { ...state, responses: action.messages }
-
-    default:
-      return state;
-  }
-}
-
-const store = createStore(reduce, {
-  clock_counter: 0
-});
+const store = createStore(reducer);
 
 // load data from the server, caching it using JSONStorage, and save
 // the result in the Redux store.
@@ -48,7 +27,7 @@ export function lookup({ name, path, action, initialValue }) {
   if (!name) name = path.replace(/-\w/g, (data => data[1].toUpperCase()));
   if (!action) action = Actions[name];
 
-  if (name in state) {
+  if (name in state && state[name]) {
     return state[name];
   } else {
     Promise.resolve().then(() => {
