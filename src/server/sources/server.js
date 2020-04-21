@@ -2,7 +2,8 @@
 //  fetch server information from live whimsy server, and merge in
 //  local agenda and draft information as well as location of
 //  websocket and associated session token and the execution
-//  environment (development or production).
+//  environment (development or production).  Also, collect all of the
+//  user information into a single object.
 // 
 // NODE_ENV == 'production':
 //   TODO
@@ -24,6 +25,16 @@ export default async function server(request) {
   server.session = session;
 
   server.env = process.env.NODE_ENV;
+
+  let userprops = ['userid', 'username', 'firstname', 'initials', 'role'];
+
+  server.user = {};
+  for (let prop of userprops) {
+     if (server[prop]) {
+       server.user[prop] = server[prop];
+       delete server[prop];
+     }
+  }
 
   return server;
 }
