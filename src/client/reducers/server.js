@@ -8,7 +8,7 @@ export default function reduce(state = {}, action) {
       // only update properties that actually changed
       for (let prop in action.server) {
         if (!deepEqual(state[prop], action.server[prop])) {
-          state = { ...state, [prop]: action.server[prop]}
+          state = { ...state, [prop]: action.server[prop] }
         }
       }
 
