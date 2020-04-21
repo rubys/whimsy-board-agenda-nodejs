@@ -108,7 +108,11 @@ class Keyboard {
 
         return false
       } else if (event.keyCode === 61 || event.keyCode === 187) {
-        navigate("/cache/");
+        if (event.shiftKey) {
+          navigate("/cache/");
+        } else {
+          navigate("/store/");
+        }
         return false
       }
     }

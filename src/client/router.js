@@ -16,6 +16,7 @@ import React from "react";
 import Rejected from "./pages/rejected.js";
 import Search from "./pages/search.js";
 import Shepherd from "./pages/shepherd.js";
+import Store from "./pages/store.js";
 import User from "./models/user.js";
 import { Server } from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
@@ -76,7 +77,9 @@ class Router extends React.Component {
 
     // if title is not present, construct a title from the class name
     if (!item.title) {
-      item.title = item.view.name.replace(
+      let view = item.view;
+      if (view.WrappedComponent) view = view.WrappedComponent;
+      item.title = view.name.replace(
         /(^|-)\w/g,
         c => c.toUpperCase()
       ).replace(/-/g, " ").trim()
@@ -273,8 +276,24 @@ class Router extends React.Component {
         {main({ view: CacheStatus })}
       </Route>
 
-      <Route path="/^cache/">
+      <Route path="/cache/:page">
         {main({ view: CachePage })}
+      </Route>
+
+      <Route exact path="/store/">
+        {main({ view: Store })}
+      </Route>
+
+      <Route exact path="/store/:table">
+        {({ match: { params: { table } } }) => (
+          main({ view: Store, table })
+        )}
+      </Route>
+
+      <Route exact path="/store/:table/:id">
+        {({ match: { params: { table, id } } }) => (
+          main({ view: Store, table, id })
+        )}
       </Route>
 
       <Route exact path="Discussion-Items">
