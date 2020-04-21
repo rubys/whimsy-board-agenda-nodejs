@@ -6,7 +6,7 @@ export default async function (agenda, { request, quick = false } = {}) {
   let minutes = agenda.split(/^ 3. Minutes from previous meetings/m, 2)
     .pop().split(OFFICER_SEPARATOR)[0];
 
-  let pattern1 = /\s{4}(?<attach>[A-Z])\.\sThe.meeting.of\s+(?<title>.*?)\n(?<text>.*?)\[\s(?:.*?):\s*?(?<approved>.*?)\s*comments:(?<comments>.*?)\n\s{8,9}\]\n/ms;
+  let pattern1 = /\s{4}(?<attach>[A-Z])\.\sThe.meeting.of\s+(?<title>.*?)\n(?<text>.*?)\[\s(?:.*?):\s*?(?<approved>.*?)\s*comments:(?<comments>.*?)\n\s{8,9}\]\n/gms;
 
   let sections = [...minutes.matchAll(pattern1)].map(match => match.groups);
 
@@ -28,7 +28,7 @@ export default async function (agenda, { request, quick = false } = {}) {
     return attrs;
   }));
 
-  let pattern2 = /\s{4}(?<attach>[A-Z])\.\s+(?<title>Action.*?)\n(?<text>.*)/m;
+  let pattern2 = /\s{4}(?<attach>[A-Z])\.\s+(?<title>Action.*?)\n(?<text>.*)/gm;
 
   sections = [...agenda.matchAll(pattern2)].map(match => match.groups);
 
