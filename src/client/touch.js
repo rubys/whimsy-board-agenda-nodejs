@@ -1,4 +1,4 @@
-import Main from "./layout/main.js";
+import { navigate } from "./router.js";
 
 //
 // Respond to swipes
@@ -60,11 +60,11 @@ class Touch {
 
       case "up":
       case "down":
-        let path = window.history.state.path.replace(/[^/]+\/?$/m, "") || ".";
-        if (path === "shepherd/queue/") path = `shepherd/${Main.item.shepherd}`;
-        if (path === "flagged/") path = "flagged";
-        if (path === "queue/") path = "queue";
-        Main.navigate(path);
+        let path = window.history.state.path.replace(/[^/]+\/?$/m, "") || "/";
+        // if (path === "shepherd/queue/") path = `/shepherd/${Main.item.shepherd}`;
+        if (path === "flagged/") path = "/flagged";
+        if (path === "queue/") path = "/queue";
+        navigate(path);
         break;
 
       default:

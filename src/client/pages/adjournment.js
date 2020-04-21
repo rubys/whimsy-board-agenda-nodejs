@@ -1,6 +1,6 @@
 import Agenda from "../models/agenda.js";
 import { Link } from "react-router-dom";
-import Main from "../layout/main.js";
+import { navigate }  from "../router.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
 import { post, retrieve } from "../utils.js";
@@ -344,7 +344,7 @@ class FeedbackReminder extends React.Component {
       </ul>
 
       <button className="btn-default btn checklist" onClick={() => (
-        Main.navigate("feedback")
+        navigate("/feedback")
       )}>Submit</button>
     </>
   }

@@ -1,4 +1,4 @@
-import Main from "../layout/main.js";
+import { navigate } from "../router.js";
 import EventBus from "../event-bus.js";
 import React from "react";
 
@@ -110,7 +110,7 @@ class SendFeedback extends React.Component {
         this.setState({ disabled: false });
 
         // return to the Adjournment page
-        Main.navigate("Adjournment")
+        navigate("/Adjournment")
       })
     ));
 

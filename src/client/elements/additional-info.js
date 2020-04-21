@@ -1,7 +1,7 @@
 // import ActionItems from "../pages/action-items.js"; TODO
 import Agenda from "../models/agenda.js";
 import { Link } from "react-router-dom";
-import Main from "../layout/main.js";
+import { navigate } from "../router.js";
 import Minutes from "../models/minutes.js";
 import Posted from "../models/posted.js";
 import React from "react";
@@ -100,7 +100,7 @@ class AdditionalInfo extends React.Component {
         ))}
 
         {this.props.item.pending ? <div className="clickable commented comment" onClick={() => (
-          Main.navigate("queue")
+          navigate("/queue")
         )}>
 
           <h5 id={`${this.state.prefix}pending`}>Pending Comment</h5>
@@ -161,7 +161,7 @@ class AdditionalInfo extends React.Component {
           </>}
         </React.Fragment>)}
       </> : this.props.item.pending ? <div className="clickable commented comment" onClick={() => (
-        Main.navigate("queue")
+        navigate("/queue")
       )}>
 
         <h5 id={`${this.state.prefix}pending`}>Pending Comment</h5>

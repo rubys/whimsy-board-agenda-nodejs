@@ -3,6 +3,7 @@ import Chat from "./models/chat.js";
 import Main from "./layout/main.js";
 import Minutes from "./models/minutes.js";
 import User from "./models/user.js";
+import { navigate } from "./router.js";
 import { jQuery } from "jquery";
 import { post } from "./utils.js";
 import Store from './store.js';
@@ -38,7 +39,7 @@ class Keyboard {
         }
       } else if (event.keyCode === 13) {
         let link = document.querySelector(".default");
-        if (link) Main.navigate(link.getAttribute("href"));
+        if (link) navigate(link.getAttribute("href"));
         return false
       } else if (event.keyCode === 67) {
         let link = document.getElementById("comments");
@@ -46,7 +47,7 @@ class Keyboard {
         if (link) {
           jQuery("html, body").animate({scrollTop: link.offsetTop}, "slow")
         } else {
-          Main.navigate("comments")
+          navigate("/comments")
         };
 
         return false
@@ -55,13 +56,13 @@ class Keyboard {
         if (info) info.click();
         return false
       } else if (event.keyCode === 77) {
-        Main.navigate("missing");
+        navigate("/missing");
         return false
       } else if (event.keyCode === 78) {
         document.getElementById("nav").click();
         return false
       } else if (event.keyCode === 65) {
-        Main.navigate(".");
+        navigate("/");
         return false
       } else if (event.keyCode === 83) {
         if (event.shiftKey) {
@@ -69,7 +70,7 @@ class Keyboard {
           Main.refresh()
         } else {
           link = document.getElementById("shepherd");
-          if (link) Main.navigate(link.getAttribute("href"))
+          if (link) navigate(link.getAttribute("href"))
         };
 
         return false
@@ -84,16 +85,16 @@ class Keyboard {
           return false
         }
       } else if (event.keyCode === 81) {
-        Main.navigate("queue");
+        navigate("/queue");
         return false
       } else if (event.keyCode === 70) {
-        Main.navigate("flagged");
+        navigate("/flagged");
         return false
       } else if (event.keyCode === 66) {
-        Main.navigate("backchannel");
+        navigate("/backchannel");
         return false
       } else if (event.shiftKey && event.keyCode === 191) {
-        Main.navigate("help");
+        navigate("/help");
         return false
       } else if (event.keyCode === 82) {
         Store.dispatch(Actions.clockIncrement());
@@ -107,7 +108,7 @@ class Keyboard {
 
         return false
       } else if (event.keyCode === 61 || event.keyCode === 187) {
-        Main.navigate("cache/");
+        navigate("/cache/");
         return false
       }
     }

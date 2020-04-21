@@ -29,15 +29,18 @@ import { Switch, Route, withRouter } from "react-router-dom";
 // determines what buttons are required.
 //
 
+let history = null;
+
+export function navigate(path, query) {
+  history.push(path, { path, query });
+}
+
 class Router extends React.Component {
 
   state = {};
 
   static getDerivedStateFromProps(props) {
-    Router.history = props.history;
-    Router.navigate = (path, query) => {
-      Router.history.push(path, { path, query })
-    }
+    history = props.history;
 
     let path = props.location.pathname;
 
