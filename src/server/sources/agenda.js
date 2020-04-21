@@ -13,6 +13,19 @@ export function minutesLink(title) {
   return "https://whimsy.apache.org/board/minutes/" + title.replace(/\W/g, "_")
 }
 
+// mapping of agenda section numbers to section names
+const CONTENTS = {
+  '2.': 'Roll Call',
+  '3A': 'Minutes',
+  '4A': 'Executive Officer',
+  '1': 'Additional Officer',
+  'A': 'Committee Reports',
+  '7A': 'Special Orders',
+  '8.': 'Discussion Items',
+  '8A': 'Discussion Items',
+  '9.': 'Action Items'
+}
+
 export async function parse(filename, request) {
   // first check cache
   let mtime = await Board.mtime(filename);
@@ -49,8 +62,16 @@ export async function parse(filename, request) {
     Object.assign(sections.get(attach), section);
   });
 
+  // add index markers for major sections
+  for (let [section, index] of Object.entries(CONTENTS)) {
+    if (sections.has(section)) {
+      sections.get(section).index = index
+    }
+  }
+
+  // convert back to an array
   items = Array.from(sections.values());
-  
+
   // cleanup
   for (let section of items) {
     // parse approved into invididual approvals
@@ -60,7 +81,7 @@ export async function parse(filename, request) {
 
     // unindent text or report
     let text = section.text || section.report;
-    if (text) {  
+    if (text) {
       let unindent = Math.min(...Array.from(text.matchAll(/^ *\S/gm)).map(item => (item[0].length))) || 1;
       text = text.replace(new RegExp(`^ {${unindent - 1}}`, "gm"), "").trim();
       section.text ? section.text = text : section.report = text;
