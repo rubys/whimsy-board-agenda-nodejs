@@ -2,6 +2,7 @@ import express from 'express';
 import compression from 'compression';
 import historicalComments from "./sources/historical-comments.js";
 import jira from "./sources/jira.js";
+import minutes from "./sources/minutes.js";
 import postedReports from "./sources/posted-reports.js";
 import reporter from "./sources/reporter.js";
 import responses from "./sources/responses.js";
@@ -73,6 +74,10 @@ app.get('/api/jira', async (request, response) => {
 app.get('/api/historical-comments', async (request, response) => {
   response.setHeader('content-type', 'application/json');
   response.send(await historicalComments(request))  
+});
+
+app.get('/api/minutes/:date([0-9]+-[0-9]+-[0-9]+)', async (request, response, next) => {
+  response.json(await minutes(request, request.params.date));
 });
 
 app.get('/api/posted-reports', async (request, response) => {

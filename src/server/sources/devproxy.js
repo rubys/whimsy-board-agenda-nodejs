@@ -7,7 +7,7 @@ import * as cache from '../cache.js';
 
 export default async function devproxy(request, path) {
 
-  let cacheFile = `${path.split('/').pop().split('.')[0]}.json`;
+  let cacheFile = path.split('/').pop();
 
   let data = await cache.read(cacheFile, 5 * 60 * 1000);
   if (data) return data;
@@ -33,8 +33,12 @@ export default async function devproxy(request, path) {
       });
 
       res.on('end', () => {
-        resolve(body);
-        cache.write(cacheFile, body)
+        if (res.statusCode === 200) {
+          resolve(body);
+          cache.write(cacheFile, body)
+        } else {
+          resolve(null)
+        }
       });
 
       res.on('error', (error) => {
