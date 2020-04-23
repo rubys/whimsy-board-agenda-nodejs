@@ -1,4 +1,5 @@
 import Agenda from "../models/agenda.js";
+import Colorize from "../elements/colorize.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
 import User from "../models/user.js";
@@ -15,30 +16,32 @@ import { Link } from "react-router-dom";
 //
 class Footer extends React.Component {
   render() {
-    return <footer className={"fixed-bottom navbar " + this.props.item.color}>
-      <PrevLink item={this.props.item} options={this.props.options} />
+    return <Colorize item={this.props.item}>
+      <footer className="fixed-bottom navbar">
+        <PrevLink item={this.props.item} options={this.props.options} />
 
-      <span>{this.props.buttons ? this.props.buttons.map((button) => {
-        let props;
+        <span>{this.props.buttons ? this.props.buttons.map((button) => {
+          let props;
 
-        if (button.text) {
-          props = { ...button.attrs, key: button.text };
+          if (button.text) {
+            props = { ...button.attrs, key: button.text };
 
-          if (button.attrs.class) {
-            props.className = button.attrs.class.split(" ");
-            delete props.class;
-          };
+            if (button.attrs.class) {
+              props.className = button.attrs.class.split(" ");
+              delete props.class;
+            };
 
-          return React.createElement("button", props, button.text)
-        } else if (button.type) {
-          return React.createElement(button.type, { ...button.attrs, key: button.type.name })
-        }
+            return React.createElement("button", props, button.text)
+          } else if (button.type) {
+            return React.createElement(button.type, { ...button.attrs, key: button.type.name })
+          }
 
-        return null
-      }) : null}</span>
+          return null
+        }) : null}</span>
 
-      <NextLink item={this.props.item} options={this.props.options} />
-    </footer>
+        <NextLink item={this.props.item} options={this.props.options} />
+      </footer>
+    </Colorize>
   }
 };
 
@@ -99,11 +102,12 @@ class PrevLink extends React.Component {
     };
 
     if (link) {
-      if (!prefix && link.href.startsWith('../')) {
-        return <a className={"navbar-brand backlink " + link.color} rel="prev" href={`${prefix}${link.href}`}>{link.title}</a>
-      } else {
-        return <Link className={"navbar-brand backlink " + link.color} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
-      }
+      return <Colorize item={link}>
+        {(!prefix && link.href.startsWith('../'))
+          ? <a className={"navbar-brand backlink"} rel="next" href={link.href}>{link.title}</a>
+          : <Link className={"navbar-brand backlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
+        }
+      </Colorize>
     } else if (this.props.item.prev || this.props.item.next) {
       return <a className="navbar-brand" />
     } else {
@@ -155,11 +159,12 @@ class NextLink extends React.Component {
     };
 
     if (link) {
-      if (!prefix && link.href.startsWith('../')) {
-        return <a className={"navbar-brand nextlink " + link.color} rel="next" href={`${prefix}${link.href}`}>{link.title}</a>
-      } else {
-        return <Link className={"navbar-brand nextlink " + link.color} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
-      }
+      return <Colorize item={link}>
+        {(!prefix && link.href.startsWith('../'))
+          ? <a className={"navbar-brand nextlink"} rel="prev" href={link.href}>{link.title}</a>
+          : <Link className={"navbar-brand nextlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
+        }
+      </Colorize>
     } else if (this.props.item.prev || this.props.item.next) {
       return <a className="navbar-brand" />
     } else {
