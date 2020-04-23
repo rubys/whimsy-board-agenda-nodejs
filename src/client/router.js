@@ -15,10 +15,11 @@ import Queue from "./pages/queue.js";
 import React from "react";
 import Rejected from "./pages/rejected.js";
 import Search from "./pages/search.js";
+import Server from "./pages/server.js";
 import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
 import User from "./models/user.js";
-import { Server } from "./utils.js";
+import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from "react-router-dom";
@@ -115,7 +116,7 @@ class Router extends React.Component {
           // no form or form has no separate button: so this is just a button
           delete props.text;
           props.type = button.button || form;
-          props.attrs = { item, server: Server }
+          props.attrs = { item, server: Utils.Server }
         };
 
         // item overrides
@@ -273,15 +274,31 @@ class Router extends React.Component {
       </Route>
 
       <Route exact path="/cache/">
-        {main({ view: CacheStatus })}
+        {main({
+          view: CacheStatus,
+          next: { href: '/server/', title: 'Server' },
+          prev: { href: '/store/', title: 'Store' }
+        })}
       </Route>
 
       <Route path="/cache/:page">
         {main({ view: CachePage })}
       </Route>
 
+      <Route exact path="/server/">
+        {main({
+          view: Server,
+          next: { href: '/store/', title: 'Store' },
+          prev: { href: '/cache/', title: 'Cache' }
+        })}
+      </Route>
+
       <Route exact path="/store/">
-        {main({ view: Store })}
+        {main({
+          view: Store,
+          next: { href: '/cache/', title: 'Cache' },
+          prev: { href: '/server/', title: 'Server' }
+        })}
       </Route>
 
       <Route exact path="/store/:table">
