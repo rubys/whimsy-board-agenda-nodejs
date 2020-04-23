@@ -6,12 +6,16 @@ export default function reduce(state = null, action) {
       // copy the agenda
       let agenda = action.index.map(item => ({ ...item }));
 
-      // set up next and prev links
+      // set up next and prev links, hrefs
       let prev = null;
       for (let item of agenda) {
+        // set up next and prev links
         item.prev = prev;
         if (prev) prev.next = item;
         prev = item;
+
+        // compute hrefs
+        item.href = '/' + item.title.replace(/[^a-zA-Z0-9]+/g, "-");
       };
   
       // remove president attachments from the normal flow
