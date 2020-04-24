@@ -16,8 +16,8 @@ export default async function server(request) {
 
   let server = JSON.parse(await devproxy(request, 'server.json'));
 
-  server.agendas = await Board.agendas();
-  server.drafts = await Board.draftMinutes();
+  server.agendas = await Board.agendas(request);
+  server.drafts = await Board.draftMinutes(request);
 
   let wsProtocol = request.secure ? 'wss' : 'ws';
 

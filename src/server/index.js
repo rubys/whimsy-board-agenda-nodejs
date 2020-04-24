@@ -60,7 +60,7 @@ app.get('/api/latest.json', async (request, response) => {
 app.get('/api/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
   let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
   try {
-    response.json(await parse(agenda));
+    response.json(await parse(agenda, request));
   } catch (error) {
     if (error.code === 'ENOENT') next();
     next(error);
