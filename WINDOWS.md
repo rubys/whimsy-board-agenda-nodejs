@@ -1,12 +1,12 @@
 To run on Microsoft Windows, you will need to install svn, git, node.js,
-and yarn.  Visual Studio code is highly recommnded.  These installation
+and yarn.  Visual Studio code is highly recommended.  These installation
 instructions will guide you through the process.
 
 # Subversion
 
 Download and install [TortoiseSVN](https://tortoisesvn.net/downloads.html).
 Be aware that their website is a bit spammy and may include ads that look
-like downloads.  What you are looking for is a buttun that identifies
+like downloads.  What you are looking for is a button that identifies
 a TortoiseSVN version number and whether it is for a 32 or 64 bit operating
 system.
 
@@ -64,7 +64,10 @@ the application with the following command:
 
     yarn dev
 
-***NOTE** the conveniece "npm scripts" list in the EXPLORER window in VSCode
+**NOTE** the convenience "npm scripts" list in the EXPLORER window in VSCode
 will not currently work as they won't use the right shell.
 
+
+**NOTE** at the moment, the Windows Edge browser does not work (it produces
+a parse error for the JavaScript that is generated).  Firefox works fine.
 
