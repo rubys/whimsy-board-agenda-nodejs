@@ -1,6 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import * as Actions from '../actions.js';
 import agenda from './reducers/agenda.js';
+import client from './reducers/client.js';
 import clockCounter from './reducers/clock-counter.js';
 import historicalComments from './reducers/historical-comments.js';
 import responses from './reducers/responses.js';
@@ -11,7 +12,7 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-let reducer = combineReducers({ agenda, clockCounter, historicalComments, responses, server });
+let reducer = combineReducers({ agenda, client, clockCounter, historicalComments, responses, server });
 
 const store = createStore(reducer);
 

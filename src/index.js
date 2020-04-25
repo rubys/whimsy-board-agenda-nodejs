@@ -43,7 +43,10 @@ ReactDOM.render(
     // fetch and store agenda information
     response = await fetch(`/api/${base.slice(1, -1)}.json`);
     if (response.ok) {
-      store.dispatch(Actions.postAgenda(await response.json()));
+      let agenda = await response.json();
+      let date = new Date(agenda[0].timestamp).toISOString().slice(0, 10);
+      store.dispatch(Actions.postAgenda(agenda));
+      store.dispatch(Actions.meetingDate(date));
     } else {
       console.error(`fetch agenda ${base}: ${response.statusText}`);
     }

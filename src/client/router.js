@@ -162,14 +162,14 @@ class Router extends React.Component {
           for (let agenda of this.props.agendas) {
             let date = (agenda.match(/(\d+_\d+_\d+)/) || [])[1].replace(/_/g, "-");
 
-            if (date < Agenda.date && (prev.title === "Help" || date > prev.title)) {
+            if (date < this.props.meetingDate && (prev.title === "Help" || date > prev.title)) {
               prev = { title: date, href: `../${date}/` }
-            } else if (date > Agenda.date && (next.title === "Help" || date < next.title)) {
+            } else if (date > this.props.meetingDate && (next.title === "Help" || date < next.title)) {
               next = { title: date, href: `../${date}/` }
             }
           };
 
-          return main({ view: Index, title: Agenda.date, prev, next })
+          return main({ view: Index, title: this.props.meetingDate, prev, next })
         }}
       </Route>
 
@@ -355,7 +355,11 @@ class Router extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return { agenda: state.agenda, agendas: state.server.agendas || {} }
+  return {
+    agenda: state.agenda,
+    agendas: state.server.agendas || {},
+    meetingDate: state.client.meetingDate
+  }
 };
 
 export default connect(mapStateToProps)(withRouter(Router))
