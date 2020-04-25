@@ -28,7 +28,7 @@ const CONTENTS = {
 
 export async function parse(filename, request) {
   // first check cache
-  let mtime = await Board.mtime(filename);
+  let mtime = await Board.mtime(filename, request);
   let cacheFile = filename.replace('.txt', '.json');
   let agenda = await cache.read(cacheFile, 5 * 60 * 1000, mtime);
   if (agenda) return JSON.parse(agenda);
@@ -36,6 +36,9 @@ export async function parse(filename, request) {
   // read from local svn working copy
   agenda = await Board.read(filename);
   if (!agenda) return null;
+
+  // canonicalize line endings
+  if (agenda.includes('\r')) agenda = agenda.replace(/\r\n?/g, "\n");
 
   // replace tabs with spaces
   agenda = agenda.replace(/^(\t+)/gm, tabs => new Array(8 * tabs.length + 1).join(" "));
