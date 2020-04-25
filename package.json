@@ -33,7 +33,7 @@
     "yaml": "^1.9.2"
   },
   "scripts": {
-    "dev": "NODE_ENV=development concurrently --kill-others-on-fail npm:server npm:client",
+    "dev": "NODE_ENV=development concurrently --kill-others-on-fail yarn:server yarn:client",
     "client": "react-scripts start",
     "server": "nodemon --ignore work -w src/server.js -w src/server src/server.js",
     "start": "react-scripts start",

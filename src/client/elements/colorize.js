@@ -6,7 +6,9 @@ import { connect } from 'react-redux';
 function Colorize({ item, minutes, pending, drafts, children }) {
 
   let color = (() => {
-    if (flagged()) {
+    if (!item) {
+      return "blank"
+    } if (flagged()) {
       return "commented"
     } else if (item.color) {
       return item.color

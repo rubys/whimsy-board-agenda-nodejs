@@ -11,11 +11,11 @@ import { htmlEscape } from "../utils.js";
 //
 class Search extends React.Component {
   // initialize query text based on data passed to the component
-  state = {text: this.props.item.query || ""};
+  state = {text: this.props.query || ""};
 
   render() {
     let matches = false;
-    let text;
+    let text = this.state.text.toLowerCase();
 
     return <>
       <div className="search">
@@ -24,8 +24,6 @@ class Search extends React.Component {
       </div>
 
       {this.state.text.length > 2 ? <>
-        {text = this.state.text.toLowerCase()}
-
         {Agenda.index.map((item) => {
           if (!item.text || !item.text.toLowerCase().includes(text)) return null;
           matches = true;
@@ -56,7 +54,7 @@ class Search extends React.Component {
   };
 
   // update text whenever input changes
-  input(event) {
+  input = (event) => {
     this.setState({text: event.target.value})
   };
 

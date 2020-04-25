@@ -16,9 +16,11 @@ import { Link } from "react-router-dom";
 //
 class Footer extends React.Component {
   render() {
-    return <Colorize item={this.props.item}>
+    let item = this.props.item || this.props;
+
+    return <Colorize item={item}>
       <footer className="fixed-bottom navbar">
-        <PrevLink item={this.props.item} options={this.props.options} />
+        <PrevLink item={item} options={this.props.options} />
 
         <span>{this.props.buttons ? this.props.buttons.map((button) => {
           let props;
@@ -39,7 +41,7 @@ class Footer extends React.Component {
           return null
         }) : null}</span>
 
-        <NextLink item={this.props.item} options={this.props.options} />
+        <NextLink item={item} options={this.props.options} />
       </footer>
     </Colorize>
   }
@@ -49,7 +51,7 @@ class Footer extends React.Component {
 
 class PrevLink extends React.Component {
   render() {
-    let link = this.props.item.prev;
+    let link = this.props.item?.prev;
     let prefix = "";
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
@@ -108,7 +110,7 @@ class PrevLink extends React.Component {
           : <Link className={"navbar-brand backlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
       </Colorize>
-    } else if (this.props.item.prev || this.props.item.next) {
+    } else if (this.props.item?.prev || this.props.item?.next) {
       return <a className="navbar-brand" />
     } else {
       return null
@@ -118,7 +120,7 @@ class PrevLink extends React.Component {
 
 class NextLink extends React.Component {
   render() {
-    let link = this.props.item.next;
+    let link = this.props.item?.next;
     let prefix = '';
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
@@ -165,7 +167,7 @@ class NextLink extends React.Component {
           : <Link className={"navbar-brand nextlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
       </Colorize>
-    } else if (this.props.item.prev || this.props.item.next) {
+    } else if (this.props.item?.prev || this.props.item?.next) {
       return <a className="navbar-brand" />
     } else {
       return null

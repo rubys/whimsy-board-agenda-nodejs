@@ -29,7 +29,7 @@ function Store( { state }) {
   return <JsonTree data={state} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false}/>
 }
 
-function mapStateToProps(state, { item: { table, id }}) {
+function mapStateToProps(state, { table, id }) {
   if (!table) return { state } ;
   state = state[table];
   if (!id) return { state } ;

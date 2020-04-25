@@ -27,6 +27,9 @@ class Report extends React.Component {
   render() {
     let warning, draft;
 
+    let item = this.props.item;
+    let text = item.text || item.report;
+
     return <section className="flexbox">
       <section>
         {this.props.item.warnings ? <ul className="missing">
@@ -35,12 +38,10 @@ class Report extends React.Component {
         </ul> : null}
 
         <pre className="report">{
-          this.props.item.text ?
-            <Text raw={this.props.item.text} filters={this.filters} /> :
-            this.props.item.missing ? <>
-              {draft = Reporter.find(this.props.item)}
-
-              {draft ? <>
+          text
+            ? <Text raw={text} filters={this.filters} />
+            : this.props.item.missing ? <>
+              {((draft = Reporter.find(this.props.item))) ? <>
                 <p>
                   <em>Unposted draft being prepared at </em>
                   <a href={`https://reporter.apache.org/wizard?${draft.project}`}>reporter.apache.org</a>
@@ -59,7 +60,7 @@ class Report extends React.Component {
              is posted there with a <tt>[Report]</tt>
              tag in the subject line a POST button will appear here
              to assist with the posting the report.
-          </p> : null }
+          </p> : null}
 
           <Email item={this.props.item} />
         </section> : null}

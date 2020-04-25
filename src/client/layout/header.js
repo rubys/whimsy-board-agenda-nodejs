@@ -19,12 +19,17 @@ class Header extends React.Component {
 
   render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
-    let summary = this.props.item.summary || Agenda.summary;
+    let props= this.props.item || this.props;
+    let summary = props.summary || Agenda.summary;
 
-    return <Colorize item={this.props.item}>
+    return <Colorize item={props}>
       <header className="navbar fixed-top">
-        <div className="navbar-brand">{this.props.item.title}</div>
-        {/^7/m.test(this.props.item.attach) && /^Establish .* Project/m.test(this.props.item.fulltitle) ? <PodlingNameSearch item={this.props.item} /> : null}
+        <div className="navbar-brand">{props.title}</div>
+
+        {/^7/m.test(props.attach) && /^Establish .* Project/m.test(props.fulltitle)
+          ? <PodlingNameSearch item={props} />
+          : null}
+
         {this.props.clock_counter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
 
         <ul className="nav nav-pills navbar-right">
@@ -33,22 +38,22 @@ class Header extends React.Component {
             <Link to="queue">{Pending.count}</Link>
           </li> : null}
 
-          {this.props.item.attach ?
+          {props.attach ?
             <li className={"report-info dropdown " + this.#infodropdown}>
               <a id="info" className="dropdown-toggle" onClick={this.toggleInfo}>
                 <>info</>
                 <b className="caret" />
               </a>
 
-              <Info item={this.props.item} position="dropdown-menu" />
-            </li> : this.props.item.online ? <li className="dropdown">
+              <Info item={props} position="dropdown-menu" />
+            </li> : props.online ? <li className="dropdown">
               <a id="info" className="dropdown-toggle" data-toggle="dropdown">
                 <>online</>
                 <b className="caret" />
               </a>
 
               <ul className="online dropdown-menu">
-                {this.props.item.online.map(id =>
+                {props.online.map(id =>
                   <li>
                     <a href={`/roster/committer/${id}`}>{id}</a>
                   </li>
@@ -91,9 +96,9 @@ class Header extends React.Component {
               </li>
 
               {Agenda.index.map((item) => {
-                if (item.index) {
+                if (props.index) {
                   return <li>
-                    <Link to={item.href}>{item.index}</Link>
+                    <Link to={props.href}>{props.index}</Link>
                   </li>
                 } else {
                   return null

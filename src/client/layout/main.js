@@ -32,7 +32,7 @@ class Main extends React.Component {
 
   // common layout for all pages: header, main, footer, and forms
   render() {
-    if (!this.props.item) {
+    if (!this.props.view) {
       if (this.props.server) {
         return <p>Page not found</p>
       } else {
@@ -46,14 +46,14 @@ class Main extends React.Component {
     };
 
     return <>
-      <Header item={this.props.item} />
+      <Header {...this.props}/>
 
-      <main>{Agenda.index[0] && Agenda.index[0].text ? React.createElement(
-        this.props.item.view,
-        { item: this.props.item, ref: Main.view }
-      ) : null}</main>
+      <main>{React.createElement(
+        this.props.view,
+        { ...this.props, ref: Main.view }
+      )}</main>
 
-      <Footer item={this.props.item} buttons={this.props.buttons} options={this.props.options} />
+      <Footer {...this.props} />
 
       {this.props.buttons ? this.props.buttons.map((button) => {
         if (button.form) {

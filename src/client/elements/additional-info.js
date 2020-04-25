@@ -80,7 +80,7 @@ class AdditionalInfo extends React.Component {
       </> : null}
       */}
 
-      {this.props.item.special_orders.length !== 0 ? <>
+      {this.props.item.special_orders?.length ? <>
         <h4 id={`${this.state.prefix}orders`}>Special Orders</h4>
 
         <ul>{this.props.item.special_orders.map(resolution => (
@@ -90,7 +90,7 @@ class AdditionalInfo extends React.Component {
         ))}</ul>
       </> : null}
 
-      {this.props.item.comments.length !== 0 || (historicalComments.length > 0 && !this.state.prefix) ? <>
+      {this.props.item.comments?.length || (historicalComments.length > 0 && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
         {this.props.item.comments.map(comment => (

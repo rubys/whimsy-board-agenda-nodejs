@@ -6,6 +6,7 @@ import Comments from "./pages/comments.js";
 import Feedback from "./pages/feedback.js";
 import Flagged from "./pages/flagged.js";
 import Help from "./pages/help.js";
+import Index from "./pages/index.js";
 import InsiderSecrets from "./pages/secrets.js";
 import Install from "./buttons/install.js";
 import Main from "./layout/main.js";
@@ -23,6 +24,7 @@ import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from "react-router-dom";
+import Report from "./pages/report.js";
 
 //
 // Route request based on path and query information in the URL
@@ -139,7 +141,7 @@ class Router extends React.Component {
       })
     };
 
-    let props = { ...this.props, item, buttons, options };
+    let props = { ...item, buttons, options };
 
     return <Main {...props} />
   }
@@ -147,11 +149,28 @@ class Router extends React.Component {
   render() {
     let main = this.main;
 
+    if (!this.props.agenda?.length) return main(null);
+
     // route request based on path and query from the window location (URL)
     return <Switch>
 
       <Route exact path={['/', '/.']}>
-        {Agenda.index.length === 0 ? main(null) : main(Agenda)}
+        {() => {
+          let prev = { title: "Help", href: "help" };
+          let next = prev;
+
+          for (let agenda of this.props.agendas) {
+            let date = (agenda.match(/(\d+_\d+_\d+)/) || [])[1].replace(/_/g, "-");
+
+            if (date < Agenda.date && (prev.title === "Help" || date > prev.title)) {
+              prev = { title: date, href: `../${date}/` }
+            } else if (date > Agenda.date && (next.title === "Help" || date < next.title)) {
+              next = { title: date, href: `../${date}/` }
+            }
+          };
+
+          return main({ view: Index, title: Agenda.date, prev, next })
+        }}
       </Route>
 
       <Route exact path="/search">
@@ -202,19 +221,19 @@ class Router extends React.Component {
 
       <Route path="/flagged/:path">
         {({ match: { params: { path } } }) => (
-          main(Agenda.find(path), { traversal: "flagged" })
+          main(this.find(path), { traversal: "flagged" })
         )}
       </Route>
 
       <Route path="/queue/:path">
         {({ match: { params: { path } } }) => (
-          main(Agenda.find(path), { traversal: "queue" })
+          main(this.find(path), { traversal: "queue" })
         )}
       </Route>
 
       <Route path="/shepherd/queue/:path">
         {({ match: { params: { path } } }) => (
-          main(Agenda.find(path), { traversal: "shepherd" })
+          main(this.find(path), { traversal: "shepherd" })
         )}
       </Route>
 
@@ -313,29 +332,30 @@ class Router extends React.Component {
         )}
       </Route>
 
-      <Route exact path="Discussion-Items">
+      <Route exact path="/Discussion-Items">
         {() => {
-          let item = null;
+          let item = this.props.agenda.find(item => /^8[.A-Z]/m.test(item.attach));
 
-          for (let i of Agenda.index) {
-            if (/^8[.A-Z]/m.test(i.attach)) if (!item) item = i
-          };
-
-          return main(item)
+          return main({ view: Report, item })
         }}
       </Route>
 
       <Route path="/:path">
         {({ match: { params: { path } } }) => (
-          main(Agenda.find(path))
+          main({ view: Report, item: this.find(path) })
         )}
       </Route>
     </Switch>
   }
+
+  find = (path) => {
+    let href = '/' + path;
+    return this.props.agenda.find(item => item.href === href);
+  }
 }
 
 function mapStateToProps(state) {
-  return { agenda: state.agenda }
+  return { agenda: state.agenda, agendas: state.server.agendas || {} }
 };
 
 export default connect(mapStateToProps)(withRouter(Router))
