@@ -289,7 +289,7 @@ main hr {
 
 @media screen and (min-width: 768px) {
   .wide-form .modal-dialog {
-    width: 80%;
+    max-width: 80%;
   }
   .wide-form .modal-footer {
     margin-top: 0  
