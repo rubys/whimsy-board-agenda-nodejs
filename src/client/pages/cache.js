@@ -24,7 +24,7 @@ class CacheStatus extends React.Component {
           if (basename === "bootstrap.html") basename = item.split("/")[item.split("/").length - 2] + ".html";
 
           return <li>
-            <Link to={`cache/${basename}`}>{item}</Link>
+            <Link to={`/cache/${basename}`}>{item}</Link>
           </li>
         })}
       </ul>}
@@ -56,7 +56,7 @@ class CacheStatus extends React.Component {
   };
 
   // update information
-  collect_data() {
+  collect_data = () => {
     if (typeof caches !== 'undefined') {
       caches.open("board/agenda").then(cache => (
         cache.matchAll().then((responses) => {
@@ -72,7 +72,7 @@ class CacheStatus extends React.Component {
     }
   };
 
-  mounted() {
+  componentDidMount() {
     // initial observations
     this.collect_data();
 
@@ -83,7 +83,7 @@ class CacheStatus extends React.Component {
     CacheStatus.collect_data = this.collect_data
   };
 
-  beforeDestroy() {
+  componentWillUnmount() {
     if (CacheStatus.timer) clearInterval(CacheStatus.timer);
     CacheStatus.timer = null
   }
@@ -113,7 +113,7 @@ class UnregisterWorker extends React.Component {
     return <button className="btn-primary btn" onClick={this.click}>Unregister ServiceWorker</button>
   };
 
-  click(event) {
+  click = (event) => {
     if (typeof caches !== 'undefined') {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         let base = new URL("..", document.getElementsByTagName("base")[0].href).href;
@@ -166,7 +166,7 @@ export class CachePage extends React.Component {
   };
 
   // update on first update
-  mounted() {
+  componentDidMount() {
     if (typeof caches !== 'undefined') {
       let basename = window.location.href.split("/").pop();
       if (basename === "index.html") basename = "";

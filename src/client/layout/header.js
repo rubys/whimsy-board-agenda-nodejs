@@ -100,7 +100,7 @@ class Header extends React.Component {
 
             <ul className="dropdown-menu">
               <li>
-                <Link id="agenda" to=".">Agenda</Link>
+                <Link id="agenda" to="/">Agenda</Link>
               </li>
 
               {this.props.agenda.map(item => {
