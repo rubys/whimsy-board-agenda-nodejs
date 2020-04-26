@@ -64,7 +64,7 @@ class JSONStorage {
         let request = new Request(`../api/${name}`, {
           method: "get",
           credentials: "include",
-          headers: {Accept: "application/json"}
+          headers: { Accept: "application/json" }
         });
 
         // dispatch request
@@ -78,22 +78,26 @@ class JSONStorage {
               if (json) block(json)
             }
           })
-          .catch(error => {
-            console.error(`fetch ${request.url}:\n${error}`)
-          })
-          .finally(() => {
-            if (!fetched) Store.dispatch(Actions.clockDecrement());
-          })
+            .catch(error => {
+              console.error(`fetch ${request.url}:\n${error}`)
+            })
+            .finally(() => {
+              if (!fetched) Store.dispatch(Actions.clockDecrement());
+            })
         });
 
         // check cache
         cache.match(`../api/${name}`).then(response => {
           if (response && !fetched) {
-            response.json().then(json => {
-              Store.dispatch(Actions.clockDecrement());
-              fetched = json;
-              if (json) block(json)
-            })
+            try {
+              response.json().then(json => {
+                Store.dispatch(Actions.clockDecrement());
+                fetched = json;
+                if (json) block(json)
+              })
+            } catch (error) {
+              if (error.name !== 'SyntaxError') throw error;
+            }
           }
         })
       })
