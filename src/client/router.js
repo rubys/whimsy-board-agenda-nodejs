@@ -1,4 +1,5 @@
 import Agenda from "./models/agenda.js";
+import Adjournment from "./pages/adjournment.js";
 import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
 import CacheStatus, { CachePage } from "./pages/cache.js";
@@ -15,6 +16,7 @@ import PageCache from "./models/pagecache.js";
 import Queue from "./pages/queue.js";
 import React from "react";
 import Rejected from "./pages/rejected.js";
+import RollCall from "./pages/roll-call.js";
 import Search from "./pages/search.js";
 import Server from "./pages/server.js";
 import Shepherd from "./pages/shepherd.js";
@@ -341,9 +343,16 @@ class Router extends React.Component {
       </Route>
 
       <Route path="/:path">
-        {({ match: { params: { path } } }) => (
-          main({ view: Report, item: this.find(path) })
-        )}
+        {({ match: { params: { path } } }) => {
+          let view = Report;
+
+          if (this.props.role === 'secretary') {
+            if (path === 'Roll-Call') view = RollCall;
+            if (path === 'Adjournment') view = Adjournment;
+          }
+
+          return main({ view, item: this.find(path) })
+        }}
       </Route>
     </Switch>
   }
@@ -358,7 +367,8 @@ function mapStateToProps(state) {
   return {
     agenda: state.agenda,
     agendas: state.server.agendas || {},
-    meetingDate: state.client.meetingDate
+    meetingDate: state.client.meetingDate,
+    role: state.server?.user?.role
   }
 };
 
