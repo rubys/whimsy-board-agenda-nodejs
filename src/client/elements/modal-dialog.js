@@ -6,91 +6,88 @@ import React from "react";
 // don't have to.  The elements provided by the calling component are
 // distributed to header, body, and footer sections.
 //
-class ModalDialog extends React.Component {
-  collateChildren() {
-    let sections = {header: [], body: [], footer: []};
+export default class ModalDialog extends React.Component {
+  state = {header: [], body: [], footer: []};
 
-    React.Children.forEach(this.children, child => {
-      if (child.tag === "h4") {
+  componentWillMount() {
+    this.componentWillReceiveProps(this.props)
+  };
+
+  componentWillReceiveProps($$props) {
+    this.state.header.length = 0;
+    this.state.body.length = 0;
+    this.state.footer.length = 0;
+
+    for (let child of React.Children.toArray($$props.children)) {
+      if (child.type == "h4") {
         // place h4 elements into the header, adding a modal-title class
         child = this.addClass(child, "modal-title");
-        sections.header.push(child)
-      } else if (child.tag === "button") {
+        this.state.header.push(child);
+        ModalDialog.h4 = child
+      } else if (child.type == "button") {
         // place button elements into the footer, adding a btn class
         child = this.addClass(child, "btn");
-        sections.footer.push(child)
-      } else if (child.tag === "input" || child.tag === "textarea") {
+        this.state.footer.push(child)
+      } else if (child.type == "input" || child.type == "textarea") {
         // wrap input and textarea elements in a form-control, 
         // add label if present
         child = this.addClass(child, "form-control");
         let label = null;
 
-        if (child.data.attrs.label && child.data.attrs.id) {
-          let props = {attrs: {for: child.data.attrs.id}};
+        if (child.props.label && child.props.id) {
+          let props = {htmlFor: child.props.id};
 
-          if (child.data.attrs.type === "checkbox") {
-            props.class = ["checkbox"];
-
-            label = React.createElement(
-              "label",
-              props,
-              [child, React.createElement("span", child.data.attrs.label)]
-            );
-
-            delete child.data.attrs.label;
+          if (child.props.type == "checkbox") {
+            props.className = "checkbox";
+            label = React.createElement("label", props, child, child.props.label);
+            delete child.props.label;
             child = null
           } else {
-            label = React.createElement("label", props, child.data.attrs.label);
-            delete child.data.attrs.label
+            label = React.createElement("label", props, child.props.label);
+            child = React.cloneElement(child, {label: null})
           }
         };
 
-        sections.body.push(React.createElement(
+        this.state.body.push(React.createElement(
           "div",
-          {class: "form-group"},
-          [label, child]
+          {className: "form-group"},
+          label,
+          child
         ))
       } else {
         // place all other elements into the body
-        sections.body.push(child)
+        this.state.body.push(child)
       }
-    });
-
-    return sections
+    }
   };
 
   render() {
-    let sections = this.collateChildren();
-
-    return <>
-      <div className={"fade modal " + this.props.className} id={this.props.id}>
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className={"modal-header " + this.props.color}>
-              <button className="close" type="button" data_dismiss="modal">×</button>
-              {sections.header}
-            </div>
-
-            <div className="modal-body">{sections.body}</div>
-            <div className={"modal-footer " + this.props.color}>{sections.footer}</div>
+    return <div className={"fade modal " + this.props.className} id={this.props.id}>
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className={"modal-header " + this.props.color}>
+            <button className="close" type="button" data_dismiss="modal">×</button>
+            {this.state.header}
           </div>
+
+          <div className="modal-body">{this.state.body}</div>
+          <div className={"modal-footer " + this.props.color}>{this.state.footer}</div>
         </div>
       </div>
-    </>
+    </div>
   };
 
   // helper method: add a class to an element, returning new element
   addClass(element, name) {
-    element.data = element.data || {};
-
-    if (!element.data.class) {
-      element.data.class = [name]
-    } else if (!element.data.class.includes(name)) {
-      element.data.class.push(name)
+    if (!element.props.className) {
+      element = React.cloneElement(element, {className: name})
+    } else if (!element.props.className.split(" ").includes(name)) {
+      element = React.cloneElement(
+        element,
+        {className: element.props.className + ` ${name}`}
+      )
     };
 
     return element
   }
-};
-
-export default ModalDialog
+}
