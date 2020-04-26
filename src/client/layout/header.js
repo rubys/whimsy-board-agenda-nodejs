@@ -15,11 +15,11 @@ import { connect } from 'react-redux';
 // Finally: make info dropdown status 'sticky'
 
 class Header extends React.Component {
-  #infodropdown = null;
+  state = { infodropdown: null };
 
   render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
-    let props= this.props.item || this.props;
+    let props = this.props.item || this.props;
     let summary = props.summary || this.summary();
 
     return <Colorize item={props}>
@@ -39,31 +39,38 @@ class Header extends React.Component {
           </li> : null}
 
           {props.attach ?
-            <li className={"report-info dropdown " + this.#infodropdown}>
-              <a id="info" className="dropdown-toggle" onClick={this.toggleInfo}>
-                <>info</>
+            <li className={"report-info dropdown"} data-toggle="dropdown">
+              <a id="info" className="dropdown-toggle">
+                info
                 <b className="caret" />
               </a>
 
               <Info item={props} position="dropdown-menu" />
-            </li> : props.online ? <li className="dropdown">
-              <a id="info" className="dropdown-toggle" data-toggle="dropdown">
-                <>online</>
-                <b className="caret" />
-              </a>
+            </li>
 
-              <ul className="online dropdown-menu">
-                {props.online.map(id =>
-                  <li>
-                    <a href={`/roster/committer/${id}`}>{id}</a>
-                  </li>
-                )}
-              </ul>
-            </li> :
+            : props.online ?
+
+              <li className="dropdown">
+                <a id="info" className="dropdown-toggle" data-toggle="dropdown">
+                  online
+                  <b className="caret" />
+                </a>
+
+                <ul className="online dropdown-menu">
+                  {props.online.map(id =>
+                    <li>
+                      <a href={`/roster/committer/${id}`}>{id}</a>
+                    </li>
+                  )}
+                </ul>
+              </li>
+
+              :
+
               <li className="dropdown">
                 <a id="info" className="dropdown-toggle" data-toggle="dropdown">
                   summary
-                <b className="caret" />
+                  <b className="caret" />
                 </a>
 
                 <table className="table-bordered online dropdown-menu">
@@ -82,7 +89,8 @@ class Header extends React.Component {
                     </tr>
                   })}</tbody>
                 </table>
-              </li>}
+              </li>
+          }
 
           <li className="dropdown">
             <a id="nav" className="dropdown-toggle" data-toggle="dropdown">
@@ -138,11 +146,6 @@ class Header extends React.Component {
       </header>
     </Colorize>
   };
-
-  // toggle info dropdown
-  toggleInfo = () => {
-    this.#infodropdown = this.#infodropdown ? null : "open"
-  }
 
   // summarize the state of the various reports
   summary = () => {
@@ -266,7 +269,7 @@ class Header extends React.Component {
 };
 
 function mapStateToProps(state) {
-  return { 
+  return {
     agenda: state.agenda,
     clock_counter: state.clock_counter,
     user: state.server.user
