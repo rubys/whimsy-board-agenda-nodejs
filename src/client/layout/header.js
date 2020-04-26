@@ -22,6 +22,14 @@ class Header extends React.Component {
     let props = this.props.item || this.props;
     let summary = props.summary || this.summary();
 
+    // update title to match the item title whenever page changes
+    if (typeof document !== 'undefined' && props.title) {
+      let title = document.getElementsByTagName("title")[0]
+      if (title.textContent !== props.title) {
+        title.textContent = props.title
+      }
+    }
+
     return <Colorize item={props}>
       <header className="navbar fixed-top">
         <div className="navbar-brand">{props.title}</div>
