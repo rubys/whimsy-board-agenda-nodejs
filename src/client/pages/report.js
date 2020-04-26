@@ -32,16 +32,16 @@ class Report extends React.Component {
 
     return <section className="flexbox">
       <section>
-        {this.props.item.warnings ? <ul className="missing">
-          {this.props.item.warnings}
+        {item.warnings ? <ul className="missing">
+          {item.warnings}
           <li>{warning}</li>
         </ul> : null}
 
         <pre className="report">{
           text
             ? <Text raw={text} filters={this.filters} />
-            : this.props.item.missing ? <>
-              {((draft = Reporter.find(this.props.item))) ? <>
+            : item.missing ? <>
+              {((draft = Reporter.find(item))) ? <>
                 <p>
                   <em>Unposted draft being prepared at </em>
                   <a href={`https://reporter.apache.org/wizard?${draft.project}`}>reporter.apache.org</a>
@@ -52,8 +52,8 @@ class Report extends React.Component {
               </> : <p><em>Missing</em></p>}
             </> : <p><em>Empty</em></p>}</pre>
 
-        {(this.props.item.missing || this.props.item.comments) && this.props.item.mail_list ? <section className="reminder">
-          {this.props.item.missing && Posted.get(this.props.item.title).length !== 0 ? <button className="btn-primary btn" data_toggle="modal" data_target="#post-report-form">post report</button> : /^[A-Z]/m.test(this.props.item.attach) && User.firstname && this.props.item.shepherd && User.firstname.startsWith(this.props.item.shepherd.toLowerCase()) ? <p className="comment">
+        {(item.missing || item.comments) && item.mail_list ? <section className="reminder">
+          {item.missing && Posted.get(item.title).length !== 0 ? <button className="btn-primary btn" data_toggle="modal" data_target="#post-report-form">post report</button> : /^[A-Z]/m.test(item.attach) && User.firstname && item.shepherd && User.firstname.startsWith(item.shepherd.toLowerCase()) ? <p className="comment">
             No report was found on
             <a href="https://lists.apache.org/list.html?board@apache.org">board@apache.org</a>
              archives since the last board report.  If/when a report
@@ -62,7 +62,7 @@ class Report extends React.Component {
              to assist with the posting the report.
           </p> : null}
 
-          <Email item={this.props.item} />
+          <Email item={item} />
         </section> : null}
 
         {this.minutes ? <pre className="comment">{this.minutes === "missing" ? <p>
@@ -71,11 +71,11 @@ class Report extends React.Component {
       </section>
 
       <section>
-        <AdditionalInfo item={this.props.item} />
+        <AdditionalInfo item={item} />
 
         <div className="report-info">
           <h4>Report Info</h4>
-          <Info item={this.props.item} />
+          <Info item={item} />
         </div>
       </section>
     </section>
