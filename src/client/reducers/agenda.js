@@ -63,6 +63,17 @@ export default function reduce(state = null, action) {
 
       return agenda;
 
+    case Actions.POST_MINUTES:
+      let index = state.findIndex(item => item.attach === action.attach);
+      
+      if (index >= 0) {
+        let agenda = [...state];
+        agenda[index] = {...agenda[index], minutes: action.minutes};
+        return agenda
+      }
+
+      return state;
+
     default:
       return state
   }

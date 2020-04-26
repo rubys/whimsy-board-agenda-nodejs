@@ -1,3 +1,4 @@
+import * as Actions from "../../actions.js";
 import AdditionalInfo from "../elements/additional-info.js";
 import Agenda from "../models/agenda.js";
 import Email from "../buttons/email.js";
@@ -8,7 +9,8 @@ import React from "react";
 import Reporter from "../models/reporter.js";
 import Text from "../elements/text.js";
 import User from "../models/user.js";
-import { Server, hotlink, retrieve, Flow, escapeRegExp } from "../utils.js";
+import Store from "../store.js";
+import { Server, hotlink, Flow, escapeRegExp } from "../utils.js";
 
 //
 // A two section representation of an agenda item (typically a PMC report),
@@ -53,14 +55,17 @@ class Report extends React.Component {
             </> : <p><em>Empty</em></p>}</pre>
 
         {(item.missing || item.comments) && item.mail_list ? <section className="reminder">
-          {item.missing && Posted.get(item.title).length !== 0 ? <button className="btn-primary btn" data_toggle="modal" data_target="#post-report-form">post report</button> : /^[A-Z]/m.test(item.attach) && User.firstname && item.shepherd && User.firstname.startsWith(item.shepherd.toLowerCase()) ? <p className="comment">
-            No report was found on
-            <a href="https://lists.apache.org/list.html?board@apache.org">board@apache.org</a>
-             archives since the last board report.  If/when a report
-             is posted there with a <tt>[Report]</tt>
-             tag in the subject line a POST button will appear here
-             to assist with the posting the report.
-          </p> : null}
+          {item.missing && Posted.get(item.title).length !== 0
+            ? <button className="btn-primary btn" data_toggle="modal" data_target="#post-report-form">post report</button>
+            : /^[A-Z]/m.test(item.attach) && User.firstname && item.shepherd && User.firstname.startsWith(item.shepherd.toLowerCase())
+              ? <p className="comment">
+                No report was found on
+                <a href="https://lists.apache.org/list.html?board@apache.org">board@apache.org</a>
+                archives since the last board report.  If/when a report
+                is posted there with a <tt>[Report]</tt>
+                tag in the subject line a POST button will appear here
+                to assist with the posting the report.
+              </p> : null}
 
           <Email item={item} />
         </section> : null}
@@ -115,13 +120,17 @@ class Report extends React.Component {
         if (this.props.item.mtime) {
           this.props.item.minutes = '';
 
-          retrieve(
-            `minutes/${date}?${this.props.item.mtime}`,
-            "text",
-            minutes => this.props.item.minutes = minutes
-          )
+          let page = `/api/${date.replace(/_/g, '-')}.txt?${this.props.item.mtime}`
+          fetch(page).then(response => {
+            if (!response.ok) throw response.statusText;
+
+            response.text().then(minutes => (
+              Store.dispatch(Actions.postMinutes(this.props.item.attach, minutes))
+            ))
+          })
+          .catch(error => console.error(`fetch ${page}: ${error}`))
         } else {
-          this.props.item.minutes = "missing"
+          Store.dispatch(Actions.postMinutes(this.props.item.attach, "missing"))
         }
       }
     };
