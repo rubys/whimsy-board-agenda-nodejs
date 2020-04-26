@@ -14,5 +14,5 @@ export const postServer = (server) => ({ type: POST_SERVER, server });
 
 export const meetingDate = (date) => ({ type: SET_MEETING_DATE, date });
 
-export const historicalComments = (comments) => ({ type: POST_HISTORICAL_COMMENTS, comments});
-export const responses = (messages) => ({ type: POST_RESPONSES, messages })
+export const postHistoricalComments = (comments) => ({ type: POST_HISTORICAL_COMMENTS, comments});
+export const postResponses = (messages) => ({ type: POST_RESPONSES, messages })

@@ -26,7 +26,7 @@ export function lookup({ name, path, action, initialValue }) {
   let state = store.getState();
 
   if (!name) name = path.replace(/-\w/g, (data => data[1].toUpperCase()));
-  if (!action) action = Actions[name];
+  if (!action) action = Actions['post' + name.replace(/^\w/, c => c.toUpperCase())];
 
   if (name in state && state[name]) {
     return state[name];
