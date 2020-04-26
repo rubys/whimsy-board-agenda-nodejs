@@ -48,10 +48,9 @@ class Header extends React.Component {
 
           {props.attach ?
             <li className={"report-info dropdown"} data-toggle="dropdown">
-              <a id="info" className="dropdown-toggle">
+              <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
                 info
-                <b className="caret" />
-              </a>
+              </button>
 
               <Info item={props} position="dropdown-menu" />
             </li>
@@ -59,10 +58,9 @@ class Header extends React.Component {
             : props.online ?
 
               <li className="dropdown">
-                <a id="info" className="dropdown-toggle" data-toggle="dropdown">
+                <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
                   online
-                  <b className="caret" />
-                </a>
+                </button>
 
                 <ul className="online dropdown-menu">
                   {props.online.map(id =>
@@ -76,10 +74,9 @@ class Header extends React.Component {
               :
 
               <li className="dropdown">
-                <a id="info" className="dropdown-toggle" data-toggle="dropdown">
+                <button id="info" className="dropdown-toggle" data-toggle="dropdown">
                   summary
-                  <b className="caret" />
-                </a>
+                </button>
 
                 <table className="table-bordered online dropdown-menu">
                   <tbody>{summary.map((status) => {
@@ -101,10 +98,9 @@ class Header extends React.Component {
           }
 
           <li className="dropdown">
-            <a id="nav" className="dropdown-toggle" data-toggle="dropdown">
-              <>navigation</>
-              <b className="caret" />
-            </a>
+            <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
+              navigation
+            </button>
 
             <ul className="dropdown-menu">
               <li>
