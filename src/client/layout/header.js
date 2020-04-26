@@ -95,10 +95,10 @@ class Header extends React.Component {
                 <Link id="agenda" to=".">Agenda</Link>
               </li>
 
-              {Agenda.index.map((item) => {
-                if (props.index) {
+              {this.props.agenda.map(item => {
+                if (item.index) {
                   return <li>
-                    <Link to={props.href}>{props.index}</Link>
+                    <Link to={item.href}>{item.index}</Link>
                   </li>
                 } else {
                   return null
@@ -108,15 +108,15 @@ class Header extends React.Component {
               <li className="divider" />
 
               <li>
-                <Link to="search">Search</Link>
+                <Link to="/search">Search</Link>
               </li>
 
               <li>
-                <Link to="comments">Comments</Link>
+                <Link to="/comments">Comments</Link>
               </li>
 
-              {Agenda.shepherd ? <li>
-                <Link id="shepherd" to={`shepherd/${Agenda.shepherd}`}>Shepherd</Link>
+              {this.props.user.role === 'director' ? <li>
+                <Link id="shepherd" to={`/shepherd/${this.props.user.firstname}`}>Shepherd</Link>
               </li> : null}
 
               <li>
@@ -126,11 +126,11 @@ class Header extends React.Component {
               <li className="divider" />
 
               <li>
-                <Link id="backchannel" to="backchannel">Backchannel</Link>
+                <Link id="backchannel" to="/backchannel">Backchannel</Link>
               </li>
 
               <li>
-                <Link id="help" to="help">Help</Link>
+                <Link id="help" to="/help">Help</Link>
               </li>
             </ul>
           </li>
@@ -146,7 +146,11 @@ class Header extends React.Component {
 };
 
 function mapStateToProps(state) {
-  return { clock_counter: state.clock_counter }
+  return { 
+    agenda: state.agenda,
+    clock_counter: state.clock_counter,
+    user: state.server.user
+  }
 };
 
 export default connect(mapStateToProps)(Header)
