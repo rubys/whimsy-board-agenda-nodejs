@@ -24,7 +24,7 @@ export default function reduce(state = null, action) {
         }
 
         // attach special orders related to an item to that item
-        if (/^7\w/m.test(item.attach)) {
+        if (/^7\w/m.test(item.attach) && item.roster) {
           let order = item;
           for (let item of agenda) {
             if (item.roster === order.roster) {
