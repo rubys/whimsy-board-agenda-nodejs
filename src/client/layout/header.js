@@ -1,4 +1,4 @@
-import Agenda from "../models/agenda.js";
+import Minutes from "../models/minutes.js";
 import Colorize from "../elements/colorize.js";
 import Info from "../elements/info.js";
 import { Link } from "react-router-dom";
@@ -20,7 +20,7 @@ class Header extends React.Component {
   render() {
     /* eslint-disable jsx-a11y/anchor-is-valid */
     let props= this.props.item || this.props;
-    let summary = props.summary || Agenda.summary;
+    let summary = props.summary || this.summary();
 
     return <Colorize item={props}>
       <header className="navbar fixed-top">
@@ -143,6 +143,126 @@ class Header extends React.Component {
   toggleInfo = () => {
     this.#infodropdown = this.#infodropdown ? null : "open"
   }
+
+  // summarize the state of the various reports
+  summary = () => {
+    let results = [];
+    let agenda = this.props.agenda;
+
+    // committee reports
+    let count = 0;
+    let link = null;
+
+    for (let item of agenda) {
+      if (/^[A-Z]+$/m.test(item.attach)) {
+        count++;
+        link = link || item.href
+      }
+    };
+
+    results.push({
+      color: "available",
+      count,
+      href: link,
+      text: "committee reports"
+    });
+
+    // special orders
+    count = 0;
+    link = null;
+
+    for (let item of agenda) {
+      if (/^7[A-Z]+$/m.test(item.attach)) {
+        count++;
+        link = link || item.href
+      }
+    };
+
+    results.push({
+      color: "available",
+      count,
+      href: link,
+      text: "special orders"
+    });
+
+    // discussion items
+    count = 0;
+    link = null;
+
+    for (let item of agenda) {
+      if (/^8[.A-Z]+$/m.test(item.attach)) {
+        if (item.attach !== "8." || !!item.text) count++;
+        link = link || item.href
+      }
+    };
+
+    results.push({
+      color: "available",
+      count,
+      href: link,
+      text: "discussion items"
+    });
+
+    // awaiting preapprovals
+    count = 0;
+
+    for (let item of agenda) {
+      if (item.color === "ready" && item.title !== "Action Items") count++
+    };
+
+    results.push({
+      color: "ready",
+      count,
+      href: "queue",
+      text: "awaiting preapprovals"
+    });
+
+    // flagged reports
+    count = 0;
+
+    for (let item of agenda) {
+      if (item.flagged_by) count++
+    };
+
+    results.push({
+      color: "commented",
+      count,
+      href: "flagged",
+      text: "flagged reports"
+    });
+
+    // missing reports
+    count = 0;
+
+    for (let item of agenda) {
+      if (item.missing) count++
+    };
+
+    results.push({
+      color: "missing",
+      count,
+      href: "missing",
+      text: "missing reports"
+    });
+
+    // rejected reports
+    count = 0;
+
+    for (let item of agenda) {
+      if (item.rejected) count++
+    };
+
+    if (Minutes.started || count > 0) {
+      results.push({
+        color: "missing",
+        count,
+        href: "rejected",
+        text: "not accepted"
+      })
+    };
+
+    return results
+  };
 };
 
 function mapStateToProps(state) {
