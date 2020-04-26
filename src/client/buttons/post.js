@@ -13,10 +13,10 @@ import { jQuery } from "jquery";
 // For new resolutions, allow entry of title, but not commit message
 // For everything else, allow modification of commit message, but not title
 class Post extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "post report",
-      class: "btn_primary",
+      className: "btn-primary",
       disabled: Server.offline,
       data_toggle: "modal",
       data_target: "#post-report-form"

@@ -4,6 +4,7 @@ import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
 import CacheStatus, { CachePage } from "./pages/cache.js";
 import Comments from "./pages/comments.js";
+import DraftMinutes from "./buttons/draft-minutes.js";
 import Feedback from "./pages/feedback.js";
 import Flagged from "./pages/flagged.js";
 import Help from "./pages/help.js";
@@ -11,14 +12,19 @@ import Index from "./pages/index.js";
 import InsiderSecrets from "./pages/secrets.js";
 import Install from "./buttons/install.js";
 import Main from "./layout/main.js";
+import Minutes from "./models/minutes.js";
 import Missing from "./pages/missing.js";
 import PageCache from "./models/pagecache.js";
 import Queue from "./pages/queue.js";
+import Post from "./buttons/post.js";
+import PublishMinutes from "./buttons/publish-minutes.js";
 import React from "react";
+import Refresh from "./buttons/refresh.js";
 import Rejected from "./pages/rejected.js";
 import RollCall from "./pages/roll-call.js";
 import Search from "./pages/search.js";
 import Server from "./pages/server.js";
+import Summary from "./buttons/summary.js";
 import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
 import User from "./models/user.js";
@@ -92,14 +98,14 @@ class Router extends React.Component {
 
     // determine what buttons are required, merging defaults, form provided
     // overrides, and any overrides provided by the agenda item itself
-    let buttons = item.buttons;
-    if (item.view.buttons) buttons = item.view.buttons().concat(buttons || []);
+    let buttons = item.buttons || [];
+    if (item.view.buttons) buttons = [... item.view.buttons(), ...buttons];
 
     if (buttons) {
       buttons = buttons.map((button) => {
         let props = {
           text: "button",
-          attrs: { class: "btn" },
+          attrs: { className: "btn" },
           form: button.form
         };
 
@@ -110,8 +116,8 @@ class Router extends React.Component {
           for (let [name, override] of Object.entries(form.button)) {
             if (name === "text") {
               props.text = form.button.text
-            } else if (name === "class" || name === "classname") {
-              props.attrs.class += ` ${override.replace(/_/g, "-")}`
+            } else if (name === "class" || name === "className") {
+              props.attrs.className += ` ${override.replace(/_/g, "-")}`
             } else {
               props.attrs[name.replace(/_/g, "-")] = override
             }
@@ -127,8 +133,8 @@ class Router extends React.Component {
         for (let [name, override] of Object.entries(button)) {
           if (name === "text") {
             props.text = button.text
-          } else if (name === "class" || name === "classname") {
-            props.attrs.class += ` ${override.replace(/_/g, "-")}`
+          } else if (name === "class" || name === "className") {
+            props.attrs.className += ` ${override.replace(/_/g, "-")}`
           } else if (name !== "form") {
             props.attrs[name.replace(/_/g, "-")] = override
           }
@@ -171,7 +177,23 @@ class Router extends React.Component {
             }
           };
 
-          return main({ view: Index, title: this.props.meetingDate, prev, next })
+          let buttons = [{button: Refresh}];
+
+          if (!Minutes.complete) {
+            buttons.push({form: Post, text: "add item"})
+          } else if (["director", "secretary"].includes(this.props.role)) {
+            if (!Minutes.summary_sent) buttons.push({form: Summary})
+          };
+      
+          if (this.props.role === "secretary") {
+            if (Agenda.approved === "approved") {
+              buttons.push({form: PublishMinutes})
+            } else if (Minutes.ready_to_post_draft) {
+              buttons.push({form: DraftMinutes})
+            }
+          };
+
+          return main({ view: Index, title: this.props.meetingDate, buttons, prev, next })
         }}
       </Route>
 
