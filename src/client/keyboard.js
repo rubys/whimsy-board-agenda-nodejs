@@ -17,6 +17,7 @@ class Keyboard {
     // keyboard navigation (unless on the search screen)
     document.body.onkeydown = function(event) {
       let link;
+      console.log(event)
 
       if (event.metaKey || event.ctrlKey || event.altKey || document.getElementById("search-text") || document.querySelector(".modal.in") || [
         "input",

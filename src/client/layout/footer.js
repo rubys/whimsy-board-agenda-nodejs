@@ -106,8 +106,8 @@ class PrevLink extends React.Component {
     if (link) {
       return <Colorize item={link}>
         {(!prefix && link.href.startsWith('../'))
-          ? <a className={"navbar-brand backlink"} rel="next" href={link.href}>{link.title}</a>
-          : <Link className={"navbar-brand backlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
+          ? <a className={"navbar-brand backlink"} rel="prev" href={link.href}>{link.title}</a>
+          : <Link className={"navbar-brand backlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
       </Colorize>
     } else if (this.props.item?.prev || this.props.item?.next) {
@@ -163,8 +163,8 @@ class NextLink extends React.Component {
     if (link) {
       return <Colorize item={link}>
         {(!prefix && link.href.startsWith('../'))
-          ? <a className={"navbar-brand nextlink"} rel="prev" href={link.href}>{link.title}</a>
-          : <Link className={"navbar-brand nextlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
+          ? <a className={"navbar-brand nextlink"} rel="next" href={link.href}>{link.title}</a>
+          : <Link className={"navbar-brand nextlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
       </Colorize>
     } else if (this.props.item?.prev || this.props.item?.next) {

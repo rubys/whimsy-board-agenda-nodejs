@@ -31,6 +31,12 @@ ReactDOM.render(
   let options = { credentials: "include" };
   let request = new Request("../api/server", options);
   let response = await fetch(request);
+  
+  if (!response.ok) {
+    alert('unable to contact server');
+    return;
+  }
+
   let server = await response.json();
   store.dispatch(Actions.postServer(server));
 
