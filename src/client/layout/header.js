@@ -74,7 +74,7 @@ class Header extends React.Component {
               :
 
               <li className="dropdown">
-                <button id="info" className="dropdown-toggle" data-toggle="dropdown">
+                <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
                   summary
                 </button>
 
