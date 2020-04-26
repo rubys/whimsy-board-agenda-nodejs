@@ -7,6 +7,7 @@ function Server( { agendas, drafts }) {
 
   let links = [
     ...agendas.map(agenda => `/api/${agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-")}.json`),
+    ...drafts.map(draft => `/api/${draft.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-")}.txt`),
     '/api/historical-comments',
     '/api/digest',
     '/api/jira',
