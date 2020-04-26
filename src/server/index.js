@@ -1,20 +1,11 @@
 import express from 'express';
 import compression from 'compression';
-import historicalComments from "./sources/historical-comments.js";
-import jira from "./sources/jira.js";
-import minutes from "./sources/minutes.js";
-import postedReports from "./sources/posted-reports.js";
-import reporter from "./sources/reporter.js";
-import responses from "./sources/responses.js";
-import server from "./sources/server.js";
 import * as websocket from "./websocket.js";
 import { port, buildPath } from './config.js';
-import { Board } from './svn.js';
-import { parse } from './sources/agenda.js';
 import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
-import { digest } from './cache.js';
 import * as watcher from './watcher.js';
+import router from './router.js';
 
 const app = express();
 app.use(compression());
@@ -49,58 +40,7 @@ app.use('/', (request, response, next) => {
   next();
 });
 
-app.get('/api/session', async (request, response) => {
-  response.json({ session: websocket.session });
-});
-
-app.get('/api/latest.json', async (request, response) => {
-  response.json(await parse((await Board.agendas(request)).pop()));
-});
-
-app.get('/api/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
-  let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
-  try {
-    response.json(await parse(agenda, request));
-  } catch (error) {
-    if (error.code === 'ENOENT') next();
-    next(error);
-  }
-});
-
-app.get('/api/jira', async (request, response) => {
-  response.json(await jira());
-});
-
-app.get('/api/historical-comments', async (request, response) => {
-  response.setHeader('content-type', 'application/json');
-  response.send(await historicalComments(request))  
-});
-
-app.get('/api/minutes/:date([0-9]+-[0-9]+-[0-9]+)', async (request, response, next) => {
-  response.json(await minutes(request, request.params.date));
-});
-
-app.get('/api/posted-reports', async (request, response) => {
-  response.setHeader('content-type', 'application/json');
-  response.send(await postedReports(request))  
-});
-
-app.get('/api/reporter', async (request, response) => {
-  response.json(await reporter(request));
-});
-
-app.get('/api/responses', async (request, response) => {
-  response.setHeader('content-type', 'application/json');
-  response.send(await responses(request))  
-});
-
-app.get('/api/server', async (request, response) => {
-  response.json(await server(request));
-});
-
-app.get('/api/digest', async (request, response) => {
-  response.json(await digest());
-})
+router(app);
 
 app.listen(port, () => {
   console.log(`Whimsy board agenda app listening on port ${port}`);
