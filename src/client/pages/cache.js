@@ -138,12 +138,8 @@ export class CachePage extends React.Component {
     let keys = [];
 
     if (this.state.response.headers) {
-      let iterator = Object.entries(this.state.response.headers);
-      let entry = iterator.next();
-
-      while (!entry.done) {
-        if (entry.value[0] !== "status") keys.push(entry.value[0]);
-        entry = iterator.next()
+      for (let [key, value] of this.state.response.headers) {
+        if (key !== "status") keys.push(key);
       };
 
       keys.sort()
@@ -156,7 +152,7 @@ export class CachePage extends React.Component {
       {
         this.state.response.headers ?
           <ul>{keys.map(key => (
-            <li>{`${key}: ${this.state.response.headers.get(key)}`}</li>
+            <li><tt>{`${key}: ${this.state.response.headers.get(key)}`}</tt></li>
           ))}</ul>
           : null
       }
