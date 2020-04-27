@@ -7,6 +7,10 @@ import Store from "../store.js";
 import * as Actions from "../../actions.js";
 import { connect } from 'react-redux'
 
+function mapStateToProps(state) {
+  return { clock_counter: state.clock_counter }
+};
+
 //
 // Secretary Roll Call update form
 class RollCall extends React.Component {
@@ -227,10 +231,6 @@ class Attendee extends React.Component {
       this.setState({disabled: false})
     })
   }
-};
-
-function mapStateToProps(state) {
-  return { clock_counter: state.clock_counter }
 };
 
 export default connect(mapStateToProps)(RollCall)

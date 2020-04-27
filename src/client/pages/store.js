@@ -25,10 +25,6 @@ export const theme = {
   base0F: "#333333"
 };
 
-function Store( { state }) {
-  return <JsonTree data={state} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false}/>
-}
-
 function mapStateToProps(state, { table, id }) {
   if (!table) return { state } ;
   state = state[table];
@@ -39,5 +35,9 @@ function mapStateToProps(state, { table, id }) {
     return { state: state[id]} ;
   }
 };
+
+function Store( { state }) {
+  return <JsonTree data={state} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false}/>
+}
 
 export default connect(mapStateToProps)(Store)

@@ -47,6 +47,15 @@ export function navigate(path, query) {
   history.push(path, { path, query });
 }
 
+function mapStateToProps(state) {
+  return {
+    agenda: state.agenda,
+    agendas: state.server.agendas || {},
+    meetingDate: state.client.meetingDate,
+    role: state.server?.user?.role
+  }
+};
+
 class Router extends React.Component {
 
   state = {};
@@ -384,14 +393,5 @@ class Router extends React.Component {
     return this.props.agenda.find(item => item.href === href);
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    agenda: state.agenda,
-    agendas: state.server.agendas || {},
-    meetingDate: state.client.meetingDate,
-    role: state.server?.user?.role
-  }
-};
 
 export default connect(mapStateToProps)(withRouter(Router))

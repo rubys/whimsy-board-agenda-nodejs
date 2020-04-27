@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 
 // inject color (CSS property) into child element's className
 
+function mapStateToProps({ minutes, server: { pending, drafts } }) {
+  return { minutes, pending, drafts }
+};
+
 function Colorize({ item, minutes, pending, drafts, children }) {
 
   let color = (() => {
@@ -70,9 +74,5 @@ function Colorize({ item, minutes, pending, drafts, children }) {
   };
 
 }
-
-function mapStateToProps({ minutes, server: { pending, drafts } }) {
-  return { minutes, pending, drafts }
-};
 
 export default connect(mapStateToProps)(Colorize)

@@ -3,6 +3,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+function mapStateToProps({ server: { agendas, drafts }}) {
+  return { agendas, drafts }
+};
+
 function Server( { agendas, drafts }) {
 
   let links = [
@@ -27,10 +31,6 @@ function Server( { agendas, drafts }) {
       )}
     </ul>
   </>;
-}
-
-function mapStateToProps({ server: { agendas, drafts }}) {
-  return { agendas, drafts }
 };
 
 export default connect(mapStateToProps)(Server)

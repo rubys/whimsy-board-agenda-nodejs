@@ -14,6 +14,14 @@ import { connect } from 'react-redux';
 //
 // Finally: make info dropdown status 'sticky'
 
+function mapStateToProps(state) {
+  return {
+    agenda: state.agenda,
+    clock_counter: state.clock_counter,
+    user: state.server.user
+  }
+};
+
 class Header extends React.Component {
   state = { infodropdown: null };
 
@@ -270,14 +278,6 @@ class Header extends React.Component {
 
     return results
   };
-};
-
-function mapStateToProps(state) {
-  return {
-    agenda: state.agenda,
-    clock_counter: state.clock_counter,
-    user: state.server.user
-  }
 };
 
 export default connect(mapStateToProps)(Header)

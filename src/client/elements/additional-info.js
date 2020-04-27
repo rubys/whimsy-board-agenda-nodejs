@@ -11,7 +11,17 @@ import Text from "./text.js";
 import User from "../models/user.js";
 import { hotlink, Flow, splitComments } from "../utils.js";
 import { connect } from 'react-redux';
-import { Server } from '../utils.js'
+import { Server } from '../utils.js';
+
+function mapStateToProps(state, props) {
+  let title = props.item.title;
+
+  return {
+    historicalComments: Object.entries(lookup({ path: 'historical-comments', initialValue: {} })[title] || {}),
+    responses: Object.fromEntries(Object.entries(lookup({ path: 'responses', initialValue: {} }))
+      .map(([date, list]) => [date, list[title]]))
+  }
+};
 
 //
 // Display information associated with an agenda item:
@@ -30,39 +40,43 @@ import { Server } from '../utils.js'
 class AdditionalInfo extends React.Component {
   state = { prefix: '' };
 
-  render() {
-    let minutes = Minutes.get(this.props.item.title);
-    let draft = Reporter.find(this.props.item);
-    let posted;
+  // determine prefix (if any)
+  static getDerivedStateFromProps(props) {
+    if (props.prefix === true) {
+      return { prefix: props.item.title.toLowerCase() + "-" }
+    } else if (props.prefix) {
+      return { prefix: props.prefix }
+    } else {
+      return { prefix: "" }
+    }
+  }
 
-    let title = this.props.item.title;
-    let historicalComments = Object.entries(this.props.historicalComments[title] || {});
-    let responses = Object.fromEntries(Object.entries(this.props.responses)
-      .map(([date, list]) => [date, list[title]]))
+  render() {
+    const { item, historicalComments, responses } = this.props;
+
+    let minutes = Minutes.get(item.title);
+    let draft = Reporter.find(item);
+    let posted = item.missing && Posted.get(item.title);
 
     return <>
-      {this.props.item.rejected ? <p className="rejected">Report was not accepted</p> : null}
-      {this.props.item.notes ? <p className={!/^new, monthly through/m.test(this.props.item.notes) ? "notes" : null}>{this.props.item.notes}</p> : null}
+      {item.rejected ? <p className="rejected">Report was not accepted</p> : null}
+      {item.notes ? <p className={!/^new, monthly through/m.test(item.notes) ? "notes" : null}>{item.notes}</p> : null}
 
       {minutes ? <>
         <h4 id={`${this.state.prefix}minutes`}>Minutes</h4>
         <pre className="comment">{minutes}</pre>
       </> : null}
 
-      {this.props.item.missing ? <>
-        {posted = Posted.get(this.props.item.title)}
+      {item.missing && posted.length !== 0 ? <>
+        <h4 id={`${this.state.prefix}posted`}>Posted reports</h4>
 
-        {posted.length !== 0 ? <>
-          <h4 id={`${this.state.prefix}posted`}>Posted reports</h4>
-
-          <ul className="posted-reports">
-            {posted.map(post =>
-              <li key={post.link}>
-                <a href={post.link}>{post.subject}</a>
-              </li>
-            )}
-          </ul>
-        </> : null}
+        <ul className="posted-reports">
+          {posted.map(post =>
+            <li key={post.link}>
+              <a href={post.link}>{post.subject}</a>
+            </li>
+          )}
+        </ul>
       </> : null}
 
       {draft && this.state.prefix ? <span className="hilite">
@@ -71,42 +85,42 @@ class AdditionalInfo extends React.Component {
       </span> : null}
 
       {/* TODO
-      {this.props.item.title !== "Action Items" && this.props.item.actions.length !== 0 ? <>
+      {item.title !== "Action Items" && item.actions.length !== 0 ? <>
         <h4 id={`${this.state.prefix}actions`}>
           <Link to="Action-Items">Action Items</Link>
         </h4>
 
-        {/* <ActionItems item={this.props.item} filter={{ pmc: this.props.item.title }} />
+        {/* <ActionItems item={item} filter={{ pmc: item.title }} />
       </> : null}
       */}
 
-      {this.props.item.special_orders?.length ? <>
+      {item.special_orders?.length ? <>
         <h4 id={`${this.state.prefix}orders`}>Special Orders</h4>
 
-        <ul>{this.props.item.special_orders.map(resolution => (
+        <ul>{item.special_orders.map(resolution => (
           <li key={resolution.href}>
             <Link to={resolution.href}>{resolution.title}</Link>
           </li>
         ))}</ul>
       </> : null}
 
-      {this.props.item.comments?.length || (historicalComments.length > 0 && !this.state.prefix) ? <>
+      {item.comments?.length || (historicalComments.length > 0 && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
-        {this.props.item.comments.map(comment => (
+        {item.comments.map(comment => (
           <pre className="comment" key={comment}>
             <Text raw={comment} filters={[hotlink]} />
           </pre>
         ))}
 
-        {this.props.item.pending ? <div className="clickable commented comment" onClick={() => (
+        {item.pending ? <div className="clickable commented comment" onClick={() => (
           navigate("/queue")
         )}>
 
           <h5 id={`${this.state.prefix}pending`}>Pending Comment</h5>
 
           <pre className="commented">{Flow.comment(
-            this.props.item.pending,
+            item.pending,
             User.initials
           )}</pre>
         </div> : null}
@@ -145,7 +159,7 @@ class AdditionalInfo extends React.Component {
 
                   return <>
                     <span>: </span>
-                    <a href={`https://lists.apache.org/list.html?board@apache.org&d=dfr=${dfr}|dto=${dto}&header_subject='Board%20feedback%20on%20${dfr}%20${this.props.item.title}%20report'`}>{link}</a>
+                    <a href={`https://lists.apache.org/list.html?board@apache.org&d=dfr=${dfr}|dto=${dto}&header_subject='Board%20feedback%20on%20${dfr}%20${item.title}%20report'`}>{link}</a>
                   </>
                 } else {
                   return null
@@ -160,14 +174,14 @@ class AdditionalInfo extends React.Component {
             ))}
           </>}
         </React.Fragment>)}
-      </> : this.props.item.pending ? <div className="clickable commented comment" onClick={() => (
+      </> : item.pending ? <div className="clickable commented comment" onClick={() => (
         navigate("/queue")
       )}>
 
         <h5 id={`${this.state.prefix}pending`}>Pending Comment</h5>
 
         <pre className="commented">{Flow.comment(
-          this.props.item.pending,
+          item.pending,
           User.initials
         )}</pre>
       </div> : null}
@@ -186,24 +200,6 @@ class AdditionalInfo extends React.Component {
     }
   }
 
-  // determine prefix (if any)
-  static getDerivedStateFromProps(props) {
-    if (props.prefix === true) {
-      return { prefix: props.item.title.toLowerCase() + "-" }
-    } else if (props.prefix) {
-      return { prefix: props.prefix }
-    } else {
-      return { prefix: "" }
-    }
-  }
-
-};
-
-function mapStateToProps() {
-  return {
-    historicalComments: lookup({ path: 'historical-comments', initialValue: {} }),
-    responses: lookup({ path: 'responses', initialValue: {} })
-  }
 };
 
 export default connect(mapStateToProps)(AdditionalInfo)
