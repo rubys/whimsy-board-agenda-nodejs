@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import JsonTree from 'react-json-tree';
+import { theme } from "./store.js";
 import React from "react";
 
 //
@@ -136,6 +138,7 @@ export class CachePage extends React.Component {
 
   render() {
     let keys = [];
+    let contentType = 'text/plain';
 
     if (this.state.response.headers) {
       for (let [key, value] of this.state.response.headers) {
@@ -143,11 +146,23 @@ export class CachePage extends React.Component {
       };
 
       keys.sort()
+
+      contentType = this.state.response.headers.get('Content-Type') || contentType;
     };
+
+    let content = this.state.text;
+
+    try {
+      if (contentType.includes('json')) {
+        content = JSON.parse(content);
+      }
+    } catch {
+    }
 
     return <>
       <h2>{this.state.response.url}</h2>
       <p>{`${this.state.response.status} ${this.state.response.statusText}`}</p>
+      <pre>{contentType}</pre>
 
       {
         this.state.response.headers ?
@@ -157,7 +172,10 @@ export class CachePage extends React.Component {
           : null
       }
 
-      <pre>{this.state.text}</pre>
+      {typeof content === "object"
+        ? <JsonTree data={JSON.parse(this.state.text)} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false}/>
+        : <pre>{this.state.text}</pre>
+    }
     </>
   };
 

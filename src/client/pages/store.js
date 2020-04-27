@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import JsonTree from 'react-json-tree';
 
-const theme = {
+export const theme = {
   scheme: "Github",
   author: "Defman21",
   base00: "#ffffff",
