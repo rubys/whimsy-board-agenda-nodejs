@@ -9,35 +9,37 @@ import React from "react";
 export default class ModalDialog extends React.Component {
   state = {header: [], body: [], footer: []};
 
-  componentWillMount() {
-    this.componentWillReceiveProps(this.props)
-  };
+  static getDerivedStateFromProps($$props) {
+    let header = [];
+    let body = [];
+    let footer = [];
 
-  componentWillReceiveProps($$props) {
-    this.state.header.length = 0;
-    this.state.body.length = 0;
-    this.state.footer.length = 0;
+    let children = React.Children.toArray($$props.children);
+    while (children.length === 1 && typeof children[0].type !== 'string') {
+     children = React.Children.toArray(children[0].props.children);
+    }
 
-    for (let child of React.Children.toArray($$props.children)) {
-      if (child.type == "h4") {
+    for (let child of children) {
+      console.log(child)
+      if (child.type === "h4") {
         // place h4 elements into the header, adding a modal-title class
-        child = this.addClass(child, "modal-title");
-        this.state.header.push(child);
+        child = addClass(child, "modal-title");
+        header.push(child);
         ModalDialog.h4 = child
-      } else if (child.type == "button") {
+      } else if (child.type === "button") {
         // place button elements into the footer, adding a btn class
-        child = this.addClass(child, "btn");
-        this.state.footer.push(child)
-      } else if (child.type == "input" || child.type == "textarea") {
+        child = addClass(child, "btn");
+        footer.push(child)
+      } else if (child.type === "input" || child.type === "textarea") {
         // wrap input and textarea elements in a form-control, 
         // add label if present
-        child = this.addClass(child, "form-control");
+        child = addClass(child, "form-control");
         let label = null;
 
         if (child.props.label && child.props.id) {
           let props = {htmlFor: child.props.id};
 
-          if (child.props.type == "checkbox") {
+          if (child.props.type === "checkbox") {
             props.className = "checkbox";
             label = React.createElement("label", props, child, child.props.label);
             delete child.props.label;
@@ -48,7 +50,7 @@ export default class ModalDialog extends React.Component {
           }
         };
 
-        this.state.body.push(React.createElement(
+        body.push(React.createElement(
           "div",
           {className: "form-group"},
           label,
@@ -56,9 +58,11 @@ export default class ModalDialog extends React.Component {
         ))
       } else {
         // place all other elements into the body
-        this.state.body.push(child)
+        body.push(child)
       }
-    }
+    };
+
+    return { header, body, footer };
   };
 
   render() {
@@ -76,18 +80,18 @@ export default class ModalDialog extends React.Component {
       </div>
     </div>
   };
+}
 
-  // helper method: add a class to an element, returning new element
-  addClass(element, name) {
-    if (!element.props.className) {
-      element = React.cloneElement(element, {className: name})
-    } else if (!element.props.className.split(" ").includes(name)) {
-      element = React.cloneElement(
-        element,
-        {className: element.props.className + ` ${name}`}
-      )
-    };
+// helper method: add a class to an element, returning new element
+function addClass(element, name) {
+  if (!element.props.className) {
+    element = React.cloneElement(element, {className: name})
+  } else if (!element.props.className.split(" ").includes(name)) {
+    element = React.cloneElement(
+      element,
+      {className: element.props.className + ` ${name}`}
+    )
+  };
 
-    return element
-  }
+  return element
 }

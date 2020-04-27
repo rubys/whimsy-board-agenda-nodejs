@@ -99,7 +99,7 @@ class Router extends React.Component {
     // determine what buttons are required, merging defaults, form provided
     // overrides, and any overrides provided by the agenda item itself
     let buttons = item.buttons || [];
-    if (item.view.buttons) buttons = [... item.view.buttons(), ...buttons];
+    if (item.view.buttons) buttons = [...item.view.buttons(), ...buttons];
 
     if (buttons) {
       buttons = buttons.map((button) => {
@@ -177,19 +177,19 @@ class Router extends React.Component {
             }
           };
 
-          let buttons = [{button: Refresh}];
+          let buttons = [{ button: Refresh }];
 
           if (!Minutes.complete) {
-            buttons.push({form: Post, text: "add item"})
+            buttons.push({ form: Post, text: "add item" })
           } else if (["director", "secretary"].includes(this.props.role)) {
-            if (!Minutes.summary_sent) buttons.push({form: Summary})
+            if (!Minutes.summary_sent) buttons.push({ form: Summary })
           };
-      
+
           if (this.props.role === "secretary") {
             if (Agenda.approved === "approved") {
-              buttons.push({form: PublishMinutes})
+              buttons.push({ form: PublishMinutes })
             } else if (Minutes.ready_to_post_draft) {
-              buttons.push({form: DraftMinutes})
+              buttons.push({ form: DraftMinutes })
             }
           };
 
