@@ -1,4 +1,5 @@
 import * as Actions from "./actions.js";
+import JSONStorage from "./client/models/jsonstorage.js";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -47,15 +48,11 @@ ReactDOM.render(
     window.location.href = `/${date}/`;
   } else {
     // fetch and store agenda information
-    response = await fetch(`/api/${base.slice(1, -1)}.json`);
-    if (response.ok) {
-      let agenda = await response.json();
+    JSONStorage.fetch(`${base.slice(1, -1)}.json`, agenda => {
       let date = new Date(agenda[0].timestamp).toISOString().slice(0, 10);
       store.dispatch(Actions.postAgenda(agenda));
       store.dispatch(Actions.meetingDate(date));
-    } else {
-      console.error(`fetch agenda ${base}: ${response.statusText}`);
-    }
+    })
   }
 })();
 
