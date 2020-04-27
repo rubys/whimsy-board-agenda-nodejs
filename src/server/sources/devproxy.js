@@ -5,12 +5,14 @@ import credentials from '../credentials.js';
 import https from 'https';
 import * as cache from '../cache.js';
 
-export default async function devproxy(request, path) {
+export default async function devproxy(request, path, method = "get", data) {
 
   let cacheFile = path.split('/').pop();
 
-  let data = await cache.read(cacheFile, 5 * 60 * 1000);
-  if (data) return data;
+  if (method === "get") {
+    let data = await cache.read(cacheFile, 5 * 60 * 1000);
+    if (data) return data;
+  }
 
   let { username, password } = credentials(request);
 
@@ -25,25 +27,41 @@ export default async function devproxy(request, path) {
       }
     };
 
-    https.get(options, res => {
+    if (method == 'post' && data) {
+      if (typeof data === "string") {
+        options['Content-Type'] = 'application/x-www-form-urlencoded';
+      } else {
+        options['Content-Type'] = 'application/json; charset=utf-8';
+        data = JSON.stringify(data);
+      };
+
+      options['Content-Length'] = Buffer.byteLength(data);
+    }
+
+    let request = https[method](options, response => {
       let body = "";
 
-      res.on('data', data => {
+      response.on('data', data => {
         body += data;
       });
 
-      res.on('end', () => {
-        if (res.statusCode === 200) {
+      response.on('end', () => {
+        if (response.statusCode === 200) {
           resolve(body);
-          cache.write(cacheFile, body)
+          if (method === "get") cache.write(cacheFile, body)
         } else {
           resolve(null)
         }
       });
 
-      res.on('error', (error) => {
+      response.on('error', (error) => {
         reject(error)
       });
     });
+
+    if (method == "post") {
+      if (data) request.write(data);
+      request.end();
+    }
   })
 }
