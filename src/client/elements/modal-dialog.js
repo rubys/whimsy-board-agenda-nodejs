@@ -20,7 +20,6 @@ export default class ModalDialog extends React.Component {
     }
 
     for (let child of children) {
-      console.log(child)
       if (child.type === "h4") {
         // place h4 elements into the header, adding a modal-title class
         child = addClass(child, "modal-title");
