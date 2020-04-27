@@ -47,124 +47,143 @@ class Post extends React.Component {
 
     let reporting_this_month;
 
-    return <ModalDialog className="wide-form" id="post-report-form" color="commented">{this.state.button === "add item" ? <>
-      <h4>Select Item Type</h4>
+    return <ModalDialog className="wide-form" id="post-report-form" color="commented">
+      {this.state.button === "add item" ? <>
+        <h4>Select Item Type</h4>
 
-      <ul className="new-item-type">
-        <li>
-          <button className="btn-primary btn" onClick={this.selectItem}>Change Chair</button>
+        <ul className="new-item-type">
+          <li>
+            <button className="btn-primary btn" onClick={this.selectItem}>Change Chair</button>
           - change chair for an existing PMC
         </li>
 
-        <li>
-          <button className="btn-primary btn" onClick={this.selectItem}>Establish Project</button>
+          <li>
+            <button className="btn-primary btn" onClick={this.selectItem}>Establish Project</button>
           - direct to TLP project and subproject to TLP
         </li>
 
-        <li>
-          <button className="btn-primary btn" onClick={this.selectItem}>Terminate Project</button>
+          <li>
+            <button className="btn-primary btn" onClick={this.selectItem}>Terminate Project</button>
           - move a project to the attic
         </li>
 
-        <li>
-          <button className="btn-primary btn" onClick={this.selectItem}>New Resolution</button>
+          <li>
+            <button className="btn-primary btn" onClick={this.selectItem}>New Resolution</button>
           - free form entry of a new resolution
         </li>
 
-        <li>
-          <button className="btn-info btn" onClick={this.selectItem}>Out of Cycle Report</button>
+          <li>
+            <button className="btn-info btn" onClick={this.selectItem}>Out of Cycle Report</button>
           - report from a PMC not currently on the agenda for this month
         </li>
 
-        <li>
-          <button className="btn-success btn" onClick={this.selectItem}>Discussion Item</button>
+          <li>
+            <button className="btn-success btn" onClick={this.selectItem}>Discussion Item</button>
           - add a discussion item to the agenda
         </li>
-      </ul>
+        </ul>
 
-      <button className="btn-default" data_dismiss="modal">Cancel</button>
-    </> : this.state.button === "Change Chair" ? <>
-      <h4>Change Chair Resolution</h4>
+        <button className="btn-default" data-dismiss="modal">Cancel</button>
 
-      <div className="form-group">
-        <label htmlFor="change-chair-pmc">PMC</label>
+      </> : this.state.button === "Change Chair" ? <>
 
-        <select className="form-control" id="change-chair-pmc" onChange={event => (
-          this.chair_pmc_change(event.target.value)
-        )}>{this.state.pmcs.map(pmc => <option>{pmc}</option>)}</select>
-      </div>
+        <h4>Change Chair Resolution</h4>
 
-      <div className="form-group">
-        <label htmlFor="outgoing-chair">Outgoing Chair</label>
-        <input className="form-control" id="outgoing-chair" value={this.state.outgoing_chair} disabled={true} />
-      </div>
+        <div className="form-group">
+          <label htmlFor="change-chair-pmc">PMC</label>
 
-      <div className="form-group">
-        <label htmlFor="incoming-chair">Incoming Chair</label>
+          <select className="form-control" id="change-chair-pmc" onChange={event => (
+            this.chair_pmc_change(event.target.value)
+          )}>{this.state.pmcs.map(pmc => <option>{pmc}</option>)}</select>
+        </div>
 
-        <select className="form-control" id="incoming-chair">{this.state.pmc_members.map(person => (
-          <option value={person.id} selected={person.id === User.id}>{person.name}</option>
-        ))}</select>
-      </div>
+        <div className="form-group">
+          <label htmlFor="outgoing-chair">Outgoing Chair</label>
+          <input className="form-control" id="outgoing-chair" value={this.state.outgoing_chair} disabled={true} />
+        </div>
 
-      <button className="btn-default" data_dismiss="modal">Cancel</button>
-      <button className="btn-primary" disabled={this.state.disabled} onClick={this.draft_chair_change_resolution}>Draft</button>
-    </> : this.state.button === "Establish Project" ? <>
-      <h4>Establish Project Resolution</h4>
+        <div className="form-group">
+          <label htmlFor="incoming-chair">Incoming Chair</label>
 
-      <div className="form-group">
-        <label htmlFor="establish-pmc">PMC name</label>
-        <input className="form-control" id="establish-pmc" value={this.state.pmcname} />
-      </div>
+          <select className="form-control" id="incoming-chair">{this.state.pmc_members.map(person => (
+            <option value={person.id} selected={person.id === User.id}>{person.name}</option>
+          ))}</select>
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="establish-description">Complete this sentence:</label>
-        {pmcname ? ` Apache ${pmcname} consists of software related to` : null}
-        <textarea className="form-control" id="establish-description" value={this.state.pmcdesc} disabled={!pmcname} />
-      </div>
+        <button className="btn-default" data-dismiss="modal">Cancel</button>
+        <button className="btn-primary" disabled={this.state.disabled} onClick={this.draft_chair_change_resolution}>Draft</button>
 
-      <div className="form-group">
-        <label htmlFor="parent-pmc">Parent PMC name (if applicable)</label>
+      </> : this.state.button === "Establish Project" ? <>
 
-        <select className="form-control" id="parent-pmc" onChange={event => (
-          this.parent_pmc_change(event.target.value)
-        )}>
+        <h4>Establish Project Resolution</h4>
 
-          <option value="" selected={true}>-- none --</option>
+        <div className="form-group">
+          <label htmlFor="establish-pmc">PMC name</label>
+          <input className="form-control" id="establish-pmc" value={this.state.pmcname} />
+        </div>
 
-          {this.state.pmcs.map((pmc) => (
-            pmc === "incubator" ? null : <option>{pmc}</option>
-          ))}
-        </select>
-      </div>
+        <div className="form-group">
+          <label htmlFor="establish-description">Complete this sentence:</label>
+          {pmcname ? ` Apache ${pmcname} consists of software related to` : null}
+          <textarea className="form-control" id="establish-description" value={this.state.pmcdesc} disabled={!pmcname} />
+        </div>
 
-      {this.state.chair ? <div className="form-group">
-        <label>{`Chair: ${this.state.chair.name}`}</label>
-      </div> : null}
+        <div className="form-group">
+          <label htmlFor="parent-pmc">Parent PMC name (if applicable)</label>
 
-      <label>Initial set of PMC members</label>
+          <select className="form-control" id="parent-pmc" onChange={event => (
+            this.parent_pmc_change(event.target.value)
+          )}>
 
-      <p>
-        {!this.state.chair ? "Search for the chair " : "Search for additional PMC members "}
+            <option value="" selected={true}>-- none --</option>
+
+            {this.state.pmcs.map((pmc) => (
+              pmc === "incubator" ? null : <option>{pmc}</option>
+            ))}
+          </select>
+        </div>
+
+        {this.state.chair ? <div className="form-group">
+          <label>{`Chair: ${this.state.chair.name}`}</label>
+        </div> : null}
+
+        <label>Initial set of PMC members</label>
+
+        <p>
+          {!this.state.chair ? "Search for the chair " : "Search for additional PMC members "}
         using the search box below, and select
         the desired name using the associated checkbox
       </p>
 
-      {this.state.pmc.map(person => (
-        <div className="form-check">
-          <input className="form-check-input" type="checkbox" checked={true} value={person.id} id={`person_${person.id}`} />
-          <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
-        </div>
-      ))}
+        {this.state.pmc.map(person => (
+          <div className="form-check">
+            <input className="form-check-input" type="checkbox" checked={true} value={person.id} id={`person_${person.id}`} />
+            <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
+          </div>
+        ))}
 
-      <input className="form-control" value={this.state.search} placeholder="search" />
+        <input className="form-control" value={this.state.search} placeholder="search" />
 
-      {this.state.search.length >= 3 && Server.committers ? <>
+        {this.state.search.length >= 3 && Server.committers ? <>
 
-        {Server.committers.map((person) => {
-          if (search.every(part => (
-            person.id.includes(part) || person.name.toLowerCase().includes(part)
-          ))) {
+          {Server.committers.map((person) => {
+            if (search.every(part => (
+              person.id.includes(part) || person.name.toLowerCase().includes(part)
+            ))) {
+              return <div className="form-check" key={person.id}>
+                <input className="form-check-input" type="checkbox" id={`person_${person.id}`} onClick={() => (
+                  this.establish_pmc(person)
+                )} />
+
+                <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
+              </div>
+            } else {
+              return null
+            }
+          })}
+        </> : this.state.search.length === 0 && this.state.roster && this.state.roster.length !== 0 ? this.state.roster.map((person) => {
+
+          if (!this.state.pmc.includes(person)) {
             return <div className="form-check" key={person.id}>
               <input className="form-check-input" type="checkbox" id={`person_${person.id}`} onClick={() => (
                 this.establish_pmc(person)
@@ -175,108 +194,104 @@ class Post extends React.Component {
           } else {
             return null
           }
+
+        }) : null}
+
+        <button className="btn-default" data-dismiss="modal">Cancel</button>
+        <button className="btn-primary" onClick={this.draft_establish_project} disabled={!this.state.pmcname || !this.state.pmcdesc || this.state.pmc.length === 0}>Draft</button>
+
+      </> : this.state.button === "Terminate Project" ? <>
+
+        <h4>Terminate Project Resolution</h4>
+
+        <div className="form-group">
+          <label htmlFor="terminate-pmc">PMC</label>
+
+          <select className="form-control" id="terminate-pmc">{this.state.pmcs.map(pmc => (
+            <option>{pmc}</option>
+          ))}</select>
+        </div>
+
+        <p>Reason for termination:</p>
+
+        <div className="form-check">
+          <input className="form-check-input" id="termvote" type="radio" name="termreason" onClick={() => (
+            this.setState({ termreason: "vote" })
+          )} />
+
+          <label className="form-check-label" htmlFor="termvote">by vote of the PMC</label>
+        </div>
+
+        <div className="form-check">
+          <input className="form-check-input" id="termconsensus" type="radio" name="termreason" onClick={() => (
+            this.setState({ termreason: "consensus" })
+          )} />
+
+          <label className="form-check-label" htmlFor="termconsensus">by consensus of the PMC</label>
+        </div>
+
+        <div className="form-check">
+          <input className="form-check-input" id="termboard" type="radio" name="termreason" onClick={() => (
+            this.setState({ termreason: "board" })
+          )} />
+
+          <label className="form-check-label" htmlFor="termboard">by the board for inactivity</label>
+        </div>
+
+        <button className="btn-default" data-dismiss="modal">Cancel</button>
+        <button className="btn-primary" onClick={this.draft_terminate_project} disabled={this.state.pmcs.length === 0 || !this.state.termreason}>Draft</button>
+
+      </> : this.state.button === "Out of Cycle Report" ? <>
+
+        <h4>Out of Cycle PMC Report</h4>
+        {reporting_this_month = []}
+
+        {Agenda.index.map((item) => {
+          if (item.roster && /^[A-Z]+$/m.test(item.attach)) {
+            return reporting_this_month << item.roster.split("/").pop()
+          } else {
+            return null
+          }
         })}
-      </> : this.state.search.length === 0 && this.state.roster && this.state.roster.length !== 0 ? this.state.roster.map((person) => {
 
-        if (!this.state.pmc.includes(person)) {
-          return <div className="form-check" key={person.id}>
-            <input className="form-check-input" type="checkbox" id={`person_${person.id}`} onClick={() => (
-              this.establish_pmc(person)
-            )} />
+        <div className="form-group">
+          <label htmlFor="out-of-cycle-pmc">PMC</label>
 
-            <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
+          <select className="form-control" id="out-of-cycle-pmc">{this.state.pmcs.map((pmc) => (
+            reporting_this_month.includes(pmc) ? null : <option>{pmc}</option>
+          ))}</select>
+        </div>
+
+        <button className="btn-default" data-dismiss="modal">Cancel</button>
+        <button className="btn-primary" disabled={this.state.pmcs.length === 0} onClick={this.draft_out_of_cycle_report}>Draft</button>
+
+      </> : this.state.button === "Discussion Item" ? <>
+
+        <h4>{this.state.header}</h4>
+        {this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item" ? <input id="post-report-title" label="title" disabled={this.state.disabled} placeholder="title" value={this.state.title} onFocus={this.default_title} /> : null}
+        <textarea id="post-report-text" label={this.state.label} value={this.state.report} placeholder={this.state.label} rows={17} disabled={this.state.disabled} onInput={this.change_text} />
+
+        {this.props.item.title === "Treasurer" ? <form>
+          <div className="form-group">
+            <label htmlFor="upload">financial spreadsheet from virtual</label>
+            <input id="upload" type="file" value={this.state.upload} />
+            <button className="btn-primary btn" onClick={this.upload_spreadsheet} disabled={this.state.disabled || !this.state.upload}>Upload</button>
           </div>
-        } else {
-          return null
-        }
+        </form> : null}
 
-      }) : null}
+        {this.state.header !== "Add Resolution" && this.state.header !== "Add Discussion Item" ? <input id="post-report-message" label="commit message" disabled={this.state.disabled} value={this.state.message} /> : null}
+        <button className="btn-default" data-dismiss="modal">Cancel</button>
+        <button className={this.reflow_color()} onClick={this.reflow}>Reflow</button>
+        <button className="btn-primary" onClick={this.submit} disabled={!this.ready()}>Submit</button>
 
-      <button className="btn-default" data_dismiss="modal">Cancel</button>
-      <button className="btn-primary" onClick={this.draft_establish_project} disabled={!this.state.pmcname || !this.state.pmcdesc || this.state.pmc.length === 0}>Draft</button>
-    </> : this.state.button === "Terminate Project" ? <>
-      <h4>Terminate Project Resolution</h4>
+      </> : <></>}
 
-      <div className="form-group">
-        <label htmlFor="terminate-pmc">PMC</label>
+    </ModalDialog>
 
-        <select className="form-control" id="terminate-pmc">{this.state.pmcs.map(pmc => (
-          <option>{pmc}</option>
-        ))}</select>
-      </div>
-
-      <p>Reason for termination:</p>
-
-      <div className="form-check">
-        <input className="form-check-input" id="termvote" type="radio" name="termreason" onClick={() => (
-          this.setState({ termreason: "vote" })
-        )} />
-
-        <label className="form-check-label" htmlFor="termvote">by vote of the PMC</label>
-      </div>
-
-      <div className="form-check">
-        <input className="form-check-input" id="termconsensus" type="radio" name="termreason" onClick={() => (
-          this.setState({ termreason: "consensus" })
-        )} />
-
-        <label className="form-check-label" htmlFor="termconsensus">by consensus of the PMC</label>
-      </div>
-
-      <div className="form-check">
-        <input className="form-check-input" id="termboard" type="radio" name="termreason" onClick={() => (
-          this.setState({ termreason: "board" })
-        )} />
-
-        <label className="form-check-label" htmlFor="termboard">by the board for inactivity</label>
-      </div>
-
-      <button className="btn-default" data_dismiss="modal">Cancel</button>
-      <button className="btn-primary" onClick={this.draft_terminate_project} disabled={this.state.pmcs.length === 0 || !this.state.termreason}>Draft</button>
-    </> : this.state.button === "Out of Cycle Report" ? <>
-      <h4>Out of Cycle PMC Report</h4>
-      {reporting_this_month = []}
-
-      {Agenda.index.map((item) => {
-        if (item.roster && /^[A-Z]+$/m.test(item.attach)) {
-          return reporting_this_month << item.roster.split("/").pop()
-        } else {
-          return null
-        }
-      })}
-
-      <div className="form-group">
-        <label htmlFor="out-of-cycle-pmc">PMC</label>
-
-        <select className="form-control" id="out-of-cycle-pmc">{this.state.pmcs.map((pmc) => (
-          reporting_this_month.includes(pmc) ? null : <option>{pmc}</option>
-        ))}</select>
-      </div>
-
-      <button className="btn-default" data_dismiss="modal">Cancel</button>
-      <button className="btn-primary" disabled={this.state.pmcs.length === 0} onClick={this.draft_out_of_cycle_report}>Draft</button>
-    </> : <>
-                <h4>{this.state.header}</h4>
-                {this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item" ? <input id="post-report-title" label="title" disabled={this.state.disabled} placeholder="title" value={this.state.title} onFocus={this.default_title} /> : null}
-                <textarea id="post-report-text" label={this.state.label} value={this.state.report} placeholder={this.state.label} rows={17} disabled={this.state.disabled} onInput={this.change_text} />
-
-                {this.props.item.title === "Treasurer" ? <form>
-                  <div className="form-group">
-                    <label htmlFor="upload">financial spreadsheet from virtual</label>
-                    <input id="upload" type="file" value={this.state.upload} />
-                    <button className="btn-primary btn" onClick={this.upload_spreadsheet} disabled={this.state.disabled || !this.state.upload}>Upload</button>
-                  </div>
-                </form> : null}
-
-                {this.state.header !== "Add Resolution" && this.state.header !== "Add Discussion Item" ? <input id="post-report-message" label="commit message" disabled={this.state.disabled} value={this.state.message} /> : null}
-                <button className="btn-default" data_dismiss="modal">Cancel</button>
-                <button className={this.reflow_color()} onClick={this.reflow}>Reflow</button>
-                <button className="btn-primary" onClick={this.submit} disabled={!this.ready()}>Submit</button>
-              </>}</ModalDialog>
   };
 
   // add item menu support
-  selectItem(event) {
+  selectItem = (event) => {
     let $button = event.target.textContent;
 
     if ($button === "Change Chair") {
@@ -308,12 +323,12 @@ class Post extends React.Component {
   };
 
   // reposition after update if header changed
-  updated() {
+  updated = () => {
     if (Post.header !== this.state.header) this.reposition()
   };
 
   // set focus, scroll
-  reposition() {
+  reposition = () => {
     // set focus once modal is shown
     let title = document.getElementById("post-report-title");
     let text = document.getElementById("post-report-text");
@@ -329,12 +344,12 @@ class Post extends React.Component {
   };
 
   // initialize form title, etc.
-  created() {
+  created = () => {
     this.retitle()
   };
 
   // match form title, input label, and commit message with button text
-  retitle() {
+  retitle = () => {
     let $digest, $alerted, $base;
     let $edited = this.state.edited;
     let $header = this.state.header;
@@ -461,7 +476,7 @@ class Post extends React.Component {
   };
 
   // default title based on common resolution patterns
-  default_title(event) {
+  default_title = (event) => {
     if (this.state.title) return;
     let match = null;
 
@@ -475,14 +490,14 @@ class Post extends React.Component {
   };
 
   // track changes to text value
-  change_text(event) {
+  change_text = (event) => {
     this.setState({ report: event.target.value });
     this.change_message()
   };
 
   // update default message to reflect whether only whitespace changes were
   // made or if there is something more that was done
-  change_message() {
+  change_message = () => {
     let $edited = this.state.base !== this.state.report;
 
     if (new RegExp(`(Edit|Reflow) ${this.props.item.title} Report`).test(this.state.message)) {
@@ -500,7 +515,7 @@ class Post extends React.Component {
   };
 
   // determine if reflow button should be default or danger color
-  reflow_color() {
+  reflow_color = () => {
     let width = 80 - this.state.indent.length;
 
     if (this.state.report.split("\n").every(line => line.length <= width)) {
@@ -511,7 +526,7 @@ class Post extends React.Component {
   };
 
   // perform a reflow of report text
-  reflow() {
+  reflow = () => {
     let regex, indents;
     let report = this.state.report;
     let textarea = document.getElementById("post-report-text");
@@ -580,7 +595,7 @@ class Post extends React.Component {
   };
 
   // determine if the form is ready to be submitted
-  ready() {
+  ready = () => {
     if (this.state.disabled) return false;
 
     if (this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item") {
@@ -591,7 +606,7 @@ class Post extends React.Component {
   };
 
   // when save button is pushed, post comment and dismiss modal when complete
-  submit(event) {
+  submit = (event) => {
     let data;
     this.setState({ edited: false });
 
@@ -626,7 +641,7 @@ class Post extends React.Component {
   //                                Treasurer                              #
   //########################################################################
   // upload contents of spreadsheet in base64; append extracted table to report
-  upload_spreadsheet(event) {
+  upload_spreadsheet = (event) => {
     this.setState({ disabled: true });
     event.preventDefault();
     let reader = new FileReader();
@@ -659,7 +674,7 @@ class Post extends React.Component {
   //########################################################################
   //                            Establish Project                          #
   //########################################################################
-  initialize_establish_project() {
+  initialize_establish_project = () => {
     this.setState({
       search: "",
       pmcname: null,
@@ -693,7 +708,7 @@ class Post extends React.Component {
     this.setState({ search: "" })
   };
 
-  draft_establish_project() {
+  draft_establish_project = () => {
     this.setState({ disabled: true });
     let people = [];
 
@@ -725,7 +740,7 @@ class Post extends React.Component {
   //########################################################################
   //                            Terminate Project                          #
   //########################################################################
-  initialize_terminate_project() {
+  initialize_terminate_project = () => {
     // get a list of PMCs
     if (this.state.pmcs.length === 0) {
       post(
@@ -738,7 +753,7 @@ class Post extends React.Component {
     this.setState({ termreason: null })
   };
 
-  draft_terminate_project() {
+  draft_terminate_project = () => {
     this.setState({ disabled: true });
 
     let options = {
@@ -762,7 +777,7 @@ class Post extends React.Component {
   //########################################################################
   //                           Out of Cycle report                         #
   //########################################################################
-  initialize_out_of_cycle() {
+  initialize_out_of_cycle = () => {
     this.setState({ disabled: true });
 
     // gather a list of reports already on the agenda
@@ -784,7 +799,7 @@ class Post extends React.Component {
     this.setState({ pmcs: $pmcs })
   };
 
-  draft_out_of_cycle_report() {
+  draft_out_of_cycle_report = () => {
     let pmc = document.getElementById("out-of-cycle-pmc").value.replace(
       /\b[a-z]/g,
       s => s.toUpperCase()
@@ -804,7 +819,7 @@ class Post extends React.Component {
   //########################################################################
   //                         Change Project Chair                          #
   //########################################################################
-  initialize_chair_change() {
+  initialize_chair_change = () => {
     this.setState({ disabled: true });
     let $pmcs = [];
     this.chair_pmc_change(null);
@@ -839,7 +854,7 @@ class Post extends React.Component {
     })
   };
 
-  draft_chair_change_resolution() {
+  draft_chair_change_resolution = () => {
     this.setState({ disabled: true });
 
     let options = {

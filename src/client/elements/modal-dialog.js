@@ -69,7 +69,7 @@ export default class ModalDialog extends React.Component {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className={"modal-header " + this.props.color}>
-            <button className="close" type="button" data_dismiss="modal">×</button>
+            <button className="close" type="button" data-dismiss="modal">×</button>
             {this.state.header}
           </div>
 

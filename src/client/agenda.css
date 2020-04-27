@@ -247,6 +247,11 @@ footer .btn {
   border-top-right-radius: 6px
 }
 
+.modal-header button {
+
+  order: 2;
+}
+
 .modal-body {
   background-color: white;
   max-height: 80vh;
