@@ -24,21 +24,22 @@ export default async function devproxy(request, path, method = "get", data) {
       headers: {
         'Authorization': 'Basic ' +
           Buffer.from(username + ':' + password).toString('base64')
-      }
+      },
+      method
     };
 
     if (method == 'post' && data) {
       if (typeof data === "string") {
-        options['Content-Type'] = 'application/x-www-form-urlencoded';
+        options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
       } else {
-        options['Content-Type'] = 'application/json; charset=utf-8';
+        options.headers['Content-Type'] = 'application/json; charset=utf-8';
         data = JSON.stringify(data);
       };
 
-      options['Content-Length'] = Buffer.byteLength(data);
+      options.headers['Content-Length'] = Buffer.byteLength(data);
     }
 
-    let request = https[method](options, response => {
+    let request = https.request(options, response => {
       let body = "";
 
       response.on('data', data => {
@@ -59,9 +60,10 @@ export default async function devproxy(request, path, method = "get", data) {
       });
     });
 
-    if (method == "post") {
-      if (data) request.write(data);
-      request.end();
+    if (method == "post" && data) {
+      request.write(data);
     }
+
+    request.end();
   })
 }

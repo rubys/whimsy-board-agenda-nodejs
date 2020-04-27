@@ -6,6 +6,7 @@ import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
 import * as watcher from './watcher.js';
 import router from './router.js';
+import bodyParser from 'body-parser';
 
 const app = express();
 app.use(compression());
@@ -33,12 +34,12 @@ app.use(basicAuth({
 }));
 
 app.use('/', (request, response, next) => {
-  if (!watcher.active) {
-    watcher.start(request);
-  };
-
+  if (!watcher.active) watcher.start(request);
   next();
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 router(app);
 

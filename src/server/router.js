@@ -9,6 +9,7 @@ import * as websocket from "./websocket.js";
 import { Board, Minutes } from './svn.js';
 import { parse } from './sources/agenda.js';
 import { digest } from './cache.js';
+import postData from "./operations/post-data.js";
 
 export default function router(app) {
 
@@ -82,6 +83,10 @@ export default function router(app) {
 
   app.get('/api/digest', async (request, response) => {
     response.json(await digest());
-  })
+  });
+
+  app.post('/api/post-data', async (request, response) => {
+    response.json(await postData(request));
+  });
 
 }

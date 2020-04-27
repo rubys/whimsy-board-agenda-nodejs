@@ -49,12 +49,12 @@ class JSONStorage {
     }
   };
 
-  // retrieve an cached object.  Note: block may be dispatched twice,
+  // retrieve a cached object.  Note: callback may be dispatched twice,
   // once with slightly stale data and once with current data
   //
   // Note: caches only work currently on Firefox and Chrome.  All
   // other browsers fall back to XMLHttpRequest (AJAX).
-  static fetch(name, block) {
+  static fetch(name, callback) {
     if (typeof fetch !== 'undefined' && typeof caches !== 'undefined' && (window.location.protocol === "https:" || window.location.hostname === "localhost")) {
       caches.open("board/agenda").then((cache) => {
         let fetched = null;
@@ -75,7 +75,7 @@ class JSONStorage {
             if (!fetched || JSON.stringify(fetched) !== JSON.stringify(json)) {
               if (!fetched) Store.dispatch(Actions.clockDecrement());
               fetched = json;
-              if (json) block(json)
+              if (json) callback(json)
             }
           })
             .catch(error => {
@@ -93,7 +93,7 @@ class JSONStorage {
               response.json().then(json => {
                 Store.dispatch(Actions.clockDecrement());
                 fetched = json;
-                if (json) block(json)
+                if (json) callback(json)
               })
             } catch (error) {
               if (error.name !== 'SyntaxError') throw error;
@@ -103,7 +103,7 @@ class JSONStorage {
       })
     } else if (typeof XMLHttpRequest !== 'undefined') {
       // retrieve from the network only
-      retrieve(name, "json", block)
+      retrieve(name, "json", callback)
     }
   }
 };
