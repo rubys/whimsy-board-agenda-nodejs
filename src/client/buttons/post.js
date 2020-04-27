@@ -434,9 +434,9 @@ class Post extends React.Component {
     };
 
     if (!$edited) {
-      let text = $report || this.props.item.text || "";
+      let text = $report || this.props.item?.text || "";
 
-      if (this.props.item.title === "President") {
+      if (this.props.item?.title === "President") {
         text = text.replace(
           /\s*Additionally, please see Attachments \d through \d\./,
           ""
@@ -444,22 +444,22 @@ class Post extends React.Component {
       };
 
       $report = text;
-      $digest = this.props.item.digest;
+      $digest = this.props.item?.digest;
       $alerted = false;
       $edited = false;
       $base = $report
-    } else if (!$alerted && $edited && $digest !== this.props.item.digest) {
+    } else if (!$alerted && $edited && $digest !== this.props.item?.digest) {
       alert("edit conflict");
       $alerted = true
     } else {
       $report = $base
     };
 
-    if ($header === "Add Resolution" || /^[47]/m.test(this.props.item.attach)) {
+    if ($header === "Add Resolution" || /^[47]/m.test(this.props.item?.attach)) {
       this.setState({ indent: "        " })
     } else if ($header === "Add Discussion Item") {
       this.setState({ indent: "        " })
-    } else if (this.props.item.attach === "8.") {
+    } else if (this.props.item?.attach === "8.") {
       this.setState({ indent: "    " })
     } else {
       this.setState({ indent: "" })
@@ -820,20 +820,18 @@ class Post extends React.Component {
   //                         Change Project Chair                          #
   //########################################################################
   initialize_chair_change = () => {
-    this.setState({ disabled: true });
-    let $pmcs = [];
+    this.setState({ disabled: true, pmcs: [] });
     this.chair_pmc_change(null);
 
     post("post-data", { request: "committee-list" }, (response) => {
-      this.setState({ pmcs: $pmcs = response });
-      this.chair_pmc_change($pmcs[0])
+      if (!response) return;
+      this.setState({ pmcs: response });
+      this.chair_pmc_change(response[0])
     });
-
-    this.setState({ pmcs: $pmcs })
   };
 
   chair_pmc_change(pmc) {
-    this.setState({ disabled: true, outgoing_chair: null, pmc_members: [] });
+    this.setState({ disabled: true, outgoing_chair: undefined, pmc_members: [] });
     if (!pmc) return;
 
     post("post-data", { request: "committee-members", pmc }, response => (

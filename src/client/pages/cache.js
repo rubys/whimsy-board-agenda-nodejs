@@ -141,7 +141,7 @@ export class CachePage extends React.Component {
     let contentType = 'text/plain';
 
     if (this.state.response.headers) {
-      for (let [key, value] of this.state.response.headers) {
+      for (let [key, ] of this.state.response.headers) {
         if (key !== "status") keys.push(key);
       };
 

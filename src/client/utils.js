@@ -51,7 +51,7 @@ hotlink.regexp = /(^|[\s.:;?\-\]<(])(https?:\/\/[-\w;/?:@&=+$.!~*'()%,#]+[\w/])(
 // "AJAX" style post request to the server, with a callback
 export function post(target, data, block) {
   let xhr = new XMLHttpRequest();
-  xhr.open("POST", `../json/${target}`, true);
+  xhr.open("POST", `../api/${target}`, true);
 
   xhr.setRequestHeader(
     "Content-Type",
@@ -71,7 +71,7 @@ export function post(target, data, block) {
           data = JSON.parse(xhr.responseText);
           if (data.exception) alert(`Exception\n${data.exception}`)
         } else if (xhr.status === 404) {
-          alert(`Not Found: json/${target}`)
+          alert(`Not Found: /api/${target}`)
         } else if (xhr.status >= 400) {
           if (!xhr.response) {
             message = `Exception - ${xhr.statusText}`
