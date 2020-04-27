@@ -4,7 +4,7 @@ import devproxy from "../sources/devproxy.js";
 
 export default async function(request) {
     console.log('body:', JSON.stringify(request.body))
-  let response = await devproxy(request, "json/post-data", "post", JSON.stringify(request.body));
+  let response = await devproxy(request, "json/post-data", "post", request.body);
   console.log(response);
   return JSON.parse(response);
 }
