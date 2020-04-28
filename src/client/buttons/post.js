@@ -5,7 +5,7 @@ import React from "react";
 import Reporter from "../models/reporter.js";
 import User from "../models/user.js";
 import { Server, post, Flow, retrieve } from "../utils.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 
 //
 // Post or edit a report or resolution
@@ -37,6 +37,7 @@ class Post extends React.Component {
   }
 
   render() {
+    console.log(this.props)
     let pmcname = this.state.pmcname;
 
     if (pmcname && !/[A-Z]/.test(pmcname)) {
@@ -54,33 +55,33 @@ class Post extends React.Component {
         <ul className="new-item-type">
           <li>
             <button className="btn-primary btn" onClick={this.selectItem}>Change Chair</button>
-          - change chair for an existing PMC
-        </li>
+            - change chair for an existing PMC
+          </li>
 
           <li>
             <button className="btn-primary btn" onClick={this.selectItem}>Establish Project</button>
-          - direct to TLP project and subproject to TLP
-        </li>
+            - direct to TLP project and subproject to TLP
+          </li>
 
           <li>
             <button className="btn-primary btn" onClick={this.selectItem}>Terminate Project</button>
-          - move a project to the attic
-        </li>
+            - move a project to the attic
+          </li>
 
           <li>
             <button className="btn-primary btn" onClick={this.selectItem}>New Resolution</button>
-          - free form entry of a new resolution
-        </li>
+            - free form entry of a new resolution
+          </li>
 
           <li>
             <button className="btn-info btn" onClick={this.selectItem}>Out of Cycle Report</button>
-          - report from a PMC not currently on the agenda for this month
-        </li>
+            - report from a PMC not currently on the agenda for this month
+          </li>
 
           <li>
             <button className="btn-success btn" onClick={this.selectItem}>Discussion Item</button>
-          - add a discussion item to the agenda
-        </li>
+            - add a discussion item to the agenda
+          </li>
         </ul>
 
         <button className="btn-default" data-dismiss="modal">Cancel</button>
@@ -265,13 +266,17 @@ class Post extends React.Component {
         <button className="btn-default" data-dismiss="modal">Cancel</button>
         <button className="btn-primary" disabled={this.state.pmcs.length === 0} onClick={this.draft_out_of_cycle_report}>Draft</button>
 
-      </> : this.state.button === "Discussion Item" ? <>
+      </> : true ? <>
 
         <h4>{this.state.header}</h4>
-        {this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item" ? <input id="post-report-title" label="title" disabled={this.state.disabled} placeholder="title" value={this.state.title} onFocus={this.default_title} /> : null}
+
+        {this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item"
+          ? <input id="post-report-title" label="title" disabled={this.state.disabled} placeholder="title" value={this.state.title} onFocus={this.default_title} />
+          : null}
+
         <textarea id="post-report-text" label={this.state.label} value={this.state.report} placeholder={this.state.label} rows={17} disabled={this.state.disabled} onInput={this.change_text} />
 
-        {this.props.item.title === "Treasurer" ? <form>
+        {this.props.item?.title === "Treasurer" ? <form>
           <div className="form-group">
             <label htmlFor="upload">financial spreadsheet from virtual</label>
             <input id="upload" type="file" value={this.state.upload} />
@@ -279,15 +284,16 @@ class Post extends React.Component {
           </div>
         </form> : null}
 
-        {this.state.header !== "Add Resolution" && this.state.header !== "Add Discussion Item" ? <input id="post-report-message" label="commit message" disabled={this.state.disabled} value={this.state.message} /> : null}
+        {this.state.header !== "Add Resolution" && this.state.header !== "Add Discussion Item" ? <>
+          <input id="post-report-message" label="commit message" disabled={this.state.disabled} value={this.state.message} />
+        </> : <></>}
+
         <button className="btn-default" data-dismiss="modal">Cancel</button>
         <button className={this.reflow_color()} onClick={this.reflow}>Reflow</button>
         <button className="btn-primary" onClick={this.submit} disabled={!this.ready()}>Submit</button>
-
       </> : <></>}
 
     </ModalDialog>
-
   };
 
   // add item menu support
@@ -309,7 +315,7 @@ class Post extends React.Component {
   };
 
   // autofocus on report/resolution title/text
-  mounted() {
+  componentDidMount() {
     jQuery("#post-report-form").on("show.bs.modal", () => {
       // update contents when modal is about to be shown
       this.setState({ button: this.props.button.text });
@@ -344,7 +350,7 @@ class Post extends React.Component {
   };
 
   // initialize form title, etc.
-  created = () => {
+  componentWillReceiveProps() {
     this.retitle()
   };
 
@@ -403,7 +409,7 @@ class Post extends React.Component {
 
         break;
 
-      case "add resolution":
+      case "Add Resolution":
       case "New Resolution":
         $header = "Add Resolution";
         this.setState({ label: "resolution", title: "" });
@@ -498,20 +504,17 @@ class Post extends React.Component {
   // update default message to reflect whether only whitespace changes were
   // made or if there is something more that was done
   change_message = () => {
-    let $edited = this.state.base !== this.state.report;
+    let edited = this.state.base !== this.state.report;
 
     if (new RegExp(`(Edit|Reflow) ${this.props.item.title} Report`).test(this.state.message)) {
-      if ($edited && this.state.base.replace(/[ \t\n]+/g, "") === this.state.report.replace(
-        /[ \t\n]+/g,
-        ""
-      )) {
+      if (edited && this.state.base.replace(/[ \t\n]+/g, "") === this.state.report.replace(/[ \t\n]+/g, "")) {
         this.setState({ message: `Reflow ${this.props.item.title} Report` })
       } else {
         this.setState({ message: `Edit ${this.props.item.title} Report` })
       }
     };
 
-    this.setState({ edited: $edited })
+    this.setState({ edited })
   };
 
   // determine if reflow button should be default or danger color
@@ -861,7 +864,7 @@ class Post extends React.Component {
       chair: document.getElementById("incoming-chair").value
     };
 
-    post("post-data", options, response => (
+    post("post-data", options, response => {
       this.setState({
         button: "Add Resolution",
         header: "Add Resolution",
@@ -869,8 +872,8 @@ class Post extends React.Component {
         report: response.draft,
         label: "resolution",
         disabled: false
-      })
-    ))
+      });
+    })
   }
 
 };
