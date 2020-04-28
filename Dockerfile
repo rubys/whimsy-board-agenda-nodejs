@@ -18,12 +18,15 @@
 
 FROM ubuntu:bionic
 
-RUN apt update
-RUN apt install -y curl git subversion
+RUN apt update \
+  && apt-get install -y \
+    curl \
+    git \
+    subversion
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt install -y nodejs
-
+RUN apt-get install -y nodejs
 RUN npm install -g yarn
+RUN apt-get clean && rm -rf /var/lib/apt/lists/
 
 # Run yarn install in a temporary folder that our start
 # script can move before starting up. This container
