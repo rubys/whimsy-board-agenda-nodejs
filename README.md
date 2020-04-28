@@ -5,6 +5,7 @@ Pick from the following:
 * [MacOS](./MACOSX.md)
 * [Linux](./LINUX.md)
 * [Windows](./WINDOWS.md)
+* [Docker](./Dockerfile)
 
 ## Architecture
 
