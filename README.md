@@ -32,9 +32,8 @@ prev links as well as hrefs.  This would be stored in a Redux store.
 Individual React components could then subscribe to just the data they need,
 and update themselves when this data changes.
 
-Matt has seen a preview of this, but I've made a lot of progress since he tried
-it.  With the current board agenda application, there is an undocumented and
-not completely implemented feature where you press '=' and see the cache (it
+With the current board agenda application, there is an undocumented and not
+completely implemented feature where you press '=' and see the cache (it
 actually used to work, but presumably it was broken in the React=>Vue port when
 React was playing games with their license).  With the Node.js application,
 this has been expanded.  You can directly see Redux store (i.e., data after the
@@ -87,7 +86,7 @@ particular agenda, it will fetch it and dispatch the results.
 
 Note that in the (hopefully near) future, the server will hook into
 [PyPubSub](https://infra.apache.org/pypubsub.html) so that it will immediately
-be aware of all SVN commits.  Polling LDAP can also be done.
+be aware of all SVN commits and LDAP changes.
 
 ## Learn More
 
@@ -109,5 +108,4 @@ Supporting cast:
  * [jest](https://jestjs.io/) testing framework
  * [ldapjs](http://ldapjs.org/)
  * [webpack](https://webpack.js.org/)
-
-
+ * [yarn](https://yarnpkg.com/)
