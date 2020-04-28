@@ -2,13 +2,17 @@
 #
 # Build the image with
 #
-#    rm -rf node_modules ; docker build . -t whimsy-board-agenda-dev
+#    docker build . -t whimsy-board-agenda-dev
 #
-# And run with
+# Then get the yarn packages with
 #
-#  rm -rf node_modules && docker run -it -v $PWD:/whimsy-board-agenda -p 3000:3000 whimsy-board-agenda-dev
+#    docker run -it -v $PWD:/whimsy-board-agenda whimsy-board-agenda-dev yarn install
 #
-# Optionally adding "bash" at the end to run a shell in that container, for 
+# And start the server with
+#
+#    docker run -it -v $PWD:/whimsy-board-agenda -p 3000:3000 whimsy-board-agenda-dev yarn dev
+#
+# You can use "bash" instead of "yarn dev" to run a shell in that container, for
 # troubleshooting.
 #
 # Then open http://localhost:3000
@@ -28,14 +32,5 @@ RUN apt-get install -y nodejs
 RUN npm install -g yarn
 RUN apt-get clean && rm -rf /var/lib/apt/lists/
 
-# Run yarn install in a temporary folder that our start
-# script can move before starting up. This container
-# then runs on a local checkout, for development
-# convenience.
-RUN mkdir /yarn-install
-COPY package.json /yarn-install
-WORKDIR /yarn-install
-RUN yarn install
-
-COPY start-in-container.sh /
-CMD bash -c "/start-in-container.sh"
+WORKDIR /whimsy-board-agenda
+CMD bash
