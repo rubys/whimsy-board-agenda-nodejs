@@ -160,8 +160,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Significant components:
  * [Bootstrap](https://getbootstrap.com/) styles
  * [Express](https://expressjs.com/) web framework
- * [Node.js](https://nodejs.org/en/docs/guides/) - [tutorial](https://nodejs.dev/) Server-side JavaScript runtime
- * [React](https://reactjs.org/) - [tutorial](https://reactjs.org/tutorial/tutorial.html) user interface library
+ * [Node.js](https://nodejs.org/en/docs/guides/) [[tutorial](https://nodejs.dev/)] Server-side JavaScript runtime
+ * [React](https://reactjs.org/) [[tutorial](https://reactjs.org/tutorial/tutorial.html)] user interface library
  * [React Redux](https://react-redux.js.org/) predictable state container
  * [React Router](https://reacttraining.com/react-router/) declarative routing
 
