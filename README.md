@@ -10,7 +10,7 @@ Pick from the following:
 ## Architecture
 
 The server is in [src/server.js](src/server.js), with the application logic
-starting in [src/server/router.js](./src/server/router.js].  In development
+starting in [src/server/router.js](src/server/router.js).  In development
 mode, the server  stores its files in a `work` directory, and this contains
 things like svn checkouts and caches.  In production this likely will be placed
 in `/srv`.  At any time, you can blow away the `work` directory (even while the
