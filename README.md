@@ -20,7 +20,7 @@ In development mode, the client starts in [./src/index.js](src/index.js), again
 with the main line application logic starting in
 [./src/client/router.js](src/client/router.js).  In production, the startup
 entry point is likely going to be different, and will make use of
-(server side rendering)[https://reactjs.org/docs/react-dom-server.html].
+]server side rendering](https://reactjs.org/docs/react-dom-server.html).
 
 ## Data Flow
 
