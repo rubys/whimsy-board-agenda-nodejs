@@ -157,13 +157,11 @@ browser.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).  You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-Other significant components:
+Significant components:
  * [Bootstrap](https://getbootstrap.com/) styles
  * [Express](https://expressjs.com/) web framework
- * [jQuery](https://jquery.com/)
- * [Node.js](https://nodejs.org/en/docs/guides/)
+ * [Node.js](https://nodejs.org/en/docs/guides/) - [tutorial](https://nodejs.dev/)
+ * [React](https://reactjs.org/) - [tutorial](https://reactjs.org/tutorial/tutorial.html)
  * [React Redux](https://react-redux.js.org/)
  * [React Router](https://reacttraining.com/react-router/)
 
@@ -171,6 +169,7 @@ Supporting cast:
  * [babel](https://babeljs.io/) javascript transpiler
  * [express-ws](https://www.npmjs.com/package/express-ws) websocket support
  * [jest](https://jestjs.io/) testing framework
+ * [jQuery](https://jquery.com/)
  * [ldapjs](http://ldapjs.org/)
  * [webpack](https://webpack.js.org/)
  * [yarn](https://yarnpkg.com/)
