@@ -15,6 +15,9 @@ const boardUrl = 'https://svn.apache.org/repos/private/foundation/board';
 const minutesDir = `${svn}/minutes`;
 const minutesUrl = 'https://svn.apache.org/repos/asf/infrastructure/site/trunk/content/foundation/records/minutes';
 
+const committersDir = `${svn}/board`;
+const committersUrl = 'https://svn.apache.org/repos/private/committers/board';
+
 // build an authenticated subversion command
 function svncmd(request) {
   let svn = 'svn';
@@ -113,3 +116,5 @@ Minutes.map = function (file) {
   let year = file.match(/_(\d{4})_/)[1];
   return `${Minutes.dir}/${year}/${file}`
 }
+
+export const Committers = new Repository({dir: committersDir, url: committersUrl})

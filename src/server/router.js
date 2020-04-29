@@ -1,3 +1,4 @@
+import committeeInfo from "./sources/committee-info.js";
 import historicalComments from "./sources/historical-comments.js";
 import jira from "./sources/jira.js";
 import minutes from "./sources/minutes.js";
@@ -48,6 +49,10 @@ export default function router(app) {
       if (error.code === 'ENOENT') next();
       next(error);
     }
+  });
+
+  app.get('/api/committee-info', async (request, response) => {
+    response.json(await committeeInfo(request));
   });
 
   app.get('/api/jira', async (request, response) => {
