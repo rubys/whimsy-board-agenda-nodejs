@@ -52,6 +52,9 @@ Make sure that the version of Node that you are running is a supported version (
 
     node --version
 
+If you already have installed node you may run into difficulties with ownership of some directories. This may help:
+https://stackoverflow.com/questions/31374143/trouble-install-node-js-with-homebrew
+
 # Yarn
 
 Node comes with a package manager that is, unimaginatively, called `npm`.  `npm` comes with a command line tool, but there is a replacement for the command line tool named `yarn` that accesses the same back end package repository but runs considerably faster and is easier to use.  Since many of the instructions you will find online (including the instructions for [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html) that I used to bootstrap this effort) suggest using `yarn`, you might as well go with the flow:
