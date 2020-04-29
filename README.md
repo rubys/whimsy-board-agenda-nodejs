@@ -160,16 +160,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Significant components:
  * [Bootstrap](https://getbootstrap.com/) styles
  * [Express](https://expressjs.com/) web framework
- * [Node.js](https://nodejs.org/en/docs/guides/) - [tutorial](https://nodejs.dev/)
- * [React](https://reactjs.org/) - [tutorial](https://reactjs.org/tutorial/tutorial.html)
- * [React Redux](https://react-redux.js.org/)
- * [React Router](https://reacttraining.com/react-router/)
+ * [Node.js](https://nodejs.org/en/docs/guides/) - [tutorial](https://nodejs.dev/) Server-side JavaScript runtime
+ * [React](https://reactjs.org/) - [tutorial](https://reactjs.org/tutorial/tutorial.html) user interface library
+ * [React Redux](https://react-redux.js.org/) predictable state container
+ * [React Router](https://reacttraining.com/react-router/) declarative routing
 
 Supporting cast:
  * [babel](https://babeljs.io/) javascript transpiler
  * [express-ws](https://www.npmjs.com/package/express-ws) websocket support
  * [jest](https://jestjs.io/) testing framework
- * [jQuery](https://jquery.com/)
- * [ldapjs](http://ldapjs.org/)
- * [webpack](https://webpack.js.org/)
- * [yarn](https://yarnpkg.com/)
+ * [jQuery](https://jquery.com/) library for DOM traversal and manipulation
+ * [ldapjs](http://ldapjs.org/) LDAP client
+ * [webpack](https://webpack.js.org/) module bundler
+ * [yarn](https://yarnpkg.com/) package manager
