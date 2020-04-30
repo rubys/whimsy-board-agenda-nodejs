@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import store from '..//store';
-import Router from '../Router';
+import Router from '../router.js';
 
 test('renders welcome splash screen', () => {
   const context = {};
