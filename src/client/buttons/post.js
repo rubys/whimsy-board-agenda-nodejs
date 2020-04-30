@@ -349,7 +349,7 @@ class Post extends React.Component {
   };
 
   // initialize form title, etc.
-  componentWillReceiveProps() {
+  componentDitUpdate() {
     this.retitle()
   };
 

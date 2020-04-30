@@ -117,7 +117,7 @@ class Header extends React.Component {
 
               {this.props.agenda.map(item => {
                 if (item.index) {
-                  return <li>
+                  return <li key={item.index}>
                     <Link to={item.href}>{item.index}</Link>
                   </li>
                 } else {
