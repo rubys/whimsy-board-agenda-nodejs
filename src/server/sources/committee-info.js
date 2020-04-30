@@ -31,12 +31,14 @@ class CommitteeMap extends Map {
   get(name) {
     if (!name) throw new TypeError('name: must not be null');
 
-    let result = super.get(this.namemap(name));
+    let id = this.namemap(name);
+
+    let result = super.get(id);
 
     if (!result) {
-      result = { name: this.namemap(name), chairs: [] };
-      if (name !== result.name) result.display_name = name;
-      this.set(result.name, result);
+      result = { id, chairs: [] };
+      if (name !== id) result.display_name = name;
+      this.set(name, result);
     }
 
     return result;
@@ -50,7 +52,7 @@ class CommitteeMap extends Map {
     // Drop parenthesized comments and downcase before lookup; drop all spaces after lookup
     // So aliases table does not need to contain entries for Traffic Server and XML Graphics.
     // Also compress white-space before lookup so tabs etc from index.html don't matter
-    return (aliases[name.replace(/\s+\(.*?\)/, "").trim().replace(/\s+/g, " ").toLowerCase()] || name).replace(/\s+/g, "");
+    return (aliases[name.replace(/\s+\(.*?\)/, "").trim().replace(/\s+/g, " ").toLowerCase()] || name).toLowerCase().replace(/\s+/g, "");
   }
 }
 
