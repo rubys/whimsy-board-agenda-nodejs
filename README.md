@@ -1,11 +1,12 @@
 ## Quick Start
 
-Pick from the following:
+To run this, pick from the following:
 
+* [Docker](./Dockerfile)
 * [MacOS](./MACOSX.md)
 * [Linux](./LINUX.md)
 * [Windows](./WINDOWS.md)
-* [Docker](./Dockerfile)
+
 
 ## Architecture
 
