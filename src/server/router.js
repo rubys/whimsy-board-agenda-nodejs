@@ -7,6 +7,7 @@ import reporter from "./sources/reporter.js";
 import responses from "./sources/responses.js";
 import server from "./sources/server.js";
 import * as websocket from "./websocket.js";
+import * as ldap from "./ldap.js";
 import { Board, Minutes } from './svn.js';
 import { parse } from './sources/agenda.js';
 import { digest } from './cache.js';
@@ -49,6 +50,14 @@ export default function router(app) {
       if (error.code === 'ENOENT') next();
       next(error);
     }
+  });
+
+  app.get('/api/committers', async (request, response) => {
+    let members = await ldap.members();
+    let committers = Object.entries(await ldap.names()).map (([name, id]) => (
+      { name, id, member: members.includes(id) }
+    ));
+    response.json(committers);
   });
 
   app.get('/api/committee-info', async (request, response) => {
