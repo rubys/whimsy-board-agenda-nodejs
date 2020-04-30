@@ -3,7 +3,7 @@ import credentials from '../credentials.js';
 import CommitteeInfo from "../sources/committee-info.js";
 
 export default async function (request) {
-  let { pmcs } = await CommitteeInfo();
+  let { pmcs } = await CommitteeInfo(request);
   let committee, roster;
 
   switch (request.body.request) {

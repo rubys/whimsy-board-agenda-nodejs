@@ -3,9 +3,15 @@ import ModalDialog from "../elements/modal-dialog.js";
 import Posted from "../models/posted.js";
 import React from "react";
 import Reporter from "../models/reporter.js";
-import User from "../models/user.js";
 import { Server, post, Flow, retrieve } from "../utils.js";
+import { connect } from 'react-redux';
 import jQuery from "jquery";
+
+function mapStateToProps(state) {
+  return {
+    userid: state.server.user.userid
+  }
+};
 
 //
 // Post or edit a report or resolution
@@ -104,8 +110,9 @@ class Post extends React.Component {
 
         <div className="form-group">
           <label htmlFor="incoming-chair">Incoming Chair</label>
+          <p>{this.props.userid}</p>
 
-          <select className="form-control" id="incoming-chair" defaultValue={User.id}>{this.state.pmc_members.map(person => (
+          <select className="form-control" id="incoming-chair" defaultValue={this.props.userid}>{this.state.pmc_members.map(person => (
             <option key={person.id} value={person.id}>{person.name}</option>
           ))}</select>
         </div>
@@ -164,7 +171,7 @@ class Post extends React.Component {
 
         <div>
           <input className="form-control" value={this.state.search} placeholder="search"
-            onChange={(event) => { this.setState({search: event.target.value}) }} />
+            onChange={(event) => { this.setState({ search: event.target.value }) }} />
         </div>
 
         {this.state.search.length >= 3 && Server.committers ? <>
@@ -877,6 +884,6 @@ class Post extends React.Component {
       });
     })
   }
-
 };
-export default Post
+
+export default connect(mapStateToProps)(Post)
