@@ -1,6 +1,10 @@
-# Quick hack Dockerfile to run this in development mode
+# Dockerfile to run this in development mode
 #
-# Build the image with
+# If needed, check your Docker setup with
+#
+#    docker run -it busybox echo yes it works
+#
+# Then, build the image with
 #
 #    docker build . -t whimsy-board-agenda-dev
 #
@@ -10,27 +14,17 @@
 #
 # And start the server with
 #
-#    docker run -it -v $PWD:/whimsy-board-agenda -p 3000:3000 whimsy-board-agenda-dev yarn dev
+#    docker run -it -v $PWD:/whimsy-board-agenda -p 3000:3000 whimsy-board-agenda-dev
 #
-# You can use "bash" instead of "yarn dev" to run a shell in that container, for
-# troubleshooting.
+# If needed for troubleshooting, you can add "sh" to the end of that command to
+# run a shell in that container. In that shell, "yarn dev" starts the server.
 #
 # Then open http://localhost:3000
 #
 # Changes to the source files should be taken into 
 # account within a few seconds.
 
-FROM ubuntu:bionic
-
-RUN apt update \
-  && apt-get install -y \
-    curl \
-    git \
-    subversion
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g yarn
-RUN apt-get clean && rm -rf /var/lib/apt/lists/
-
+FROM node:14.0.0-alpine3.11
+RUN apk --no-cache add subversion
 WORKDIR /whimsy-board-agenda
-CMD bash
+CMD yarn dev
