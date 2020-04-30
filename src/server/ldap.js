@@ -122,6 +122,5 @@ export async function close() {
 
 // shutdown cleanly on exit
 process.on('exit', async () => {
-  console.log('closing LDAP');
   await close();
 });

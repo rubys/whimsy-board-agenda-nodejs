@@ -162,7 +162,10 @@ class Post extends React.Component {
           </div0>
         ))}
 
-        <input className="form-control" value={this.state.search} placeholder="search" onChange={() => {}} />
+        <div>
+          <input className="form-control" value={this.state.search} placeholder="search"
+            onChange={(event) => { this.setState({search: event.target.value}) }} />
+        </div>
 
         {this.state.search.length >= 3 && Server.committers ? <>
 
@@ -170,13 +173,13 @@ class Post extends React.Component {
             if (search.every(part => (
               person.id.includes(part) || person.name.toLowerCase().includes(part)
             ))) {
-              return <div1 className="form-check" key={person.id}>
+              return <div className="form-check" key={person.id}>
                 <input className="form-check-input" type="checkbox" id={`person_${person.id}`} onClick={() => (
                   this.establish_pmc(person)
                 )} />
 
                 <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
-              </div1>
+              </div>
             } else {
               return null
             }
