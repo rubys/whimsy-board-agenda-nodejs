@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rubys/whimsy-board-agenda-nodejs.svg)](https://travis-ci.org/rubys/whimsy-board-agenda-nodejs)
+
 ## Quick Start
 
 To run this, pick from the following:
