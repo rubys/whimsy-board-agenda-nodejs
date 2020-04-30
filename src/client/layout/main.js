@@ -1,15 +1,12 @@
 import Agenda from "../models/agenda.js";
-import Events from "../models/events.js";
 import Footer from "./footer.js";
 import Header from "./header.js";
-import Keyboard from "../keyboard.js";
 import Minutes from "../models/minutes.js";
 import PageCache from "../models/pagecache.js";
 import Pending from "../models/pending.js";
 import React from "react";
 import Reporter from "../models/reporter.js";
 import Router from "../router.js";
-import Touch from "../touch.js";
 import { Server } from "../utils.js";
 import { jQuery } from "jquery";
 import logo from "../react-logo.svg";
@@ -131,10 +128,6 @@ class Main extends React.Component {
     Main.refresh = this.refresh;
     Main.item = Agenda;
 
-    // start watching keystrokes and fingers
-    Keyboard.initEventHandlers();
-    Touch.initEventHandlers();
-
     // whenever the window is resized, adjust margins of the main area to
     // avoid overlapping the header and footer areas
     window.onresize = () => {
@@ -171,17 +164,6 @@ class Main extends React.Component {
     // do an initial resize
     Main.scrollTo = 0;
     window.onresize();
-
-    // if agenda is stale, fetch immediately; otherwise save etag
-    if (this.props.page) {
-      Agenda.fetch(this.props.page.etag, this.props.page.digest);
-    }
-
-    // start Service Worker
-    // if (PageCache.enabled) PageCache.register(); TODO!
-
-    // start backchannel
-    Events.monitor();
   };
 
   componentDidUpdate() {

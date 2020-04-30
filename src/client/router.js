@@ -6,11 +6,13 @@ import CacheStatus, { CachePage } from "./pages/cache.js";
 import Comments from "./pages/comments.js";
 import DraftMinutes from "./buttons/draft-minutes.js";
 import Feedback from "./pages/feedback.js";
+import Events from "./models/events.js";
 import Flagged from "./pages/flagged.js";
 import Help from "./pages/help.js";
 import Index from "./pages/index.js";
 import InsiderSecrets from "./pages/secrets.js";
 import Install from "./buttons/install.js";
+import Keyboard from "./keyboard.js";
 import Main from "./layout/main.js";
 import Minutes from "./models/minutes.js";
 import Missing from "./pages/missing.js";
@@ -27,6 +29,7 @@ import Server from "./pages/server.js";
 import Summary from "./buttons/summary.js";
 import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
+import Touch from "./touch.js";
 import User from "./models/user.js";
 import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
@@ -388,10 +391,25 @@ class Router extends React.Component {
     </Switch>
   }
 
+  // find an agenda item that matches the path
   find = (path) => {
     let href = '/' + path;
     return this.props.agenda.find(item => item.href === href);
   }
+
+  componentDidMount() {
+    if (!this.props.staticContext) {
+      // start watching keystrokes and fingers
+      Keyboard.initEventHandlers();
+      Touch.initEventHandlers();
+
+      // start Service Worker
+      // if (PageCache.enabled) PageCache.register(); TODO!
+
+      // start backchannel
+      Events.monitor();
+    }
+  };
 }
 
 export default connect(mapStateToProps)(withRouter(Router))

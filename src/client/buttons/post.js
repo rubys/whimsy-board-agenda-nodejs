@@ -37,7 +37,6 @@ class Post extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     let pmcname = this.state.pmcname;
 
     if (pmcname && !/[A-Z]/.test(pmcname)) {
