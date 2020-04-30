@@ -151,10 +151,11 @@ export function retrieve(target, type, block) {
 
   if (/^https?:/m.test(target)) {
     xhr.open("GET", target, true);
-    if (type === "json") xhr.setRequestHeader("Accept", "application/json")
   } else {
-    xhr.open("GET", `../${type}/${target}`, true)
+    xhr.open("GET", `../api/${target}`, true)
   };
+
+  if (type === "json") xhr.setRequestHeader("Accept", "application/json");
 
   xhr.responseType = type;
   xhr.send()
