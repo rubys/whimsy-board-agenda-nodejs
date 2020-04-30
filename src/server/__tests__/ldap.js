@@ -3,6 +3,10 @@
 
 import * as ldap from '../ldap.js';
 
+afterAll(async () => {
+  await ldap.close();
+});
+
 test('find committer id by name', async () => {
   let names = await ldap.names();
   expect(names['Sam Ruby']).toEqual('rubys');

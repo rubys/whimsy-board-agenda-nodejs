@@ -119,3 +119,9 @@ export async function close() {
   if (client) client.destroy();
   client = null;
 }
+
+// shutdown cleanly on exit
+process.on('exit', async () => {
+  console.log('closing LDAP');
+  await close();
+});
