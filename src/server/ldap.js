@@ -82,6 +82,38 @@ export async function members() {
   });
 }
 
+
+// return a project committers
+export async function projectCommitters(project) {
+  if (!client) await open();
+
+  if (!/^[a-z]*$/.test(project)) 
+    throw new TypeError(`invalid project name: ${JSON.stringify(project)}`);
+
+  let base = `cn=${project},ou=project,ou=groups,dc=apache,dc=org`;
+
+  let options = {
+    scope: 'sub',
+    attributes: ['member']
+  }
+
+  members = [];
+
+  return new Promise((resolve, reject) => {
+    client.search(base, options, (err, res) => {
+      if (err) reject(err);
+
+      res.on('searchEntry', entry => {
+        members.push(...entry.object.member.map(dn => dn.match(/^uid=(.*?),/)[1]));
+      });
+
+      res.on('end', result => {
+        resolve(members);
+      });
+    });
+  });
+}
+
 // close the connection to the ldap server
 export async function close() {
   if (client) client.destroy();
