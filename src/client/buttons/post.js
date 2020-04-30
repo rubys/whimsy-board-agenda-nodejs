@@ -94,7 +94,7 @@ class Post extends React.Component {
 
           <select className="form-control" id="change-chair-pmc" onChange={event => (
             this.chair_pmc_change(event.target.value)
-          )}>{this.state.pmcs.map(pmc => <option>{pmc}</option>)}</select>
+          )}>{this.state.pmcs.map(pmc => <option key={pmc}>{pmc}</option>)}</select>
         </div>
 
         <div className="form-group">
@@ -105,8 +105,8 @@ class Post extends React.Component {
         <div className="form-group">
           <label htmlFor="incoming-chair">Incoming Chair</label>
 
-          <select className="form-control" id="incoming-chair">{this.state.pmc_members.map(person => (
-            <option value={person.id} selected={person.id === User.id}>{person.name}</option>
+          <select className="form-control" id="incoming-chair" defaultValue={User.id}>{this.state.pmc_members.map(person => (
+            <option key={person.id} value={person.id}>{person.name}</option>
           ))}</select>
         </div>
 
@@ -135,10 +135,10 @@ class Post extends React.Component {
             this.parent_pmc_change(event.target.value)
           )}>
 
-            <option value="" selected={true}>-- none --</option>
+            <option value="" defaultValue>-- none --</option>
 
             {this.state.pmcs.map((pmc) => (
-              pmc === "incubator" ? null : <option>{pmc}</option>
+              pmc === "incubator" ? null : <option key={pmc}>{pmc}</option>
             ))}
           </select>
         </div>
@@ -156,13 +156,13 @@ class Post extends React.Component {
       </p>
 
         {this.state.pmc.map(person => (
-          <div className="form-check">
+          <div0 className="form-check" key={person.id}>
             <input className="form-check-input" type="checkbox" checked={true} value={person.id} id={`person_${person.id}`} />
             <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
-          </div>
+          </div0>
         ))}
 
-        <input className="form-control" value={this.state.search} placeholder="search" />
+        <input className="form-control" value={this.state.search} placeholder="search" onChange={() => {}} />
 
         {this.state.search.length >= 3 && Server.committers ? <>
 
@@ -170,13 +170,13 @@ class Post extends React.Component {
             if (search.every(part => (
               person.id.includes(part) || person.name.toLowerCase().includes(part)
             ))) {
-              return <div className="form-check" key={person.id}>
+              return <div1 className="form-check" key={person.id}>
                 <input className="form-check-input" type="checkbox" id={`person_${person.id}`} onClick={() => (
                   this.establish_pmc(person)
                 )} />
 
                 <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
-              </div>
+              </div1>
             } else {
               return null
             }
@@ -184,13 +184,13 @@ class Post extends React.Component {
         </> : this.state.search.length === 0 && this.state.roster && this.state.roster.length !== 0 ? this.state.roster.map((person) => {
 
           if (!this.state.pmc.includes(person)) {
-            return <div className="form-check" key={person.id}>
+            return <div3 className="form-check" key={person.id}>
               <input className="form-check-input" type="checkbox" id={`person_${person.id}`} onClick={() => (
                 this.establish_pmc(person)
               )} />
 
               <label className="form-check-label" htmlFor={`person_${person.id}`}>{person.name}</label>
-            </div>
+            </div3>
           } else {
             return null
           }
@@ -208,7 +208,7 @@ class Post extends React.Component {
           <label htmlFor="terminate-pmc">PMC</label>
 
           <select className="form-control" id="terminate-pmc">{this.state.pmcs.map(pmc => (
-            <option>{pmc}</option>
+            <option key={pmc}>{pmc}</option>
           ))}</select>
         </div>
 
@@ -258,7 +258,7 @@ class Post extends React.Component {
           <label htmlFor="out-of-cycle-pmc">PMC</label>
 
           <select className="form-control" id="out-of-cycle-pmc">{this.state.pmcs.map((pmc) => (
-            reporting_this_month.includes(pmc) ? null : <option>{pmc}</option>
+            reporting_this_month.includes(pmc) ? null : <option key={pmc}>{pmc}</option>
           ))}</select>
         </div>
 
@@ -679,8 +679,8 @@ class Post extends React.Component {
   initialize_establish_project = () => {
     this.setState({
       search: "",
-      pmcname: null,
-      pmcdesc: null,
+      pmcname: undefined,
+      pmcdesc: undefined,
       chair: null,
       pmc: []
     });
@@ -833,7 +833,7 @@ class Post extends React.Component {
   };
 
   chair_pmc_change(pmc) {
-    this.setState({ disabled: true, outgoing_chair: undefined, pmc_members: [] });
+    this.setState({ disabled: true, outgoing_chair: '', pmc_members: [] });
     if (!pmc) return;
 
     post("post-data", { request: "committee-members", pmc }, response => (

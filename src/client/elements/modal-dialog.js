@@ -7,7 +7,7 @@ import React from "react";
 // distributed to header, body, and footer sections.
 //
 export default class ModalDialog extends React.Component {
-  state = {header: [], body: [], footer: []};
+  state = { header: [], body: [], footer: [] };
 
   static getDerivedStateFromProps($$props) {
     let header = [];
@@ -16,7 +16,7 @@ export default class ModalDialog extends React.Component {
 
     let children = React.Children.toArray($$props.children);
     while (children.length === 1 && typeof children[0].type !== 'string') {
-     children = React.Children.toArray(children[0].props.children);
+      children = React.Children.toArray(children[0].props.children);
     }
 
     for (let child of children) {
@@ -36,7 +36,7 @@ export default class ModalDialog extends React.Component {
         let label = null;
 
         if (child.props.label && child.props.id) {
-          let props = {htmlFor: child.props.id};
+          let props = { htmlFor: child.props.id };
 
           if (child.props.type === "checkbox") {
             props.className = "checkbox";
@@ -45,13 +45,13 @@ export default class ModalDialog extends React.Component {
             child = null
           } else {
             label = React.createElement("label", props, child.props.label);
-            child = React.cloneElement(child, {label: null})
+            child = React.cloneElement(child, { label: null })
           }
         };
 
         body.push(React.createElement(
           "div",
-          {className: "form-group"},
+          { className: "form-group" },
           label,
           child
         ))
@@ -84,11 +84,11 @@ export default class ModalDialog extends React.Component {
 // helper method: add a class to an element, returning new element
 function addClass(element, name) {
   if (!element.props.className) {
-    element = React.cloneElement(element, {className: name})
+    element = React.cloneElement(element, { className: name })
   } else if (!element.props.className.split(" ").includes(name)) {
     element = React.cloneElement(
       element,
-      {className: element.props.className + ` ${name}`}
+      { className: element.props.className + ` ${name}` }
     )
   };
 
