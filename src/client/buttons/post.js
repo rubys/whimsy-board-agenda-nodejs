@@ -110,7 +110,6 @@ class Post extends React.Component {
 
         <div className="form-group">
           <label htmlFor="incoming-chair">Incoming Chair</label>
-          <p>{this.props.userid}</p>
 
           <select className="form-control" id="incoming-chair" defaultValue={this.props.userid}>{this.state.pmc_members.map(person => (
             <option key={person.id} value={person.id}>{person.name}</option>

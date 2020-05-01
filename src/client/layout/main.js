@@ -52,11 +52,11 @@ class Main extends React.Component {
 
       <Footer {...this.props} />
 
-      {this.props.buttons ? this.props.buttons.map((button) => {
+      {this.props.buttons ? this.props.buttons.map(button => {
         if (button.form) {
           return React.createElement(
             button.form,
-            { item: this.props.item, server: Server, key: button.form.name, button }
+            { item: this.props.item, server: Server, key: button.text, button }
           )
         } else {
           return null
