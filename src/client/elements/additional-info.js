@@ -15,31 +15,11 @@ import { Server } from '../utils.js';
 // return the state associated with this item's title only
 function mapStateToProps(state, props) {
   let title = props.item.title;
-  let {client: { meetingDate }} = state;
 
-  // initial fetches
-  let historicalComments = lookup({ path: 'historical-comments', initialValue: {} });
-
-  let responses = lookup({ path: 'responses', initialValue: {} });
-
-  let reporter = [];
-
-  if (meetingDate) {
-    reporter = lookup({ path: 'reporter', initialValue: [], filter: response => {
-      console.log(response.agenda,`board_agenda_${String(meetingDate).replace(/-/g, '_')}.txt`);
-       if (response.agenda === `board_agenda_${String(meetingDate).replace(/-/g, '_')}.txt`) {
-         return response.drafts;
-       } else {
-         return [];
-       }
-    }})
-  }
-
-  // extract information relevant this item
   return {
-    historicalComments: historicalComments[title] || {},
-    responses: responses[title] || {},
-    draft: reporter[title] || {}
+    historicalComments: lookup('historicalComments')[title] || {},
+    responses: lookup('responses')[title] || {},
+    draft: lookup('reporter')[title] || {}
   }
 };
 

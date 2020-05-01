@@ -13,10 +13,11 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-let reducer = combineReducers({ agenda, client, clockCounter, historicalComments, reporter, responses, server });
+let reducers = { agenda, client, clockCounter, historicalComments, reporter, responses, server };
 
-const store = createStore(reducer);
+const store = createStore(combineReducers(reducers));
 
+// for reducers that provide lookup functions,
 // load data from the server, caching it using JSONStorage, and save
 // the result in the Redux store.
 //
@@ -24,18 +25,25 @@ const store = createStore(reducer);
 // once with slightly stale data from the client and possibly once
 // again with fresh data from the server.
 let fetched = {};
-export function lookup({ name, path, action, filter, initialValue }) {
+export function lookup(name) {
   let state = store.getState();
+  if (state[name]) return state[name];
 
-  if (!name) name = path.replace(/-\w/g, (data => data[1].toUpperCase()));
-  if (!action) action = Actions['post' + name.replace(/^\w/, c => c.toUpperCase())];
-  if (!filter) filter = value => value;
+  let instructions = reducers[name]?.lookup?.(state);
+  console.log(name, instructions)
+  if (!instructions) return state[name];
 
-  if (name in state && state[name]) {
-    return state[name];
-  } else if (!fetched[path]) {
+  let { path, action, filter, initialValue } = instructions;
+
+  if (!path) return initialValue;
+
+  if (!fetched[path]) {
     Promise.resolve().then(() => {
+      if (!action) action = Actions['post' + name.replace(/^\w/, c => c.toUpperCase())];
+      if (!filter) filter = value => value;
+
       store.dispatch(action(initialValue));
+
       JSONStorage.fetch(path, value => {
         if (value) store.dispatch(action(filter(value)));
       })

@@ -17,3 +17,7 @@ export default function reduce(state = null, action) {
       return state
   }
 }
+
+reduce.lookup = () => (
+  { path: 'responses', initialValue: {} }
+)

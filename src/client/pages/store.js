@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import JsonTree from 'react-json-tree';
+import { lookup } from '../store';
 
 export const theme = {
   scheme: "Github",
@@ -26,6 +27,13 @@ export const theme = {
 };
 
 function mapStateToProps(state, { table, id }) {
+  // lookup items that are missing
+  for (let property in state) {
+    if (state[property] === null) lookup(property);
+  }
+
+  // if table (and possibly id) are specified (generally from the URL), drill down
+  // to that portion of the state
   if (!table) return { state } ;
   state = state[table];
   if (!id) return { state } ;
