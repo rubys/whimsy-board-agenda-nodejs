@@ -4,6 +4,7 @@ import agenda from './reducers/agenda.js';
 import client from './reducers/client.js';
 import clockCounter from './reducers/clock-counter.js';
 import historicalComments from './reducers/historical-comments.js';
+import reporter from './reducers/reporter.js';
 import responses from './reducers/responses.js';
 import server from './reducers/server.js';
 import JSONStorage from "./models/jsonstorage.js"
@@ -12,7 +13,7 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-let reducer = combineReducers({ agenda, client, clockCounter, historicalComments, responses, server });
+let reducer = combineReducers({ agenda, client, clockCounter, historicalComments, reporter, responses, server });
 
 const store = createStore(reducer);
 

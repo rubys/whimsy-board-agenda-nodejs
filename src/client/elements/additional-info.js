@@ -19,7 +19,8 @@ function mapStateToProps(state, props) {
   return {
     historicalComments: Object.entries(lookup({ path: 'historical-comments', initialValue: {} })[title] || {}),
     responses: Object.fromEntries(Object.entries(lookup({ path: 'responses', initialValue: {} }))
-      .map(([date, list]) => [date, list[title]]))
+      .map(([date, list]) => [date, list[title]])),
+    reporter: lookup({ path: 'reporter', initialValue: [] })
   }
 };
 
