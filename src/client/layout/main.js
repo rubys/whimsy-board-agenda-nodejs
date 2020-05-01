@@ -1,12 +1,7 @@
 import Agenda from "../models/agenda.js";
 import Footer from "./footer.js";
 import Header from "./header.js";
-import Minutes from "../models/minutes.js";
-import PageCache from "../models/pagecache.js";
-import Pending from "../models/pending.js";
 import React from "react";
-import Reporter from "../models/reporter.js";
-import Router from "../router.js";
 import { Server } from "../utils.js";
 import { jQuery } from "jquery";
 import logo from "../react-logo.svg";
@@ -63,45 +58,6 @@ class Main extends React.Component {
         }
       }) : null}
     </>
-  };
-
-  // initial load of the agenda, and route first request
-  created() {
-    // copy server info for later use
-    for (let [prop, value] of Object.entries(this.props.server)) {
-      Server[prop] = value
-    };
-
-    if (PageCache.enabled || !Server.userid) Pending.fetch();
-    Agenda.load(this.props.page.parsed, this.props.page.digest);
-    Minutes.load(this.props.page.minutes);
-    if (PageCache.enabled) Reporter.fetch();
-    this.route(this.props.page.path, this.props.page.query);
-
-    // free memory
-    this.props.page.parsed = null
-  };
-
-  // encapsulate calls to the router
-  route = (path, query) => {
-    let route = Router.route(path, query);
-
-    this.setState({
-      item: route.item,
-      buttons: route.buttons,
-      options: route.options
-    });
-
-    if (!Main.item || !route.item || Main.item.view !== route.item.view) {
-      Main.view = null
-    };
-
-    Main.item = route.item;
-
-    // update title to match the item title whenever page changes
-    if (typeof document !== 'undefined' && route.item) {
-      document.getElementsByTagName("title")[0].textContent = route.item.title
-    }
   };
 
   // navigation method that updates history (back button) information
