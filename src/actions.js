@@ -18,6 +18,6 @@ export const meetingDate = (date) => ({ type: SET_MEETING_DATE, date });
 
 export const postHistoricalComments = (comments) => ({ type: POST_HISTORICAL_COMMENTS, comments});
 export const postResponses = (messages) => ({ type: POST_RESPONSES, messages });
-export const postReporter = (reports) => ({ type: POST_REPORTER, reports });
+export const postReporter = (drafts) => ({ type: POST_REPORTER, drafts });
 
 export const postMinutes = (attach, minutes) => ({ type: POST_MINUTES, attach, minutes })

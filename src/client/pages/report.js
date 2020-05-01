@@ -6,13 +6,20 @@ import Info from "../elements/info.js";
 import JIRA from "../models/jira.js";
 import Posted from "../models/posted.js";
 import React from "react";
-import Reporter from "../models/reporter.js";
 import Text from "../elements/text.js";
 import User from "../models/user.js";
 import Store from "../store.js";
-import { Server, hotlink, Flow, escapeRegExp } from "../utils.js";
+import { hotlink, Flow, escapeRegExp } from "../utils.js";
+import { connect } from 'react-redux';
 
-//
+function mapStateToProps(state, props) {
+  let title = props.item.title;
+  return {
+    draftReport: state.reporter?.[title],
+    draftMinutes: state.server.drafts
+  };
+}
+
 // A two section representation of an agenda item (typically a PMC report),
 // where the two sections will show up as two columns on wide enough windows.
 //
@@ -27,7 +34,7 @@ import { Server, hotlink, Flow, escapeRegExp } from "../utils.js";
 //
 class Report extends React.Component {
   render() {
-    let warning, draft;
+    let { draftReport } = this.props;
 
     let item = this.props.item;
     let text = item.text || item.report;
@@ -35,22 +42,23 @@ class Report extends React.Component {
     return <section className="flexbox">
       <section>
         {item.warnings ? <ul className="missing">
-          {item.warnings}
-          <li>{warning}</li>
+          {item.warnings.map(warning => (
+            <li>{warning}</li>
+          ))}
         </ul> : null}
 
         <pre className="report">{
           text
             ? <Text raw={text} filters={this.filters} />
             : item.missing ? <>
-              {((draft = Reporter.find(item))) ? <>
+              {draftReport ? <>
                 <p>
                   <em>Unposted draft being prepared at </em>
-                  <a href={`https://reporter.apache.org/wizard?${draft.project}`}>reporter.apache.org</a>
+                  <a href={`https://reporter.apache.org/wizard?${draftReport.project}`}>reporter.apache.org</a>
                   <span>:</span>
                 </p>
 
-                <Text raw={draft.text} filters={[this.draft]} />
+                <Text raw={draftReport.text} filters={[this.draft]} />
               </> : <p><em>Missing</em></p>}
             </> : <p><em>Empty</em></p>}</pre>
 
@@ -128,7 +136,7 @@ class Report extends React.Component {
               Store.dispatch(Actions.postMinutes(this.props.item.attach, minutes))
             ))
           })
-          .catch(error => console.error(`fetch ${page}: ${error}`))
+            .catch(error => console.error(`fetch ${page}: ${error}`))
         } else {
           Store.dispatch(Actions.postMinutes(this.props.item.attach, "missing"))
         }
@@ -290,14 +298,14 @@ class Report extends React.Component {
   };
 
   // link to board minutes and other attachments
-  linkMinutes(text) {
+  linkMinutes = (text) => {
     text = text.replace(
       /board_minutes_(\d+)_\d+_\d+\.txt/g,
 
       (match, year) => {
         let link;
 
-        if (Server.drafts.includes(match)) {
+        if (this.props.draftMinutes.includes(match)) {
           link = `https://svn.apache.org/repos/private/foundation/board/${match}`
         } else {
           link = `http://apache.org/foundation/records/minutes/${year}/${match}`
@@ -391,4 +399,4 @@ class Report extends React.Component {
   }
 };
 
-export default Report
+export default connect(mapStateToProps)(Report)

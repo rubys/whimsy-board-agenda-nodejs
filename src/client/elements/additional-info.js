@@ -5,7 +5,6 @@ import { navigate } from "../router.js";
 import Minutes from "../models/minutes.js";
 import Posted from "../models/posted.js";
 import React from "react";
-import Reporter from "../models/reporter.js";
 import { lookup } from '../store.js';
 import Text from "./text.js";
 import User from "../models/user.js";
@@ -13,14 +12,34 @@ import { hotlink, Flow, splitComments } from "../utils.js";
 import { connect } from 'react-redux';
 import { Server } from '../utils.js';
 
+// return the state associated with this item's title only
 function mapStateToProps(state, props) {
   let title = props.item.title;
+  let {client: { meetingDate }} = state;
 
+  // initial fetches
+  let historicalComments = lookup({ path: 'historical-comments', initialValue: {} });
+
+  let responses = lookup({ path: 'responses', initialValue: {} });
+
+  let reporter = [];
+
+  if (meetingDate) {
+    reporter = lookup({ path: 'reporter', initialValue: [], filter: response => {
+      console.log(response.agenda,`board_agenda_${String(meetingDate).replace(/-/g, '_')}.txt`);
+       if (response.agenda === `board_agenda_${String(meetingDate).replace(/-/g, '_')}.txt`) {
+         return response.drafts;
+       } else {
+         return [];
+       }
+    }})
+  }
+
+  // extract information relevant this item
   return {
-    historicalComments: Object.entries(lookup({ path: 'historical-comments', initialValue: {} })[title] || {}),
-    responses: Object.fromEntries(Object.entries(lookup({ path: 'responses', initialValue: {} }))
-      .map(([date, list]) => [date, list[title]])),
-    reporter: lookup({ path: 'reporter', initialValue: [] })
+    historicalComments: historicalComments[title] || {},
+    responses: responses[title] || {},
+    draft: reporter[title] || {}
   }
 };
 
@@ -53,10 +72,9 @@ class AdditionalInfo extends React.Component {
   }
 
   render() {
-    const { item, historicalComments, responses } = this.props;
+    const { item, historicalComments, responses, draft } = this.props;
 
     let minutes = Minutes.get(item.title);
-    let draft = Reporter.find(item);
     let posted = item.missing && Posted.get(item.title);
 
     return <>
@@ -105,7 +123,7 @@ class AdditionalInfo extends React.Component {
         ))}</ul>
       </> : null}
 
-      {item.comments?.length || (historicalComments.length > 0 && !this.state.prefix) ? <>
+      {item.comments?.length || (Object.keys(historicalComments).length > 0 && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
         {item.comments.map(comment => (
@@ -126,7 +144,7 @@ class AdditionalInfo extends React.Component {
           )}</pre>
         </div> : null}
 
-        {historicalComments.map(([date, comments]) => <React.Fragment key={date}>
+        {Object.entries(historicalComments).map(([date, comments]) => <React.Fragment key={date}>
           {Agenda.file === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>

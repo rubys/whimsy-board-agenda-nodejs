@@ -23,21 +23,25 @@ const store = createStore(reducer);
 // Note that this implies that the store may be dispatched twice:
 // once with slightly stale data from the client and possibly once
 // again with fresh data from the server.
-export function lookup({ name, path, action, initialValue }) {
+let fetched = {};
+export function lookup({ name, path, action, filter, initialValue }) {
   let state = store.getState();
 
   if (!name) name = path.replace(/-\w/g, (data => data[1].toUpperCase()));
   if (!action) action = Actions['post' + name.replace(/^\w/, c => c.toUpperCase())];
+  if (!filter) filter = value => value;
 
   if (name in state && state[name]) {
     return state[name];
-  } else {
+  } else if (!fetched[path]) {
     Promise.resolve().then(() => {
       store.dispatch(action(initialValue));
       JSONStorage.fetch(path, value => {
-        if (value) store.dispatch(action(value));
+        if (value) store.dispatch(action(filter(value)));
       })
-    })
+    });
+
+    fetched[path] = true;
   };
 
   return initialValue
