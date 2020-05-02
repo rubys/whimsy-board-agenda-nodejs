@@ -6,15 +6,15 @@ import moment from 'moment-timezone';
 import * as ldap from '../../ldap.js';
 import { TIMEZONE } from '../../config.js';
 
-export default async function (agenda, { quick = false } = {}) {
+export default async function (agenda) {
   let pattern = /^\n\x20(?<attach>[12]\.)\s(?<title>.*?)\n\n+(?<text>.*?)(?=\n\s[23]\.)/msg;
 
   let sections = [...agenda.matchAll(pattern)].map(match => match.groups);
 
-  let names = quick || await ldap.names();
-  let members = quick || await ldap.members();
+  let names = await ldap.names();
+  let members = await ldap.members();
 
-  sections.forEach(attrs => {
+  for (let attrs of sections) {
     if (attrs.title === "Roll Call") {
       attrs.people = {};
       let absent = attrs.text.match(/Absent:\n\n.*?\n\n/gm).join();
@@ -83,7 +83,7 @@ export default async function (agenda, { quick = false } = {}) {
         attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', TIMEZONE).valueOf();
       }
     }
-  });
+  };
 
   return sections;
 }

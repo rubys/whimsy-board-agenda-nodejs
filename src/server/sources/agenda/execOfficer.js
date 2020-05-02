@@ -3,7 +3,7 @@ import md5 from 'md5';
 
 const OFFICER_SEPARATOR = /^\s*4. (Executive )?Officer Reports/m;
 
-export default async function (agenda, { quick = false } = {}) {
+export default async function (agenda) {
   let reports = agenda.split(OFFICER_SEPARATOR, 3).pop();
   reports = reports.split(/^ 5. (Additional Officer|Committee) Reports/m, 3)[0];
 
@@ -11,7 +11,7 @@ export default async function (agenda, { quick = false } = {}) {
 
   let sections = [...reports.matchAll(pattern)].map(match => match.groups);
 
-  sections.forEach(attrs => {
+  for (let attrs of sections) {
     attrs.attach = "4" + attrs.attach;
     attrs.shepherd = attrs.owner.split("/").pop();
     attrs.owner = attrs.owner.split("/")[0];
@@ -33,7 +33,7 @@ export default async function (agenda, { quick = false } = {}) {
     };
 
     attrs.digest = md5(report)
-  });
+  };
 
   return sections;
 }
