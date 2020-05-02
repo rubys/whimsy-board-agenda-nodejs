@@ -37,7 +37,7 @@
     "dev": "NODE_ENV=development concurrently --kill-others-on-fail yarn:server yarn:client",
     "test": "react-scripts test",
     "client": "react-scripts start",
-    "server": "nodemon --ignore work -w src/server.js -w src/server src/server.js",
+    "server": "node nodemon.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
