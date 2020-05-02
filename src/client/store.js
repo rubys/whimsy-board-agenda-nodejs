@@ -44,8 +44,8 @@ export function lookup(name) {
 
       store.dispatch(action(initialValue));
 
-      JSONStorage.fetch(path, value => {
-        if (value) store.dispatch(action(filter(value)));
+      JSONStorage.fetch(path, (error, value) => {
+        if (!error && value) store.dispatch(action(filter(value)));
       })
     });
 

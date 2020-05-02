@@ -28,18 +28,19 @@ ReactDOM.render(
 );
 
 (async () => {
-  // fetch and store server information
-  let options = { credentials: "include" };
-  let request = new Request("../api/server", options);
-  let response = await fetch(request);
-  
-  if (!response.ok) {
-    alert('unable to contact server');
-    return;
-  }
-
-  let server = await response.json();
-  store.dispatch(Actions.postServer(server));
+  let server = await new Promise((resolve, reject) => {
+    JSONStorage.fetch('../api/server', (error, response) => {
+      if (error) {
+        alert('unable to contact server');
+        if (reject) reject(error);
+      } else {
+        if (response) store.dispatch(Actions.postServer(response));
+        if (resolve) resolve(response);
+      };
+      
+      resolve = reject = null;
+    })
+  });
 
   if (base === '/' && server.env === 'development') {
     // emulate the server side redirect to the latest agenda
@@ -48,10 +49,12 @@ ReactDOM.render(
     window.location.href = `/${date}/`;
   } else {
     // fetch and store agenda information
-    JSONStorage.fetch(`${base.slice(1, -1)}.json`, agenda => {
-      let date = new Date(agenda[0].timestamp).toISOString().slice(0, 10);
-      store.dispatch(Actions.postAgenda(agenda));
-      store.dispatch(Actions.meetingDate(date));
+    JSONStorage.fetch(`${base.slice(1, -1)}.json`, (error, agenda) => {
+      if (!error && agenda) {
+        let date = new Date(agenda[0].timestamp).toISOString().slice(0, 10);
+        store.dispatch(Actions.postAgenda(agenda));
+        store.dispatch(Actions.meetingDate(date));
+      }
     })
   }
 })();

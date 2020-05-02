@@ -69,13 +69,14 @@ class JSONStorage {
 
         // dispatch request
         fetch(request).then((response) => {
+          if (!response.ok) throw response.statusText;
           cache.put(request, response.clone());
 
           response.json().then(json => {
             if (!fetched || JSON.stringify(fetched) !== JSON.stringify(json)) {
               if (!fetched) Store.dispatch(Actions.clockDecrement());
               fetched = json;
-              if (json) callback(json)
+              if (json) callback(null, json)
             }
           })
             .catch(error => {
@@ -93,7 +94,7 @@ class JSONStorage {
               response.json().then(json => {
                 Store.dispatch(Actions.clockDecrement());
                 fetched = json;
-                if (json) callback(json)
+                if (json) callback(null, json)
               })
             } catch (error) {
               if (error.name !== 'SyntaxError') throw error;
@@ -103,7 +104,7 @@ class JSONStorage {
       })
     } else if (typeof XMLHttpRequest !== 'undefined') {
       // retrieve from the network only
-      retrieve(name, "json", callback)
+      retrieve(name, "json", data => callback(null, data))
     }
   }
 };

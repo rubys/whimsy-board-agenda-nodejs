@@ -11,7 +11,7 @@ class JIRA {
       return JIRA.#$list.includes(name)
     } else {
       JIRA.#$list = [];
-      JSONStorage.fetch("jira", (list) => {JIRA.#$list = list})
+      JSONStorage.fetch("jira", (error, list) => {JIRA.#$list = list})
     }
   }
 };

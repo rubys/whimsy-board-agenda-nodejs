@@ -11,7 +11,9 @@ class Posted {
     // fetch list of reports on first reference
     if (!Posted.#$fetched) {
       Posted.#$list = [];
-      JSONStorage.fetch("posted-reports", (list) => {Posted.#$list = list});
+      JSONStorage.fetch("posted-reports", (error, list) => {
+        if (!error && list) Posted.#$list = list
+      });
       Posted.#$fetched = true
     };
 

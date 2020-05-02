@@ -16,9 +16,11 @@ class Reporter {
       Reporter.#$forgotten = Reporter.#$forgotten || {};
 
       if (!agenda || agenda === Agenda.file) {
-        JSONStorage.fetch("reporter", (forgotten) => {
-          Chat.reporter_change(Reporter.#$forgotten, forgotten);
-          Reporter.#$forgotten = forgotten
+        JSONStorage.fetch("reporter", (error, forgotten) => {
+          if (!error && forgotten) {
+            Chat.reporter_change(Reporter.#$forgotten, forgotten);
+            Reporter.#$forgotten = forgotten
+          }
         })
       }
     }
