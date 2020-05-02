@@ -18,6 +18,12 @@ you can use that version of npm to install yarn.
     sudo npm install -g yarn
     sudo snap install --classic code
 
+# Debian Buster
+
+    sudo apt install -y snapd squashfuse
+
+... and then follow the instructions for Ubuntu above.
+
 # Common across all Linux platforms:
 
     git clone https://github.com/rubys/whimsy-board-agenda-nodejs.git
