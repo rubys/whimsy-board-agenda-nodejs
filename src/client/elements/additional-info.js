@@ -16,9 +16,12 @@ import { Server } from '../utils.js';
 function mapStateToProps(state, props) {
   let title = props.item.title;
 
+  let responses = lookup('responses');
+
   return {
     historicalComments: lookup('historicalComments')[title] || {},
-    responses: lookup('responses')[title] || {},
+    responses: responses[title] || {},
+    loading: !responses,
     draft: lookup('reporter')[title] || {}
   }
 };
@@ -52,7 +55,7 @@ class AdditionalInfo extends React.Component {
   }
 
   render() {
-    const { item, historicalComments, responses, draft } = this.props;
+    const { item, historicalComments, responses, draft, loading } = this.props;
 
     let minutes = Minutes.get(item.title);
     let posted = item.missing && Posted.get(item.title);
@@ -150,7 +153,7 @@ class AdditionalInfo extends React.Component {
                     } else {
                       link = `(${count} responses)`
                     }
-                  } else if (Object.keys(responses).length === 0) {
+                  } else if (loading) {
                     link = "(loading)"
                   } else {
                     link = "(no responses)"
