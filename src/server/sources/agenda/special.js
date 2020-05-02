@@ -68,7 +68,7 @@ export default async function (agenda, { request } = {}) {
     delete attrs.indent;
 
     let asfid = "[a-z][-.a-z0-9_]+";
-    let list_item = "^[[:blank:]]*(?:[-*\\u2022]\\s*)?(.*?)[[:blank:]]+";
+    let list_item = "^\\s*(?:[-*\\u2022]\\s*)?(.*?)\\s+";
 
     let people = Array.from(
       text.matchAll(new RegExp(`${list_item}\\((${asfid})\\)\\s*$`, "gm")),
@@ -119,8 +119,8 @@ export default async function (agenda, { request } = {}) {
 
       if (/Change (.*?) Chair/.test(title)) {
         need_chair = true
-      } else if (committee.chair) {
-        attrs.chair = committee.chair.id
+      } else if (committee.chairs) {
+        attrs.chair = committee.chairs[0].id
       }
     } else if (/Establish (.*)/.test(title)) {
       let name = RegExp.$1;
