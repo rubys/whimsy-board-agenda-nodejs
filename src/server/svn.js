@@ -5,8 +5,6 @@ import { exec } from 'child_process';
 import { Mutex } from 'async-mutex';
 import { workPath } from './config.js';
 
-const mutex = new Mutex();
-
 const svn = `${workPath}/svn`;
 
 const boardDir = `${svn}/foundation_board`;
@@ -34,6 +32,7 @@ class Repository {
   #depth = 'infinity';
   dir = null;
   url = null;
+  mutex = new Mutex();
 
   constructor({dir, url, depth}) {
     this.dir = dir;
@@ -46,7 +45,8 @@ class Repository {
   update = async (request, ttl = 5 * 60 * 1000) => {
     await fs.access(this.dir).catch(() => { ttl = 0 });
     if (Date.now() - this.#lastUpdate < ttl) return;
-    const release = await mutex.acquire();
+    const release = await this.mutex.acquire();
+    if (Date.now() - this.#lastUpdate < ttl) { release(); return };
 
     await fs.mkdir(svn, { recursive: true });
 
@@ -54,8 +54,8 @@ class Repository {
       exec(`${svncmd(request)} checkout ${this.url} ${this.dir} --depth ${this.#depth}`,
         { cwd: svn },
         (error, stdout, stderr) => {
-          release();
           this.#lastUpdate = Date.now();
+          release();
           error ? reject(error) : resolve(stdout + stderr);
         }
       )
