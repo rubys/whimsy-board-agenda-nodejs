@@ -126,7 +126,6 @@ class Agenda {
               if (response) {
                 response.json().then((json) => {
                   if (!loaded) Agenda.load(json);
-                  Main.refresh()
                 })
               }
             })
@@ -147,7 +146,6 @@ class Agenda {
             response.clone().json().then((json) => {
               Agenda.#$etag = response.headers.get("etag");
               Agenda.load(json);
-              Main.refresh()
             });
 
             // save response in the cache
@@ -165,7 +163,6 @@ class Agenda {
           if (xhr.readyState === 4 && xhr.status === 200 && xhr.responseText !== "") {
             Agenda.#$etag = xhr.getResponseHeader("ETag");
             Agenda.load(JSON.parse(xhr.responseText));
-            Main.refresh()
           }
         };
 

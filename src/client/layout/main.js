@@ -17,9 +17,6 @@ import "../App.css";
 //  * Resizing view to leave room for the Header and Footer
 //
 class Main extends React.Component {
-  // dummy exported refresh method (replaced on client side)
-  static refresh() { };
-
   static view = React.createRef();
 
   // common layout for all pages: header, main, footer, and forms
@@ -72,16 +69,9 @@ class Main extends React.Component {
     if (path) Main.latest = false
   };
 
-  // refresh the current page
-  refresh() {
-    this.route(window.history.state.path, window.history.state.query)
-  };
-
   // additional client side initialization
   componentDidMount() {
     // export navigate and refresh methods as well as view
-    Main.navigate = this.navigate;
-    Main.refresh = this.refresh;
     Main.item = Agenda;
 
     // whenever the window is resized, adjust margins of the main area to

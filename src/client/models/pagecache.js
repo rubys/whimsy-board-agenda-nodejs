@@ -84,7 +84,6 @@ class PageCache {
 
     window.addEventListener("beforeinstallprompt", (event) => {
       PageCache.#$installPrompt = event;
-      if (Main.item.view === Help) Main.refresh();
       event.preventDefault()
     });
 

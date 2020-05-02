@@ -67,7 +67,6 @@ class Keyboard {
       } else if (event.keyCode === 83) {
         if (event.shiftKey) {
           User.role = "secretary";
-          Main.refresh()
         } else {
           link = document.getElementById("shepherd");
           if (link) navigate(link.getAttribute("href"))
@@ -98,12 +97,10 @@ class Keyboard {
         return false
       } else if (event.keyCode === 82) {
         Store.dispatch(Actions.clockIncrement());
-        Main.refresh();
 
         post("refresh", {agenda: Agenda.file}, (response) => {
           Store.dispatch(Actions.clockDecrement());
           Agenda.load(response.agenda, response.digest);
-          Main.refresh()
         });
 
         return false

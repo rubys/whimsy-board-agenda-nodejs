@@ -72,7 +72,6 @@ class Help extends React.Component {
 
   setRole(event) {
     User.role = event.target.value;
-    Main.refresh()
   }
 };
 

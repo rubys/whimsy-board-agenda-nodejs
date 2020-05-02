@@ -76,7 +76,6 @@ class Chat {
     entry.type = "topic";
     Chat.#$topic = entry;
     Chat.add(entry);
-    if (entry.subtype === "status") Main.refresh()
   };
 
   // change topic globally
@@ -148,8 +147,6 @@ class Chat {
       for (let message of messages) {
         Chat.add({type: "agenda", user: "agenda", text: message})
       };
-
-      Main.refresh()
     }
   };
 
@@ -202,8 +199,6 @@ class Chat {
       for (let message of messages) {
         Chat.add({type: "agenda", user: "reporter", text: message})
       };
-
-      Main.refresh()
     }
   };
 

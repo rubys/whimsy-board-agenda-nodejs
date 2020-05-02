@@ -16,7 +16,6 @@ class Install extends React.Component {
     PageCache.installPrompt.userChoice.then((choice) => {
       console.log(`install: ${choice.outcome}`);
       if (choice.outcome === "accepted") PageCache.installPrompt = null;
-      Main.refresh()
     })
   }
 };

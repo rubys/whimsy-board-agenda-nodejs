@@ -27,7 +27,7 @@ export const theme = {
 };
 
 function mapStateToProps(state, { table, id }) {
-  // lookup items that are missing
+  // fetch items that are missing
   for (let property in state) {
     if (state[property] === null) lookup(property);
   }
