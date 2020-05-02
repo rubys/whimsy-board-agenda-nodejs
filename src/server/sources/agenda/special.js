@@ -1,17 +1,22 @@
 // Special Orders
 
 import md5 from "md5";
+import * as ldap from "../../ldap.js";
+import CommitteeInfo from "../committee-info.js";
 import { minutesLink } from "../agenda.js";
 
-export default async function (agenda, { quick = true } = {}) {
+export default async function (agenda, { request } = {}) {
   let orders = agenda.split(/^ \d. Special Orders/ms).pop().split(/^ \d. Discussion Items/ms, 2)[0];
 
   let pattern = /\n+(?<indent>\s{3,5})(?<attach>[A-Z])\.\s(?<title>[^]*?)\n(?<text>[^]*?)(?=\n\s{4}[A-Z]\.\s|$)/sg;
-  let people = [];
+  let { pmcs } = await CommitteeInfo(request);
+  let members = await ldap.members();
+  let names = await ldap.names();
+  let ids = Object.fromEntries(Object.entries(names).map(([name, id]) => [id, name]));
 
   let sections = [...orders.matchAll(pattern)].map(match => match.groups);
 
-  sections.forEach(attrs => {
+  for (let attrs of sections) {
     let chairname, chair;
     attrs.attach = "7" + attrs.attach;
     let title = attrs.title.trim();
@@ -32,8 +37,8 @@ export default async function (agenda, { quick = true } = {}) {
     };
 
     if (title !== fulltitle) {
-        attrs.fulltitle = fulltitle;
-        attrs.title = title;
+      attrs.fulltitle = fulltitle;
+      attrs.title = title;
     }
 
     let text = attrs.text;
@@ -62,37 +67,32 @@ export default async function (agenda, { quick = true } = {}) {
 
     delete attrs.indent;
 
-    if (quick) {
-      if (attrs.warnings.length === 0) delete attrs.warnings;
-      return
-    };
-
     let asfid = "[a-z][-.a-z0-9_]+";
     let list_item = "^[[:blank:]]*(?:[-*\\u2022]\\s*)?(.*?)[[:blank:]]+";
 
-    people = Array.from(
+    let people = Array.from(
       text.matchAll(new RegExp(`${list_item}\\((${asfid})\\)\\s*$`, "gm")),
       s => s.slice(1)
     );
 
-    people += Array.from(
+    people.push(...Array.from(
       text.matchAll(new RegExp(`${list_item}\\((${asfid})(?:@|\\s*at\\s*)(?:\\.\\.\\.|apache\\.org|apache\\sdot\\sorg)\\)\\s*$`, "gim")),
       s => s.slice(1)
-    );
+    ));
 
-    people += Array.from(
+    people.push(...Array.from(
       text.matchAll(new RegExp(`${list_item}<(${asfid})(?:@|\\s*at\\s*)(?:\\.\\.\\.|apache\\.org|apache\\sdot\\sorg)>\\s*$`, "gim")),
       s => s.slice(1)
-    );
+    ));
 
     let need_chair = false;
     let whimsy = "https://whimsy.apache.org";
 
     if (/Change (.*?) Chair/.test(title) || /Terminate (\w+)$/m.test(title)) {
-      people = [];
-      let committee = ASF.Committee.find(RegExp.$1);
-      attrs.roster = `${whimsy}/roster/committee/${encodeURIComponent(committee.name)}`;
-      attrs.stats = "https://reporter.apache.org/wizard/statistics?" + encodeURIComponent(committee.name);
+      let committee = pmcs.find(pmc => pmc.display_name === RegExp.$1);
+      if (!committee) continue;
+      attrs.roster = `${whimsy}/roster/committee/${encodeURIComponent(committee.id)}`;
+      attrs.stats = "https://reporter.apache.org/wizard/statistics?" + encodeURIComponent(committee.id);
       attrs.prior_reports = minutesLink(committee.display_name);
 
       let ids = Array.from(
@@ -102,20 +102,19 @@ export default async function (agenda, { quick = true } = {}) {
 
       if (ids.length !== 0) {
         for (let id of ids) {
-          let person = ASF.Person.find(id);
-          if (person.icla) people.push([person.public_name, id])
+          let name = ids[id];
+          if (name) people.push([name, id])
         }
       };
 
-      if (!committee.names) return;
-
-      for (let [id, name] of committee.names) {
-        if (text.includes(name) || title.includes("Term")) people.push([name, id])
+      for (let [id, person] of Object.entries(committee.roster)) {
+        if (text.includes(person.name) || title.includes("Term")) {
+          people.push([person.name, id])
+        }
       };
 
       if (people.length < 2 && !title.startsWith("Terminate")) {
         attrs.warnings.push("Unable to match expected number of names");
-        attrs.names = committee.names
       };
 
       if (/Change (.*?) Chair/.test(title)) {
@@ -181,9 +180,8 @@ export default async function (agenda, { quick = true } = {}) {
     } else if (/^Appoint /m.test(title)) {
       if (/FURTHER\s+RESOLVED, that\s+([^,]*?),?\s+be\b/i.test(text)) {
         chairname = RegExp.$1.replace(/\s+/g, " ").trim();
-        chair = ASF.search_one(ASF.Person.base, `cn=${chairname}`);
         attrs.chairname = chairname;
-        if (chair.length === 1) attrs.chair = chair[0].uid[0]
+        attrs.chair = names[chairname];
       };
 
       if (attrs.chair) {
@@ -195,20 +193,17 @@ export default async function (agenda, { quick = true } = {}) {
       }
     };
 
-    people = Object.entries(people).map((name, id) => {
-      let person = new ASF.Person(id);
-      let icla = person.icla;
-
-      return [id, {
+    people = people.map(([name, id]) => (
+      [id, {
         name,
-        icla: (icla ? person.icla.name : false),
-        member: person.asf_member
+        icla: ids[id], // This really is public name
+        member: members.includes(id)
       }]
-    });
+    ));
 
     if (people.length !== 0) attrs.people = Object.fromEntries(people);
     if (attrs.warnings.length === 0) delete attrs.warnings
-  });
+  };
 
   return sections;
 }
