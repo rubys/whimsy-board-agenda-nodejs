@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Main from "../layout/main.js";
 import React from "react";
 import User from "../models/user.js";
 

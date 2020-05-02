@@ -30,7 +30,6 @@ export function lookup(name) {
   if (state[name]) return state[name];
 
   let instructions = reducers[name]?.lookup?.(state);
-  console.log(name, instructions)
   if (!instructions) return state[name];
 
   let { path, action, filter, initialValue } = instructions;

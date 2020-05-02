@@ -1,5 +1,4 @@
 import Agenda from "./agenda.js";
-import Help from "../pages/help.js";
 import Main from "../layout/main.js";
 import { Server } from "../utils.js";
 

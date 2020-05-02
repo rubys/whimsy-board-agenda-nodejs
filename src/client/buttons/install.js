@@ -1,4 +1,3 @@
-import Main from "../layout/main.js";
 import PageCache from "../models/pagecache.js";
 import React from "react";
 

@@ -1,6 +1,5 @@
 import Agenda from "./agenda.js";
 import Events from "./events.js";
-import Main from "../layout/main.js";
 import Minutes from "./minutes.js";
 import { Server, retrieve, post } from "../utils.js";
 

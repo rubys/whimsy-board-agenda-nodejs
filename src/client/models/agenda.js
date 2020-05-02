@@ -8,7 +8,6 @@ import Chat from "./chat.js";
 import DraftMinutes from "../buttons/draft-minutes.js";
 import Events from "./events.js";
 import Index from "../pages/index.js";
-import Main from "../layout/main.js";
 import Minutes from "./minutes.js";
 import PageCache from "./pagecache.js";
 import Pending from "./pending.js";
