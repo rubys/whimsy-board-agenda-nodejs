@@ -1,13 +1,17 @@
 // Attachments
 
+import CommitteeInfo from "../committee-info.js";
 import md5 from "md5";
 
-export default async function (agenda, { quick = true } = {}) {
+export default async function (agenda, { request } = {}) {
   let pattern = /-{41}\nAttachment\s\s?(?<attach>\w+):\s(?<title>.*?)\n+(?<report>.*?)(?=-{41,}\n(?:End|Attach))/msg;
 
   let sections = [...agenda.matchAll(pattern)].map(match => match.groups);
 
-  sections.forEach(attrs => {
+  let { pmcs, nonpmcs } = await CommitteeInfo(request);
+  let committees = [...pmcs, ...nonpmcs];
+
+  for (let attrs of sections) {
     // join multiline titles
     while (attrs.report.startsWith("        ")) {
       let [append, report] = attrs.report.split("\n");
@@ -38,21 +42,18 @@ export default async function (agenda, { quick = true } = {}) {
     if (attrs.report === "\n") delete attrs.report;
     if (!attrs.report || attrs.report.trim().length === 0) attrs.missing = true;
 
-    if (!quick) { // TODO
-      try {
-        let committee = ASF.Committee.find(attrs.title);
-        attrs.chair_email = `${committee.chair.id}@apache.org`;
-        attrs.mail_list = committee.mail_list;
-        if (attrs.mail_list.includes(" ")) delete attrs.mail_list;
-        if (/^Next month: (.*)/m.test(committee.report)) attrs.notes = RegExp.$1
-      } catch {
-      }
+    let committee = committees.find(committee => attrs.title === committee.display_name);
+    if (committee) {
+      attrs.chair_email = `${committee.chairs[0].id}@apache.org`;
+      attrs.mail_list = committee.mail_list; // TODO
+      if (attrs.mail_list?.includes(" ")) delete attrs.mail_list;
+      if (/^Next month: (.*)/m.test(committee.report)) attrs.notes = RegExp.$1
     };
 
     if (attrs.report.toString().includes("\uFFFD")) {
       attrs.warnings = ["UTF-8 encoding error"]
     }
-  });
+  };
 
   return sections;
 }
