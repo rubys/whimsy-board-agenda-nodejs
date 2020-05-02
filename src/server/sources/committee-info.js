@@ -106,7 +106,7 @@ export default async function (request) {
 
   // Extract the non-PMC committees (e-mail address may be absent)
   // first drop leading text (and Officers) so we only match non-PMCs
-  let nonpmcs = [...new Set(head.replace(/.*?also has /ms, "").replace(/ Officers:.*/m, "")
+  let nonpmcs = [...new Set(head.replace(/.*?also has /ms, "").replace(/ Officers:.*/ms, "")
     .match(/^[ \t]+(\w.*?)(?:[ \t][ \t]|[ \t]?$)/gm).flat(Infinity))].map(name => (list.get(name)));
 
   // Extract officers
