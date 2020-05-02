@@ -7,6 +7,7 @@ import credentials from '../credentials.js';
 import https from 'https';
 import * as cache from '../cache.js';
 import { Board } from "../svn.js"
+import CommitteeInfo from "./committee-info.js";
 
 export default async function reporter(request) {
 
@@ -18,6 +19,11 @@ export default async function reporter(request) {
   let { username, password } = credentials(request);
 
   let agenda = (await Board.agendas(request)).pop();
+
+  let committeeName = {};
+  for (let committee of (await CommitteeInfo(request)).pmcs) {
+    committeeName[committee.id] = committee.display_name;
+  };
 
   return new Promise((resolve, reject) => {
     let options = {
@@ -43,7 +49,7 @@ export default async function reporter(request) {
           .map(([project, status]) => (
             [status.attach, {
               project: project,
-              title: project[0].toUpperCase() + project.slice(1),
+              title: committeeName[project] || project,
               timestamp: status.draft_timestamp,
               author: status.last_author,
               text: status.last_draft
