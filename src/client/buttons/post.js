@@ -10,7 +10,7 @@ import * as Actions from "../../actions.js";
 
 function mapStateToProps(state) {
   return {
-    meetingDate: state.client.meetingDate,
+    agendaFile: state.client.agendaFile,
     userid: state.server.user.userid,
     agenda: state.agenda
   }
@@ -624,18 +624,16 @@ class Post extends React.Component {
     let data;
     this.setState({ edited: false });
 
-    let agenda = `board_agenda_${this.props.meetingDate.replace(/-/g, '_')}.txt`;
-
     if (this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item") {
       data = {
-        agenda: agenda,
+        agenda: this.props.agendaFile,
         attach: this.state.header === "Add Resolution" ? "7?" : "8?",
         title: this.state.title,
         report: this.state.report
       }
     } else {
       data = {
-        agenda: agenda,
+        agenda: this.props.agendaFile,
         attach: this.state.attach || this.props.item.attach,
         digest: this.state.digest,
         message: this.state.message,

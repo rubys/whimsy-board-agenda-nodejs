@@ -13,14 +13,14 @@ export default function reduce(state = null, action) {
 }
 
 reduce.lookup = state => {
-  let { client: { meetingDate } } = state;
+  let { client: { agendaFile } } = state;
 
   let initialValue = [];
 
-  if (meetingDate) {
+  if (agendaFile) {
     return {
       path: 'reporter', initialValue, filter: response => {
-        if (response.agenda === `board_agenda_${String(meetingDate).replace(/-/g, '_')}.txt`) {
+        if (response.agenda === agendaFile) {
           return response.drafts;
         } else {
           return initialValue;
