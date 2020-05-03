@@ -1,6 +1,6 @@
 import credentials from './credentials.js';
 import shellEscape from "shell-escape";
-import { promises as fs } from 'fs';
+import fs, { promises as fsp } from 'fs';
 import { exec } from 'child_process';
 import { Mutex } from 'async-mutex';
 import { workPath } from './config.js';
@@ -34,7 +34,7 @@ class Repository {
   url = null;
   mutex = new Mutex();
 
-  constructor({dir, url, depth}) {
+  constructor({ dir, url, depth }) {
     this.dir = dir;
     this.url = url;
     if (depth) this.#depth = depth;
@@ -42,13 +42,13 @@ class Repository {
 
   // checkout (update) a working copy if not done recently.
   // default Time To Live (TTL) is 5 minutes.
-  update = async (request, ttl = 5 * 60 * 1000) => {
-    await fs.access(this.dir).catch(() => { ttl = 0 });
+  async update(request, ttl = 5 * 60 * 1000) {
+    await fsp.access(this.dir).catch(() => { ttl = 0 });
     if (Date.now() - this.#lastUpdate < ttl) return;
     const release = await this.mutex.acquire();
     if (Date.now() - this.#lastUpdate < ttl) { release(); return };
 
-    await fs.mkdir(svn, { recursive: true });
+    await fsp.mkdir(svn, { recursive: true });
 
     return new Promise((resolve, reject) => (
       exec(`${svncmd(request)} checkout ${this.url} ${this.dir} --depth ${this.#depth}`,
@@ -63,24 +63,24 @@ class Repository {
   }
 
   // overrideable filename to path wrapper
-  map = (file) => (
-    `${this.dir}/${file}`
-  )
+  map(file) {
+    return `${this.dir}/${file}`
+  }
 
   // check if a file exists in the working copy
-  exist = async (file, request) => {
+  async exist(file, request) {
     await this.update(request);
 
-    return await fs.stat(this.map(file)).then(() => true).catch(() => false);
+    return await fsp.stat(this.map(file)).then(() => true).catch(() => false);
   }
 
   // get the last modification time for a file
   // returns null if file does not exist
-  mtime = async (file, request) => {
+  async mtime(file, request) {
     await this.update(request);
 
     try {
-      return (await fs.stat(this.map(file))).mtimeMs;
+      return (await fsp.stat(this.map(file))).mtimeMs;
     } catch (error) {
       if (error.code === 'ENOENT') return null;
       throw error;
@@ -88,28 +88,49 @@ class Repository {
   }
 
   // read a file from the working copy
-  read = async (file) => {
-    return fs.readFile(this.map(file), 'utf8');
+  async read(file) {
+    return fsp.readFile(this.map(file), 'utf8');
+  }
+
+  // stub for now, but what this will eventually do is to create
+  // a revision of the file and commit it; trying repeatedly until
+  // the commit succeeds.  The callback will be called with the
+  // current contents of the file to be revised each time, and
+  // is expected to return the intended new contents.
+  async revise(file, message, request, callback) {
+    let oldContents = await this.read(file);
+    let newContents = await callback(oldContents);
+    if (!newContents) throw new Error("new revision is empty");
+    if (newContents === oldContents) {
+      console.warn("revision is unchanged")
+    } else {
+      return new Promise((resolve, reject) => {
+        let wstream = fs.createWriteStream(this.map(file));
+        wstream.on('finish', resolve);
+        wstream.write(newContents);
+        wstream.end();
+      })
+    }
   }
 }
 
-export const Board = new Repository({ dir: boardDir, url: boardUrl, depth: 'files'});
+export const Board = new Repository({ dir: boardDir, url: boardUrl, depth: 'files' });
 
 // return a list of agendas
 Board.agendas = async function (request) {
   await this.update(request);
 
-  return (await fs.readdir(this.dir)).filter(name => /^board_agenda_\d/.test(name)).sort();
+  return (await fsp.readdir(this.dir)).filter(name => /^board_agenda_\d/.test(name)).sort();
 }
 
 // return a list of unpublished minutes
 Board.draftMinutes = async function (request) {
   await this.update(request);
 
-  return (await fs.readdir(this.dir)).filter(name => /^board_minutes_/.test(name)).sort();
+  return (await fsp.readdir(this.dir)).filter(name => /^board_minutes_/.test(name)).sort();
 }
 
-export const Minutes = new Repository({dir: minutesDir, url: minutesUrl});
+export const Minutes = new Repository({ dir: minutesDir, url: minutesUrl });
 
 // minutes are stored in annual directories
 Minutes.map = function (file) {
@@ -117,4 +138,4 @@ Minutes.map = function (file) {
   return `${Minutes.dir}/${year}/${file}`
 }
 
-export const Committers = new Repository({dir: committersDir, url: committersUrl})
+export const Committers = new Repository({ dir: committersDir, url: committersUrl })

@@ -9,9 +9,10 @@ import server from "./sources/server.js";
 import * as websocket from "./websocket.js";
 import * as ldap from "./ldap.js";
 import { Board, Minutes } from './svn.js';
-import { parse } from './sources/agenda.js';
+import { read } from './sources/agenda.js';
 import { digest } from './cache.js';
 import postData from "./operations/post-data.js";
+import post from "./operations/post.js";
 
 export default function router(app) {
 
@@ -20,13 +21,13 @@ export default function router(app) {
   });
 
   app.get('/api/latest.json', async (request, response) => {
-    response.json(await parse((await Board.agendas(request)).pop()));
+    response.json(await read((await Board.agendas(request)).pop()));
   });
 
   app.get('/api/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
     let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
     try {
-      response.json(await parse(agenda, request));
+      response.json(await read(agenda, request));
     } catch (error) {
       if (error.code === 'ENOENT') next();
       next(error);
@@ -97,6 +98,11 @@ export default function router(app) {
 
   app.get('/api/digest', async (request, response) => {
     response.json(await digest());
+  });
+
+
+  app.post('/api/post', async (request, response) => {
+    response.json(await post(request));
   });
 
   app.post('/api/post-data', async (request, response) => {

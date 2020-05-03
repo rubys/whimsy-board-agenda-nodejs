@@ -1,4 +1,3 @@
-import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import Posted from "../models/posted.js";
 import React from "react";
@@ -6,10 +5,14 @@ import Reporter from "../models/reporter.js";
 import { Server, post, Flow, retrieve } from "../utils.js";
 import { connect } from 'react-redux';
 import jQuery from "jquery";
+import store from '../store';
+import * as Actions from "../../actions.js";
 
 function mapStateToProps(state) {
   return {
-    userid: state.server.user.userid
+    meetingDate: state.client.meetingDate,
+    userid: state.server.user.userid,
+    agenda: state.agenda
   }
 };
 
@@ -255,7 +258,7 @@ class Post extends React.Component {
         <h4>Out of Cycle PMC Report</h4>
         {reporting_this_month = []}
 
-        {Agenda.index.map((item) => {
+        {this.props.agenda.map((item) => {
           if (item.roster && /^[A-Z]+$/m.test(item.attach)) {
             return reporting_this_month << item.roster.split("/").pop()
           } else {
@@ -621,16 +624,18 @@ class Post extends React.Component {
     let data;
     this.setState({ edited: false });
 
+    let agenda = `board_agenda_${this.props.meetingDate.replace(/-/g, '_')}.txt`;
+
     if (this.state.header === "Add Resolution" || this.state.header === "Add Discussion Item") {
       data = {
-        agenda: Agenda.file,
+        agenda: agenda,
         attach: this.state.header === "Add Resolution" ? "7?" : "8?",
         title: this.state.title,
         report: this.state.report
       }
     } else {
       data = {
-        agenda: Agenda.file,
+        agenda: agenda,
         attach: this.state.attach || this.props.item.attach,
         digest: this.state.digest,
         message: this.state.message,
@@ -644,7 +649,7 @@ class Post extends React.Component {
       jQuery("#post-report-form").modal("hide");
       document.body.classList.remove("modal-open");
       this.setState({ attach: null, disabled: false });
-      Agenda.load(response.agenda, response.digest)
+      store.dispatch(Actions.postAgenda(response.agenda))
     })
   };
 
@@ -794,7 +799,7 @@ class Post extends React.Component {
     // gather a list of reports already on the agenda
     let scheduled = {};
 
-    for (let item of Agenda.index) {
+    for (let item of this.props.agenda) {
       if (/^[A-Z]/m.test(item.attach)) scheduled[item.title.toLowerCase] = true
     };
 

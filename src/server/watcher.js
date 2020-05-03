@@ -4,7 +4,7 @@ import deepEqual from 'deep-equal';
 import credentials from './credentials.js';
 import { workPath } from './config.js';
 import { broadcast } from './websocket.js';
-import { parse } from './sources/agenda.js';
+import { read } from './sources/agenda.js';
 import { promises as fs } from 'fs';
 import WebSocket from 'faye-websocket';
 
@@ -24,7 +24,7 @@ export async function start(request) {
       if (fileName.startsWith('svn/foundation_board/')) {
         let file = fileName.split('/').pop();
         if (eventType === 'update' && /^board_agenda_\d+_\d+_\d+\.txt$/.test(file)) {
-          parse(file, request);
+          read(file, request);
         }
       } else if (fileName.startsWith('svn/minutes/')) {
       } else if (fileName.startsWith('cache/')) {

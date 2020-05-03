@@ -26,7 +26,7 @@ const CONTENTS = {
   '9.': 'Action Items'
 }
 
-export async function parse(filename, request) {
+export async function read(filename, request) {
   // first check cache
   let mtime = await Board.mtime(filename, request);
   let cacheFile = filename.replace('.txt', '.json');
@@ -37,6 +37,13 @@ export async function parse(filename, request) {
   agenda = await Board.read(filename);
   if (!agenda) return null;
 
+  let items = await parse(agenda, request);
+
+  cache.write(cacheFile, JSON.stringify(items));
+  return items;
+}
+
+export async function parse(agenda, request) {
   // canonicalize line endings
   if (agenda.includes('\r')) agenda = agenda.replace(/\r\n?/g, "\n");
 
@@ -91,6 +98,5 @@ export async function parse(filename, request) {
     };
   };
 
-  cache.write(cacheFile, JSON.stringify(items));
   return items;
 }
