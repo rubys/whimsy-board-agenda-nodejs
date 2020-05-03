@@ -20,6 +20,7 @@
     "ldapjs": "^1.0.2",
     "md5": "^2.2.1",
     "moment-timezone": "^0.5.28",
+    "mustache": "^4.0.1",
     "node-watch": "^0.6.3",
     "nodemon": "^2.0.2",
     "popper.js": "^1.16.1",

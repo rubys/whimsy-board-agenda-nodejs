@@ -1,13 +1,17 @@
 
 import credentials from '../credentials.js';
 import CommitteeInfo from "../sources/committee-info.js";
+import * as ldap from "../ldap.js";
+import { templatePath } from "../config.js";
+import Mustache from 'mustache';
+import { reflow } from '../string-utils.js';
+import { promises as fs } from 'fs';
 
 export default async function (request) {
   let { pmcs } = await CommitteeInfo(request);
-  let committee, roster;
 
   switch (request.body.request) {
-    case "committee-list":
+    case "committee-list": {
       let { username } = credentials(request);
       let committees = { chair: [], member: [], rest: [] };
 
@@ -25,11 +29,12 @@ export default async function (request) {
       };
 
       return [...committees.chair, ...committees.member, ...committees.rest];
+    }
 
-    case "committer-list":
-      committee = pmcs.find(pmc => pmc.id === request.body.pmc);
+    case "committer-list": {
+      let committee = pmcs.find(pmc => pmc.id === request.body.pmc);
       if (!committee) return;
-      roster = committee.committers;
+      let roster = committee.committers;
 
       roster = roster.map(person => ({
         name: person.public_name,
@@ -37,28 +42,35 @@ export default async function (request) {
       }));
 
       return { members: roster.sort_by(person => person.name) };
+    }
 
-    case "committee-members":
-      committee = pmcs.find(pmc => pmc.id === request.body.pmc);
+    case "committee-members": {
+      let committee = pmcs.find(pmc => pmc.id === request.body.pmc);
       if (!committee) return;
       let chair = committee.chairs[0];
       if (!chair) return;
-      roster = { ...committee.roster };
+      let roster = { ...committee.roster };
       delete roster[chair.id];
       roster = Object.entries(roster).map(([id, info]) => ({ id, ...info }));
       return { chair, members: roster };
+    }
 
-    case "change-chair":
-      committee = pmcs.find(pmc => pmc.id === request.body.pmc);
-      if (!committee) return;
-      outgoing_chair = ASF.Person[committee.chairs[0].id];
-      incoming_chair = ASF.Person[request.body.chair];
-      if (!outgoing_chair || !incoming_chair) return;
-      let template = await fs.readFile("templates/change-chair.erb", "utf8");
-      let draft = new Erubis.Eruby(template).result(binding);
-      return { draft: draft.reflow(0, 71) };
+    case "change-chair": {
+      let ids = await ldap.ids();
+      let committee = pmcs.find(pmc => pmc.id === request.body.pmc);
+      let view = {
+        committee,
+        outgoing_chair: committee?.chairs[0],
+        incoming_chair: {name: ids[request.body.chair], id: request.body.chair},
+      }
+      console.log(view);
+      if (!view.committee || !view.incoming_chair.name) return;
+      let template = await fs.readFile(`${templatePath}/change-chair.mustache`, "utf8");
+      let draft = Mustache.render(template, view);
+      return { draft: reflow(draft, 0, 71) };
+    }
 
-    case "establish":
+    case "establish": {
       people = request.body.people.split(",").map(id => ASF.Person[id]);
       people.sort_by(person => ASF.Person.sortable_name(person.public_name));
       description = request.body.description.trim().replace(/\.$/, "");
@@ -82,12 +94,14 @@ export default async function (request) {
       };
 
       return { draft, names };
+    }
 
-    case "terminate":
-      committee = ASF.Committee[request.body.pmc];
+    case "terminate": {
+      let committee = ASF.Committee[request.body.pmc];
       if (!committee) return;
       template = fs.readFileSync("templates/terminate.erb", "utf8").untaint;
       draft = new Erubis.Eruby(template).result(binding);
       return { draft: draft.reflow(0, 71) }
+    }
   };
 }

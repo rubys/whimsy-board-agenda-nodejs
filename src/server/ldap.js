@@ -16,6 +16,11 @@ export async function open() {
   return client;
 }
 
+// return a mapping of availids to public names
+export async function ids() {
+  return Object.fromEntries(Object.entries(await names()).map(([name, id]) => [id, name]));
+}
+
 // return a mapping of public names to availids
 export async function names() {
   let cache_file = 'committers.json';

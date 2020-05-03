@@ -11,8 +11,7 @@ export default async function (agenda, { request } = {}) {
   let pattern = /\n+(?<indent>\s{3,5})(?<attach>[A-Z])\.\s(?<title>[^]*?)\n(?<text>[^]*?)(?=\n\s{4}[A-Z]\.\s|$)/sg;
   let { pmcs } = await CommitteeInfo(request);
   let members = await ldap.members();
-  let names = await ldap.names();
-  let ids = Object.fromEntries(Object.entries(names).map(([name, id]) => [id, name]));
+  let id2name = await ldap.ids();
 
   let sections = [...orders.matchAll(pattern)].map(match => match.groups);
 
@@ -179,9 +178,10 @@ export default async function (agenda, { request } = {}) {
       }
     } else if (/^Appoint /m.test(title)) {
       if (/FURTHER\s+RESOLVED, that\s+([^,]*?),?\s+be\b/i.test(text)) {
+        let name2id = await ldap.names();
         chairname = RegExp.$1.replace(/\s+/g, " ").trim();
         attrs.chairname = chairname;
-        attrs.chair = names[chairname];
+        attrs.chair = name2id[chairname];
       };
 
       if (attrs.chair) {
@@ -196,7 +196,7 @@ export default async function (agenda, { request } = {}) {
     people = people.map(([name, id]) => (
       [id, {
         name,
-        icla: ids[id], // This really is public name
+        icla: id2name[id], // This really is public name
         member: members.includes(id)
       }]
     ));

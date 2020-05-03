@@ -337,7 +337,7 @@ class Post extends React.Component {
   };
 
   // reposition after update if header changed
-  updated = () => {
+  componentDidUpdate() {
     if (Post.header !== this.state.header) this.reposition()
   };
 
