@@ -16,7 +16,7 @@ export default async function (request) {
     message = `Post Discussion Item 8X: ${title}`
   };
 
-  Board.revise(
+  await Board.revise(
     agenda,
     message,
     request,
