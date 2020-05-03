@@ -333,15 +333,15 @@ class Post extends React.Component {
       this.retitle()
     });
 
-    jQuery("#post-report-form").on(
-      "shown.bs.modal",
-      () => this.reposition()
+    jQuery("#post-report-form").on("shown.bs.modal", () => {
+        this.reposition()
+      }
     )
   };
 
   // reposition after update if header changed
-  componentDidUpdate() {
-    if (Post.header !== this.state.header) this.reposition()
+  componentDidUpdate(prevProps) {
+    if (prevProps?.state?.header !== this.state.header) this.reposition()
   };
 
   // set focus, scroll
@@ -358,11 +358,6 @@ class Post extends React.Component {
     };
 
     Post.header = this.state.header
-  };
-
-  // initialize form title, etc.
-  componentDitUpdate() {
-    this.retitle()
   };
 
   // match form title, input label, and commit message with button text

@@ -6,8 +6,8 @@ import md5 from "md5";
 export async function read(file, ttl, mtime) {
   try {
     let stats = await fsp.stat(`${cachePath}/${file}`);
-    if (mtime && stats.mtimeMs > mtime) return null;
-    if (ttl && Date.now() - stats.mtimeMs > ttl) return null;
+    if (mtime && mtime >= stats.mtimeMs) return null;
+    if (ttl && Date.now() - stats.mtimeMs >= ttl) return null;
   } catch (error) {
     if (error.code === 'ENOENT') return null;
     throw error;

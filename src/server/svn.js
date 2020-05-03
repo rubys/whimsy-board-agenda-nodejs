@@ -59,7 +59,10 @@ class Repository {
 
       await fsp.mkdir(svnPath, { recursive: true });
 
-      let { stdout, stderr } = await exec(`${svncmd(request)} checkout ${this.url} ${this.dir} --depth ${this.#depth}`);
+      let { stdout, stderr } = await fsp.access(this.dir).then(
+        () => exec(`${svncmd(request)} update ${this.dir}`),
+        () => exec(`${svncmd(request)} checkout ${this.url} ${this.dir} --depth ${this.#depth}`)
+      );
 
       this.#lastUpdate = Date.now();
 
@@ -156,7 +159,7 @@ class Repository {
     if (newContents === oldContents) {
       console.warn("revision is unchanged")
     } else {
-      return new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         let wstream = fs.createWriteStream(this.map(file));
         wstream.on('finish', resolve);
         wstream.write(newContents);
