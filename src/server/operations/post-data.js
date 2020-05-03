@@ -63,7 +63,6 @@ export default async function (request) {
         outgoing_chair: committee?.chairs[0],
         incoming_chair: {name: ids[request.body.chair], id: request.body.chair},
       }
-      console.log(view);
       if (!view.committee || !view.incoming_chair.name) return;
       let template = await fs.readFile(`${templatePath}/change-chair.mustache`, "utf8");
       let draft = Mustache.render(template, view);
