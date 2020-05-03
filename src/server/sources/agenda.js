@@ -78,7 +78,7 @@ export async function parse(filename, request) {
   // cleanup
   for (let section of items) {
     // parse approved into invididual approvals
-    if (section.approved) {
+    if ('approved' in section) {
       section.approved = section.approved.trim().split(/, ?/);
     }
 
