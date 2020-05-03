@@ -31,6 +31,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
+    "rimraf": "^3.0.2",
     "shell-escape": "^0.2.0",
     "yaml": "^1.9.2"
   },

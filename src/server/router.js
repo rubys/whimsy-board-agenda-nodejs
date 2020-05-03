@@ -13,6 +13,7 @@ import { read } from './sources/agenda.js';
 import { digest } from './cache.js';
 import postData from "./operations/post-data.js";
 import post from "./operations/post.js";
+import refresh from "./operations/refresh.js";
 
 export default function router(app) {
 
@@ -100,13 +101,16 @@ export default function router(app) {
     response.json(await digest());
   });
 
-
   app.post('/api/post', async (request, response) => {
     response.json(await post(request));
   });
 
   app.post('/api/post-data', async (request, response) => {
     response.json(await postData(request));
+  });
+
+  app.post('/api/refresh', async (request, response) => {
+    response.json(await refresh(request));
   });
 
 }
