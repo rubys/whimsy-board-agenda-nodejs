@@ -3,7 +3,7 @@ import React from "react";
 
 class Info extends React.Component {
   render() {
-    let chair;
+    let chair = this.props.item.chair_email?.split("@")?.[0];
     
     return <dl className={"row " + (this.props.position || '')}>
       <dt className="col-sm-3">Attach</dt>
@@ -12,13 +12,11 @@ class Info extends React.Component {
       {this.props.item.owner ? <>
         <dt className="col-sm-3">Author</dt>
 
-        {(this.props.item.chair_email || "").split("@")[1] === "apache.org" ? <>
-          {chair = this.props.item.chair_email.split("@")[0]}
-
+        {chair && (this.props.item.chair_email.split("@")[1] === "apache.org" ? <>
           <dd className="col-sm-9">
             <a href={`https://whimsy.apache.org/roster/committer/${chair}`}>{this.props.item.owner}</a>
           </dd>
-        </> : <dd className="col-sm-9">{this.props.item.owner}</dd>}
+        </> : <dd className="col-sm-9">{this.props.item.owner}</dd>)}
       </> : null}
 
       {this.props.item.shepherd ? <>
