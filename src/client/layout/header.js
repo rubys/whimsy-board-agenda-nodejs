@@ -31,12 +31,12 @@ class Header extends React.Component {
     let { user, offline, forked, pending } = this.props;
 
     let pendingCount =
-      Object.keys(pending.comments).length +
-      pending.approved.length +
-      pending.unapproved.length +
-      pending.flagged.length +
-      pending.unflagged.length +
-      Object.keys(pending.status).length;
+      Object.keys(pending.comments || {}).length +
+      pending.approved?.length || 0 +
+      pending.unapproved?.length || 0 +
+      pending.flagged?.length || 0 +
+      pending.unflagged?.length || 0 +
+      pending.status?.length || 0;
 
     /* eslint-disable jsx-a11y/anchor-is-valid */
     let props = this.props.item || this.props;
