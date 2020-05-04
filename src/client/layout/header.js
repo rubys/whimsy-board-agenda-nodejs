@@ -17,6 +17,7 @@ function mapStateToProps(state) {
   return {
     agenda: state.agenda,
     clock_counter: state.clock_counter,
+    pending: state.server.pending,
     user: state.server.user,
     offline: state.client.offline,
     forked: state.server.forked
@@ -27,8 +28,16 @@ class Header extends React.Component {
   state = { infodropdown: null };
 
   render() {
-    let { user, offline, forked } = this.props;
- 
+    let { user, offline, forked, pending } = this.props;
+
+    let pendingCount =
+      Object.keys(pending.comments).length +
+      pending.approved.length +
+      pending.unapproved.length +
+      pending.flagged.length +
+      pending.unflagged.length +
+      Object.keys(pending.status).length;
+
     /* eslint-disable jsx-a11y/anchor-is-valid */
     let props = this.props.item || this.props;
     let summary = props.summary || this.summary();
@@ -56,12 +65,12 @@ class Header extends React.Component {
             <span className="badge badge-warning">FORKED</span>
           </li> : null}
 
-          {Pending.count > 0 || offline ? <li>
-            <span className="badge badge-danger">
+          {pendingCount > 0 || offline ? <li>
+            <h4><span className="badge badge-danger">
               {offline ? <span>OFFLINE: </span> : null}
-              <Link to="/queue">{Pending.count}</Link>
-            </span>
-           </li> : null}
+              <Link to="/queue">{pendingCount}</Link>
+            </span></h4>
+          </li> : null}
 
           {props.attach ?
             <li className={"report-info dropdown"} data-toggle="dropdown">
