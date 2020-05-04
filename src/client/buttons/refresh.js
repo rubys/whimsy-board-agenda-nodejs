@@ -1,4 +1,3 @@
-import Agenda from "../models/agenda.js";
 import React from "react";
 import { post } from "../utils.js";
 import { connect } from 'react-redux';
@@ -11,6 +10,7 @@ import * as Actions from "../../actions.js";
 
 function mapStateToProps(state) {
   return {
+    agendaFile: state.client.agendaFile,
     offline: state.client.offline,
     forked: state.server.forked,
   }
@@ -29,7 +29,7 @@ class Refresh extends React.Component {
   click = (event) => {
     this.setState({ disabled: true });
 
-    post("refresh", { agenda: Agenda.file }, response => {
+    post("refresh", { agenda: this.props.agendaFile }, response => {
       this.setState({ disabled: false });
       store.dispatch(Actions.postAgenda(response.agenda))
     })

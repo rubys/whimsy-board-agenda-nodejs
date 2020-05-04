@@ -104,10 +104,9 @@ class Repository {
     return fsp.readFile(this.map(file), 'utf8');
   }
 
-  async fork() {
+  async fork(request) {
     let repo = `${repoPath}/${path.basename(this.dir)}`;
     let exists = await fsp.access(repo).then(() => true, () => false);
-    console.log([repo, exists])
     if (exists) return;
 
     try {
@@ -119,13 +118,15 @@ class Repository {
 
     await exec(`svnadmin create ${repo}`);
 
-    let info = await exec(`svn info ${this.dir}`);
-    let log = await exec(`svn log --limit 1 ${this.dir}`);
+    let svn = svncmd(request);
+
+    let info = await exec(`${svn} info ${this.dir}`);
+    let log = await exec(`${svn} log --limit 1 ${this.dir}`);
     await fsp.writeFile(`${this.dir}.log`, info.stdout + log.stdout);
 
     await fsp.rename(`${this.dir}`, `${this.dir}.apache`);
 
-    await exec(`svn checkout file://${repo} ${this.dir}`);
+    await exec(`${svn} checkout file://${repo} ${this.dir}`);
 
     for (let file of await fsp.readdir(`${this.dir}.apache`)) {
       if (file !== '.svn') {
@@ -137,13 +138,14 @@ class Repository {
       if (error) console.error(error)
     });
 
-    await exec(`svn add ${this.dir}/*`);
-    await exec(`svn commit ${this.dir} --file ${this.dir}.log`);
+    await exec(`${svn} add ${this.dir}/*`);
+    await exec(`${svn} commit ${this.dir} --file ${this.dir}.log`);
     await fsp.unlink(`${this.dir}.log`);
-    await exec(`svn update ${this.dir}`);
-    console.log((await exec(`svn log ${this.dir} `)).stdout);
+    await exec(`${svn} update ${this.dir}`);
 
     this.#lastUpdate = Date.now();
+
+    return (await exec(`${svn} log ${this.dir} `)).stdout;
   }
 
   // stub for now, but what this will eventually do is to create
@@ -153,7 +155,7 @@ class Repository {
   // is expected to return the intended new contents.
   async revise(file, message, request, callback) {
     if (process.env.NODE_ENV === 'development') {
-      await this.fork();
+      await this.fork(request);
     }
 
     let oldContents = await this.read(file);

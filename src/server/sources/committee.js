@@ -171,8 +171,3 @@ function parse(contents) {
 
   return { committee_info, nonpmcs, officers }
 };
-
-
-fs = require('fs');
-let source = fs.readFileSync('/srv/svn/board/committee-info.txt', 'utf8');
-console.log(parse(source))

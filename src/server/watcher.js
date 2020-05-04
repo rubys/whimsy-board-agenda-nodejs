@@ -29,6 +29,8 @@ export async function start(request) {
       } else if (fileName.startsWith('svn/minutes/')) {
       } else if (fileName.startsWith('cache/')) {
       } else {
+        if (fileName.match(/^repo\/.*?\/.+/)) return;
+        if (fileName.includes('/.svn/')) return;
         broadcast({ type: 'work-update', eventType, fileName });
       }
     });
