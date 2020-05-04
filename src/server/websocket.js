@@ -19,7 +19,7 @@ export function start(app) {
         let clientToken = message.split(' ')[1].trim();
         if (clientToken === session) {
           authorized.add(ws);
-          ws.send(JSON.stringify({ type: 'digest', files: await digest()}));
+          await broadcastDigest();
         } else {
           ws.send(JSON.stringify({ type: "reload" }));
         }
@@ -40,3 +40,7 @@ export function broadcast(message) {
     }
   });
 }
+
+export async function broadcastDigest() {
+  broadcast({ type: 'digest', files: await digest()});
+};

@@ -3,7 +3,7 @@ import https from 'https';
 import deepEqual from 'deep-equal';
 import credentials from './credentials.js';
 import { workPath } from './config.js';
-import { broadcast } from './websocket.js';
+import { broadcast, broadcastDigest } from './websocket.js';
 import { read } from './sources/agenda.js';
 import { promises as fs } from 'fs';
 import WebSocket from 'faye-websocket';
@@ -28,6 +28,7 @@ export async function start(request) {
         }
       } else if (fileName.startsWith('svn/minutes/')) {
       } else if (fileName.startsWith('cache/')) {
+        broadcastDigest();
       } else {
         if (fileName.match(/^repo\/.*?\/.+/)) return;
         if (fileName.includes('/.svn/')) return;
