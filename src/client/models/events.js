@@ -236,12 +236,31 @@ class Events {
           Store.dispatch(Actions.postServer(server));
         })
       ))
+    } else if (message.type === "digest") {
+      let { digests = {}, client: { agendaFile, meetingDate } } = Store.getState();
+
+      for (let file in message.files) {
+        if (digests[file] && digests[file] !== message.files[file]) {
+          console.log("changed: ", file, digests[file], message.files[file]);
+
+          if (`${file}.txt` === agendaFile) {
+            // fetch and store agenda information
+            JSONStorage.fetch(`${meetingDate}.json`, (error, agenda) => {
+              if (!error && agenda) {
+                Store.dispatch(Actions.postAgenda(agenda));
+              }
+            })
+          }
+        }
+      }
+
+      Store.dispatch(Actions.postDigest(message.files))
+    } else if (Actions[message.type]) {
+      Store.dispatch(message);
     } else if (Events.#$subscriptions[message.type]) {
       for (let sub of Events.#$subscriptions[message.type]) {
         sub(message)
       }
-    } else if (Actions[message.type]) {
-      Store.dispatch(message);
     };
   };
 

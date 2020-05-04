@@ -1,6 +1,7 @@
 import expressWs from 'express-ws';
 import md5 from 'md5';
 import { digest } from './cache.js';
+import deepEqual from 'deep-equal';
 
 let wss = null;
 let authorized = new Set();
@@ -41,6 +42,14 @@ export function broadcast(message) {
   });
 }
 
+// broadcast digests, when changed.  Note: cache files may be 'touched'
+// periodically to indicate that they are up to date, but there is no
+// need to inform client(s) unless the content itself has changed.
+let lastDigest = null;
 export async function broadcastDigest() {
-  broadcast({ type: 'digest', files: await digest()});
+  let newDigest = await digest();
+  if (!deepEqual(lastDigest, newDigest)) {
+    broadcast({ type: 'digest', files: newDigest });
+    lastDigest = newDigest;
+  }
 };
