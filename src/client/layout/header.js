@@ -18,7 +18,9 @@ function mapStateToProps(state) {
   return {
     agenda: state.agenda,
     clock_counter: state.clock_counter,
-    user: state.server.user
+    user: state.server.user,
+    offline: state.client.offline,
+    forked: state.server.forked
   }
 };
 
@@ -26,6 +28,8 @@ class Header extends React.Component {
   state = { infodropdown: null };
 
   render() {
+    let { user, offline, forked } = this.props;
+ 
     /* eslint-disable jsx-a11y/anchor-is-valid */
     let props = this.props.item || this.props;
     let summary = props.summary || this.summary();
@@ -49,10 +53,16 @@ class Header extends React.Component {
         {this.props.clock_counter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
 
         <ul className="nav nav-pills navbar-right">
-          {Pending.count > 0 || Server.offline ? <li className="label label-danger">
-            {Server.offline ? <span>OFFLINE: </span> : null}
-            <Link to="queue">{Pending.count}</Link>
+          {forked ? <li>
+            <span className="badge badge-warning">FORKED</span>
           </li> : null}
+
+          {Pending.count > 0 || offline ? <li>
+            <span className="badge badge-danger">
+              {offline ? <span>OFFLINE: </span> : null}
+              <Link to="/queue">{Pending.count}</Link>
+            </span>
+           </li> : null}
 
           {props.attach ?
             <li className={"report-info dropdown"} data-toggle="dropdown">
@@ -135,8 +145,8 @@ class Header extends React.Component {
                 <Link to="/comments">Comments</Link>
               </li>
 
-              {this.props.user.role === 'director' ? <li>
-                <Link id="shepherd" to={`/shepherd/${this.props.user.firstname}`}>Shepherd</Link>
+              {user.role === 'director' ? <li>
+                <Link id="shepherd" to={`/shepherd/${user.firstname}`}>Shepherd</Link>
               </li> : null}
 
               <li>

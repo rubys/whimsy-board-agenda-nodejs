@@ -10,7 +10,7 @@
 
 import devproxy from './devproxy.js';
 import { session } from '../websocket.js';
-import { Board } from '../svn.js';
+import { Board, forked } from '../svn.js';
 
 export default async function server(request) {
 
@@ -26,8 +26,12 @@ export default async function server(request) {
 
   server.env = process.env.NODE_ENV;
 
-  let userprops = ['userid', 'username', 'firstname', 'initials', 'role'];
+  if (server.env === 'development') {
+    server.forked = await forked();
+  }
 
+  // move user props into a separate object
+  let userprops = ['userid', 'username', 'firstname', 'initials', 'role'];
   server.user = {};
   for (let prop of userprops) {
      if (server[prop]) {

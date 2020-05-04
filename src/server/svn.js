@@ -3,6 +3,8 @@ import shellEscape from "shell-escape";
 import fs, { promises as fsp } from 'fs';
 import { Mutex } from 'async-mutex';
 import { workPath } from './config.js';
+import { broadcast } from './websocket.js';
+import * as Actions from '../actions.js';
 import path from 'path';
 import util from 'util';
 import child_process from 'child_process';
@@ -110,6 +112,7 @@ class Repository {
 
     try {
       await fsp.mkdir(repoPath);
+      broadcast(Actions.setForked(true));
     } catch (error) {
       if (error.code !== 'EEXIST') throw error;
     }
@@ -193,14 +196,16 @@ Minutes.map = function (file) {
   return `${Minutes.dir}/${year}/${file}`
 }
 
-export const Committers = new Repository({ dir: committersDir, url: committersUrl })
+export const Committers = new Repository({ dir: committersDir, url: committersUrl });
+
+export async function forked() {
+  return await fsp.access(repoPath).then(() => true, () => false);
+}
 
 // remove all svn directories that are checked out from a local repository,
 // then delete all local repositories.
 export async function reset() {
-  let forked = await fsp.access(repoPath).then(() => true, () => false);
-  console.log(forked)
-  if (!forked) return;
+  if (!forked()) return;
 
   await Promise.all(
     (await fsp.readdir(repoPath)).map(name => (
@@ -217,4 +222,6 @@ export async function reset() {
       error ? reject(error) : resolve()
     })
   })
+
+  broadcast(Actions.setForked(false));
 }

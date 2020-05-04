@@ -14,6 +14,9 @@ export default function reduce(state = {}, action) {
 
       return state;
 
+    case Actions.SET_FORKED:
+      return { ...state, forked: action.state }
+
     default:
       return state
   }

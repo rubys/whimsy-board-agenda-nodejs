@@ -1,6 +1,6 @@
 import JSONStorage from "./jsonstorage.js";
 import * as Actions from "../../actions.js";
-import store from "../store.js";
+import Store from "../store.js";
 
 //
 // Motivation: browsers limit the number of open web socket connections to any
@@ -110,7 +110,7 @@ class Events {
 
       Events.#$ondeck = localStorage.removeItem(`${Events.#$prefix}-ondeck`);
 
-      let { server } = store.getState();
+      let { server } = Store.getState();
 
       if (server && server.session) {
         this.master(server)
@@ -120,7 +120,7 @@ class Events {
 
         fetch(request).then(response => (
           response.json().then(server => {
-            store.dispatch(Actions.postServer(server));
+            Store.dispatch(Actions.postServer(server));
             this.master(server)
           })
         ))
@@ -145,7 +145,7 @@ class Events {
           new Date().getTime()
         );
 
-        let { server } = store.getState();
+        let { server } = Store.getState();
 
         if (!server.offline) {
           this.connectToServer(server);
@@ -161,7 +161,7 @@ class Events {
       if (event.detail === true) {
         if (Events.#$socket) Events.#$socket.close()
       } else {
-        let { server } = store.getState();
+        let { server } = Store.getState();
         this.connectToServer(server)
       }
     });
@@ -233,13 +233,15 @@ class Events {
       fetch(request).then(response => (
         response.json().then((server) => {
           this.log(server);
-          store.dispatch(Actions.postServer(server));
+          Store.dispatch(Actions.postServer(server));
         })
       ))
     } else if (Events.#$subscriptions[message.type]) {
       for (let sub of Events.#$subscriptions[message.type]) {
         sub(message)
       }
+    } else if (Actions[message.type]) {
+      Store.dispatch(message);
     };
   };
 
