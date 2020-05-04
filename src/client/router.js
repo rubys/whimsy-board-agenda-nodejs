@@ -35,7 +35,6 @@ import Summary from "./buttons/summary.js";
 import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
 import Touch from "./touch.js";
-import User from "./models/user.js";
 import Vote from "./buttons/vote.js";
 import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
@@ -191,7 +190,7 @@ class Router extends React.Component {
     if (item.title === "Roll Call") list.push({ button: Attend });
 
     if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(item.attach)) {
-      if (User.role === "secretary" || !Minutes.complete) {
+      if (this.props.role === "secretary" || !Minutes.complete) {
         if (!Minutes.draft_posted) {
           if (/^8[.A-Z]/m.test(item.attach)) {
             if (/^8[A-Z]/m.test(item.attach)) {
@@ -212,11 +211,11 @@ class Router extends React.Component {
       }
     };
 
-    if (User.role === "director") {
+    if (this.props.role === "director") {
       if (!this.missing && item.comments !== undefined && !Minutes.complete) {
         if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(item.attach)) list.push({ button: Approve })
       }
-    } else if (User.role === "secretary") {
+    } else if (this.props.role === "secretary") {
       if (!Minutes.draft_posted) {
         if (/^7\w/m.test(item.attach)) {
           list.push({ form: Vote })
@@ -305,7 +304,7 @@ class Router extends React.Component {
       <Route exact path="/queue">
         {() => {
           let item = { view: Queue, title: "Queued approvals and comments" };
-          if (User.role !== "director") item.title = "Queued comments";
+          if (this.props.role !== "director") item.title = "Queued comments";
           return main(item)
         }}
       </Route>
