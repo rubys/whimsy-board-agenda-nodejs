@@ -164,7 +164,7 @@ export default async function (agenda, { request } = {}) {
           attrs.chair = (chair ? chair[chair.length - 1] : null)
         };
 
-        if (!people.includes([chairname, attrs.chair])) {
+        if (!people.some(([name, id]) => id === attrs.chair)) {
           if (people.length === 0) {
             attrs.warnings.push("Unable to locate PMC email addresses")
           } else if (attrs.chair) {
@@ -193,15 +193,18 @@ export default async function (agenda, { request } = {}) {
       }
     };
 
-    people = people.map(([name, id]) => (
-      [id, {
-        name,
-        icla: id2name[id], // This really is public name
-        member: members.includes(id)
-      }]
-    ));
+    if (people.length !== 0) {
+      people = people.map(([name, id]) => (
+        [id, {
+          name,
+          icla: id2name[id], // This really is public name
+          member: members.includes(id)
+        }]
+      ));
 
-    if (people.length !== 0) attrs.people = Object.fromEntries(people);
+      attrs.people = Object.fromEntries(people);
+    }
+
     if (attrs.warnings.length === 0) delete attrs.warnings
   };
 
