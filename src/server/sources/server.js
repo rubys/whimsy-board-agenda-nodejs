@@ -38,6 +38,10 @@ export default async function server(request) {
        server.user[prop] = server[prop];
        delete server[prop];
      }
+
+     if (server?.pending?.[prop]) {
+       delete server.pending[prop];
+     }
   }
 
   return server;
