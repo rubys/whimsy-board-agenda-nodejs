@@ -1,3 +1,7 @@
+import AddComment from "./buttons/add-comment.js";
+import AddMinutes from "./buttons/add-minutes.js";
+import Approve from "./buttons/approve.js";
+import Attend from "./buttons/attend.js";
 import Agenda from "./models/agenda.js";
 import Adjournment from "./pages/adjournment.js";
 import Backchannel from "./pages/backchannel.js";
@@ -24,6 +28,7 @@ import React from "react";
 import Refresh from "./buttons/refresh.js";
 import Rejected from "./pages/rejected.js";
 import RollCall from "./pages/roll-call.js";
+import Timestamp from "./buttons/timestamp.js";
 import Search from "./pages/search.js";
 import Server from "./pages/server.js";
 import Summary from "./buttons/summary.js";
@@ -31,6 +36,7 @@ import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
 import Touch from "./touch.js";
 import User from "./models/user.js";
+import Vote from "./buttons/vote.js";
 import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
 import { connect } from 'react-redux';
@@ -98,10 +104,11 @@ class Router extends React.Component {
     // provide defaults for required properties
     item.color = item.color || "blank";
 
+    let view = item.view;
+    if (view.WrappedComponent) view = view.WrappedComponent;
+
     // if title is not present, construct a title from the class name
     if (!item.title) {
-      let view = item.view;
-      if (view.WrappedComponent) view = view.WrappedComponent;
       item.title = view.name.replace(
         /(^|-)\w/g,
         c => c.toUpperCase()
@@ -111,9 +118,10 @@ class Router extends React.Component {
     // determine what buttons are required, merging defaults, form provided
     // overrides, and any overrides provided by the agenda item itself
     let buttons = item.buttons || [];
-    if (item.view.buttons) buttons = [...item.view.buttons(), ...buttons];
+    if (item.item) buttons = [...this.buttons(item.item), ...buttons];
+    if (view.buttons) buttons = [...view.buttons(), ...buttons];
 
-    if (buttons) {
+    if (buttons.length) {
       buttons = buttons.map((button) => {
         let props = {
           text: "button",
@@ -165,6 +173,73 @@ class Router extends React.Component {
 
     return <Main {...props} />
   }
+
+  // buttons and forms to show with this report
+  buttons(item) {
+    let list = [];
+    console.log(item)
+
+    if (!(!/^\d+$/m.test(item.attach) && item.comments === undefined) && !Minutes.complete) {
+      // some reports don't have comments
+      if (this.pending) {
+        list.push({ form: AddComment, text: "edit comment" })
+      } else {
+        list.push({ form: AddComment, text: "add comment" })
+      }
+    };
+
+    if (item.title === "Roll Call") list.push({ button: Attend });
+
+    if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(item.attach)) {
+      if (User.role === "secretary" || !Minutes.complete) {
+        if (!Minutes.draft_posted) {
+          if (/^8[.A-Z]/m.test(item.attach)) {
+            if (/^8[A-Z]/m.test(item.attach)) {
+              list.push({ form: Post, text: "edit item" })
+            } else if (!this.text || item.text.trim().length === 0) {
+              list.push({ form: Post, text: "post item" })
+            } else {
+              list.push({ form: Post, text: "edit items" })
+            }
+          } else if (this.missing) {
+            list.push({ form: Post, text: "post report" })
+          } else if (/^7\w/m.test(item.attach)) {
+            list.push({ form: Post, text: "edit resolution" })
+          } else {
+            list.push({ form: Post, text: "edit report" })
+          }
+        }
+      }
+    };
+
+    if (User.role === "director") {
+      if (!this.missing && item.comments !== undefined && !Minutes.complete) {
+        if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(item.attach)) list.push({ button: Approve })
+      }
+    } else if (User.role === "secretary") {
+      if (!Minutes.draft_posted) {
+        if (/^7\w/m.test(item.attach)) {
+          list.push({ form: Vote })
+        } else if (Minutes.get(item.title)) {
+          list.push({ form: AddMinutes, text: "edit minutes" })
+        } else if (["Call to order", "Adjournment"].includes(item.title)) {
+          list.push({ button: Timestamp })
+        } else {
+          list.push({ form: AddMinutes, text: "add minutes" })
+        }
+      };
+
+      if (/^3\w/m.test(item.attach)) {
+        if (Minutes.get(item.title) === "approved" && Server.drafts.includes((item.text.match(/board_minutes_\w+\.txt/) || [])[0])) {
+          list.push({ form: PublishMinutes })
+        }
+      } else if (item.title === "Adjournment") {
+        if (Minutes.ready_to_post_draft) list.push({ form: DraftMinutes })
+      }
+    };
+
+    return list
+  };
 
   render() {
     let main = this.main;
