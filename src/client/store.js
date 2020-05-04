@@ -3,7 +3,6 @@ import * as Actions from '../actions.js';
 import agenda from './reducers/agenda.js';
 import client from './reducers/client.js';
 import clockCounter from './reducers/clock-counter.js';
-import digests from './reducers/digests.js';
 import historicalComments from './reducers/historical-comments.js';
 import reporter from './reducers/reporter.js';
 import responses from './reducers/responses.js';
@@ -14,7 +13,7 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-let reducers = { agenda, client, clockCounter, digests, historicalComments, reporter, responses, server };
+let reducers = { agenda, client, clockCounter, historicalComments, reporter, responses, server };
 
 const store = createStore(combineReducers(reducers));
 

@@ -11,6 +11,7 @@
 import devproxy from './devproxy.js';
 import { session } from '../websocket.js';
 import { Board, forked } from '../svn.js';
+import { digest } from '../cache.js';
 
 export default async function server(request) {
 
@@ -43,6 +44,8 @@ export default async function server(request) {
        delete server.pending[prop];
      }
   }
+
+  server.digests = await digest();
 
   return server;
 }

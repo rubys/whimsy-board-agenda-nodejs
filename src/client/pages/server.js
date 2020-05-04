@@ -15,7 +15,6 @@ function Server( { agendas, drafts }) {
     '/api/committers',
     '/api/committee-info',
     '/api/historical-comments',
-    '/api/digest',
     '/api/jira',
     '/api/posted-reports',
     '/api/reporter',

@@ -14,6 +14,9 @@ export default function reduce(state = {}, action) {
 
       return state;
 
+    case Actions.POST_DIGEST:
+      return { ...state, digest: {...state.digests, ...action.files} };
+
     case Actions.SET_FORKED:
       return { ...state, forked: action.state }
 

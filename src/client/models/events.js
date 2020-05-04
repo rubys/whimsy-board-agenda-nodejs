@@ -237,7 +237,7 @@ class Events {
         })
       ))
     } else if (message.type === "digest") {
-      let { digests = {}, client: { agendaFile, meetingDate } } = Store.getState();
+      let { server: {digests = {}}, client: { agendaFile, meetingDate } } = Store.getState();
 
       for (let file in message.files) {
         if (digests[file] && digests[file] !== message.files[file]) {
