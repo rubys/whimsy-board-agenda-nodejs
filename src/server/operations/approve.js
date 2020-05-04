@@ -7,7 +7,6 @@ import * as Pending from "../sources/pending.js";
 export default async function (request) {
   let { agenda, initials, attach } = request.body;
   let pending = await Pending.read(request);
-  console.log(pending)
 
   agenda = await read(agenda);
   initials = initials || pending.initials;
