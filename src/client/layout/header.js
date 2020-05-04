@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import Pending from "../models/pending.js";
 import PodlingNameSearch from "../elements/pns.js";
 import React from "react";
-import { Server } from "../utils.js";
 import { connect } from 'react-redux';
 
 // Header: title on the left, dropdowns on the right
