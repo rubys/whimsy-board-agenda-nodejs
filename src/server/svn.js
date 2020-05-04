@@ -25,15 +25,23 @@ const committersUrl = 'https://svn.apache.org/repos/private/committers/board';
 
 let repoPath = `${workPath}/repo`;
 
-// build an authenticated subversion command
-function svncmd(request) {
+// run an authenticated subversion command
+async function svncmd(request, args) {
   let svn = 'svn';
-  if (!request) return svn;
   let { username, password } = credentials(request);
-  if (!password) return svn;
-  return `${svn} --non-interactive --no-auth-cache ` +
-    shellEscape(['--username', username, '--password', password])
-};
+
+  if (password) {
+    svn = `${svn} --non-interactive --no-auth-cache ` +
+      shellEscape(['--username', username, '--password', password])
+  };
+
+  try {
+    return await exec(`${svn} ${args}`)
+  } catch (error) {
+    if (password) error.message = error.message.split(password).join('******')
+    throw error;
+  }
+}
 
 // common methods across all repositories
 class Repository {
@@ -62,8 +70,8 @@ class Repository {
       await fsp.mkdir(svnPath, { recursive: true });
 
       let { stdout, stderr } = await fsp.access(this.dir).then(
-        () => exec(`${svncmd(request)} update ${this.dir}`),
-        () => exec(`${svncmd(request)} checkout ${this.url} ${this.dir} --depth ${this.#depth}`)
+        () => svncmd(request, `update ${this.dir}`),
+        () => svncmd(request, `checkout ${this.url} ${this.dir} --depth ${this.#depth}`)
       );
 
       this.#lastUpdate = Date.now();
@@ -118,15 +126,13 @@ class Repository {
 
     await exec(`svnadmin create ${repo}`);
 
-    let svn = svncmd(request);
-
-    let info = await exec(`${svn} info ${this.dir}`);
-    let log = await exec(`${svn} log --limit 1 ${this.dir}`);
+    let info = await svncmd(request, `info ${this.dir}`);
+    let log = await svncmd(request, `log --limit 1 ${this.dir}`);
     await fsp.writeFile(`${this.dir}.log`, info.stdout + log.stdout);
 
     await fsp.rename(`${this.dir}`, `${this.dir}.apache`);
 
-    await exec(`${svn} checkout file://${repo} ${this.dir}`);
+    await svncmd(request, `checkout file://${repo} ${this.dir}`);
 
     for (let file of await fsp.readdir(`${this.dir}.apache`)) {
       if (file !== '.svn') {
@@ -138,14 +144,14 @@ class Repository {
       if (error) console.error(error)
     });
 
-    await exec(`${svn} add ${this.dir}/*`);
-    await exec(`${svn} commit ${this.dir} --file ${this.dir}.log`);
+    await svncmd(request, `add ${this.dir}/*`);
+    await svncmd(request, `commit ${this.dir} --file ${this.dir}.log`);
     await fsp.unlink(`${this.dir}.log`);
-    await exec(`${svn} update ${this.dir}`);
+    await svncmd(request, `update ${this.dir}`);
 
     this.#lastUpdate = Date.now();
 
-    return (await exec(`${svn} log ${this.dir} `)).stdout;
+    return (await svncmd(request, `log ${this.dir} `)).stdout;
   }
 
   // stub for now, but what this will eventually do is to create
@@ -207,7 +213,7 @@ export async function forked() {
 // remove all svn directories that are checked out from a local repository,
 // then delete all local repositories.
 export async function reset() {
-  if (!forked()) return;
+  if (!await forked()) return;
 
   await Promise.all(
     (await fsp.readdir(repoPath)).map(name => (
