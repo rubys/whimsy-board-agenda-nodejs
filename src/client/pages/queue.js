@@ -6,6 +6,14 @@ import Pending from "../models/pending.js";
 import React from "react";
 import Refresh from "../buttons/refresh.js";
 import User from "../models/user.js";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    pending: state.server.pending,
+    user: state.user
+  };
+}
 
 //
 // A page showing all queued approvals and comments, as well as items
@@ -20,8 +28,10 @@ class Queue extends React.Component {
   };
 
   render() {
+    let { user, pending } = this.props;
+
     return <div className="col-xs-12">
-      {User.role === "director" ? <>
+      {user?.role === "director" ? <>
         <h4>Approvals</h4>
 
         <p className="col-xs-12">
@@ -86,7 +96,7 @@ class Queue extends React.Component {
         </ul>
       </> : null}
 
-      {User.role === "director" && this.pending.ready.length !== 0 ? <>
+      {user?.role === "director" && this.pending.ready.length !== 0 ? <>
         <div className="col-xs-12 row">
           <hr />
         </div>
@@ -102,7 +112,7 @@ class Queue extends React.Component {
   };
 
   // determine approvals, rejected, comments, and ready
-  pending() {
+  get pending() {
     let result = {
       approvals: [],
       unapprovals: [],
@@ -136,11 +146,11 @@ class Queue extends React.Component {
         action = true
       };
 
-      if (!action && item.ready_for_review(User.initials)) result.ready.push(item)
+      if (!action && item.ready_for_review(this.props.user?.initials)) result.ready.push(item)
     };
 
     return result
   }
 };
 
-export default Queue
+export default connect(mapStateToProps)(Queue)
