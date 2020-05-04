@@ -96,19 +96,19 @@ class Router extends React.Component {
   }
 
   // helper to construct a call to <Main> with the proper buttons and options
-  main = (item, options = {}) => {
-    // bail unless an item was found
-    if (!item) return <Main />;
+  main = (page, options = {}) => {
+    // bail unless an page was found
+    if (!page) return <Main />;
 
     // provide defaults for required properties
-    item.color = item.color || "blank";
+    page.color = page.color || "blank";
 
-    let view = item.view;
+    let view = page.view;
     if (view.WrappedComponent) view = view.WrappedComponent;
 
     // if title is not present, construct a title from the class name
-    if (!item.title) {
-      item.title = view.name.replace(
+    if (!page.title) {
+      page.title = view.name.replace(
         /(^|-)\w/g,
         c => c.toUpperCase()
       ).replace(/-/g, " ").trim()
@@ -116,8 +116,8 @@ class Router extends React.Component {
 
     // determine what buttons are required, merging defaults, form provided
     // overrides, and any overrides provided by the agenda item itself
-    let buttons = item.buttons || [];
-    if (item.item) buttons = [...this.buttons(item.item), ...buttons];
+    let buttons = page.buttons || [];
+    if (page.item) buttons = [...this.buttons(page.item), ...buttons];
     if (view.buttons) buttons = [...view.buttons(), ...buttons];
 
     if (buttons.length) {
@@ -145,7 +145,7 @@ class Router extends React.Component {
           // no form or form has no separate button: so this is just a button
           delete props.text;
           props.type = button.button || form;
-          props.attrs = { item, server: Utils.Server }
+          props.attrs = { item: page.item, server: Utils.Server }
         };
 
         // item overrides
@@ -168,7 +168,7 @@ class Router extends React.Component {
       })
     };
 
-    let props = { ...item, buttons, options };
+    let props = { ...page, buttons, options };
 
     return <Main {...props} />
   }

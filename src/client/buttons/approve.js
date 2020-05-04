@@ -1,7 +1,16 @@
-import Agenda from "../models/agenda.js";
-import Pending from "../models/pending.js";
 import React from "react";
-import User from "../models/user.js";
+import store from '../store';
+import * as Actions from "../../actions.js";
+import { connect } from 'react-redux';
+import { post, } from "../utils.js";
+
+function mapStateToProps(state) {
+  return {
+    pending: state.server.pending,
+    initials: state.server.user.initials,
+    agendaFile: state.client.agendaFile
+  }
+};
 
 //
 // Approve/Unapprove a report
@@ -17,11 +26,13 @@ class Approve extends React.Component {
   // set request (and button text) depending on whether or not the
   // not this items was previously approved
   get request() {
-    if (Pending.approved.includes(this.props.item.attach)) {
+    let { pending, item, initials } = this.props;
+
+    if (pending.approved.includes(item.attach)) {
       return "unapprove"
-    } else if (Pending.unapproved.includes(this.props.item.attach)) {
+    } else if (pending.unapproved.includes(item.attach)) {
       return "approve"
-    } else if (this.props.item.approved && this.props.item.approved.includes(User.initials)) {
+    } else if (item.approved && item.approved.includes(initials)) {
       return "unapprove"
     } else {
       return "approve"
@@ -31,20 +42,23 @@ class Approve extends React.Component {
   // when button is clicked, send request
   click = event => {
     let data = {
-      agenda: Agenda.file,
-      initials: User.initials,
+      agenda: this.props.agendaFile,
+      initials: this.props.initials,
       attach: this.props.item.attach,
       request: this.request
     };
 
     this.setState({disabled: true});
 
-    Pending.update(
+    post(
       "approve",
       data,
-      pending => this.setState({disabled: false})
+      pending => {
+        store.dispatch(Actions.postServer({ pending }))
+        this.setState({disabled: false})
+      }
     )
   }
 };
 
-export default Approve
+export default connect(mapStateToProps)(Approve)

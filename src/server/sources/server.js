@@ -12,6 +12,7 @@ import devproxy from './devproxy.js';
 import { session } from '../websocket.js';
 import { Board, forked } from '../svn.js';
 import { digest } from '../cache.js';
+import * as Pending from './pending.js';
 
 export default async function server(request) {
 
@@ -46,6 +47,11 @@ export default async function server(request) {
   }
 
   server.digests = await digest();
+
+  let pending = await Pending.read(request);
+  for (let attr in pending) {
+    if (pending[attr].length) server.pending[attr] = pending[attr];
+  }
 
   return server;
 }

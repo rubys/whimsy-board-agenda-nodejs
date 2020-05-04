@@ -1,3 +1,4 @@
+import approve from "./operations/approve.js";
 import committeeInfo from "./sources/committee-info.js";
 import historicalComments from "./sources/historical-comments.js";
 import jira from "./sources/jira.js";
@@ -94,6 +95,10 @@ export default function router(app) {
 
   app.get('/api/server', async (request, response) => {
     response.json(await server(request));
+  });
+
+  app.post('/api/approve', async (request, response) => {
+    response.json(await approve(request));
   });
 
   app.post('/api/post', async (request, response) => {
