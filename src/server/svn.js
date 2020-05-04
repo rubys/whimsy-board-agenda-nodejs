@@ -65,7 +65,7 @@ class Repository {
     const release = await this.mutex.acquire();
 
     try {
-      if (Date.now() - this.#lastUpdate < ttl) { release(); return };
+      if (Date.now() - this.#lastUpdate < ttl) return;
 
       await fsp.mkdir(svnPath, { recursive: true });
 
