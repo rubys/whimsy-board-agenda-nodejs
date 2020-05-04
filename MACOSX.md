@@ -1,6 +1,6 @@
 # Quick Start
 
-    brew install node yarn
+    brew install node yarn subversion
     brew cask install visual-studio-code
     git clone https://github.com/rubys/whimsy-board-agenda-nodejs
     cd whimsy-board-agenda-nodejs
@@ -36,11 +36,13 @@ Thare are a number of package managers for MacOS including [Mac Ports](https://w
 
 Verify that the subversion command line client is installed and operational:
 
-    svn --version
+    svnadmin --version
 
-If you have problems, return to the Xcode step.  If all else fails, try:
+If you have problems, return to the Xcode step.
 
-    brew install subversion
+Note: Xcode ships an older, and incomplete, svn client.  In particular, it
+does not include the commands needed to support creation of a local svn
+repository.
 
 # Node
 
