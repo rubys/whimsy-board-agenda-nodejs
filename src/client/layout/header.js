@@ -126,15 +126,15 @@ class Header extends React.Component {
                 <Link id="agenda" to="/">Agenda</Link>
               </li>
 
-              {/* this.props.agenda.map(item => {
-                if (item.index) {
-                  return <li key={item.index}>
+              {Object.values(this.props.agenda)
+                .filter(item => item.index)
+                .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
+                .map(item => (
+                  <li key={item.index}>
                     <Link to={item.href}>{item.index}</Link>
                   </li>
-                } else {
-                  return null
-                }
-              }) */}
+                ))
+              }
 
               <li className="divider" />
 
@@ -203,7 +203,7 @@ class Header extends React.Component {
 
       flaggedReports: {
         color: "commented",
-        count : 0,
+        count: 0,
         href: "/flagged",
         text: "flagged reports"
       },
