@@ -265,6 +265,5 @@ class Pending {
   }
 };
 
-Server.offline = false;
 Events.subscribe("pending", message => Pending.load(message.value));
 export default Pending

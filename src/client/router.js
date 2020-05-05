@@ -90,8 +90,6 @@ class Router extends React.Component {
       props.history.replace(path, { path });
     };
 
-    Agenda.load(props.agenda);
-
     return {}
   }
 
@@ -243,7 +241,7 @@ class Router extends React.Component {
   render() {
     let main = this.main;
 
-    if (!this.props.agenda?.length) return main(null);
+    if (!Object.keys(this.props.agenda || {}).length) return main(null);
 
     // route request based on path and query from the window location (URL)
     return <Switch>
@@ -467,8 +465,7 @@ class Router extends React.Component {
 
   // find an agenda item that matches the path
   find = (path) => {
-    let href = '/' + path;
-    return this.props.agenda.find(item => item.href === href);
+    return this.props.agenda['/' + path];
   }
 
   componentDidMount() {

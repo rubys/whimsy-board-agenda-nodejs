@@ -4,8 +4,14 @@ import Minutes from "../models/minutes.js";
 import React from "react";
 import User from "../models/user.js";
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
 
-//
+function mapStateToProps(state) {
+  return {
+    agenda: state.agenda,
+  }
+};
+
 // Layout footer consisting of a previous link, any number of buttons,
 // followed by a next link.
 //
@@ -20,7 +26,7 @@ class Footer extends React.Component {
 
     return <Colorize item={item}>
       <footer className="fixed-bottom navbar">
-        <PrevLink item={item} options={this.props.options} />
+        <PrevLink item={item} agenda={this.props.agenda} options={this.props.options} />
 
         <span>{this.props.buttons ? this.props.buttons.map((button) => {
           let props;
@@ -41,7 +47,7 @@ class Footer extends React.Component {
           return null
         }) : null}</span>
 
-        <NextLink item={item} options={this.props.options} />
+        <NextLink item={item} agenda={this.props.agenda} options={this.props.options} />
       </footer>
     </Colorize>
   }
@@ -51,30 +57,33 @@ class Footer extends React.Component {
 
 class PrevLink extends React.Component {
   render() {
-    let link = this.props.item?.prev;
+    let { agenda, item, options } = this.props;
+
+    let link = item?.prev;
+    if (link && !link.title) link = agenda[link];
     let prefix = "";
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
-    if (this.props.options.traversal === "queue") {
+    if (options.traversal === "queue") {
       prefix = "queue/";
 
       while (link && !link.ready_for_review(User.initials)) {
-        link = link.prev
+        link = agenda[link.prev]
       };
 
       link = link || { href: "../queue", title: "Queue" }
-    } else if (this.props.options.traversal === "shepherd") {
+    } else if (options.traversal === "shepherd") {
       prefix = "shepherd/queue/";
 
-      while (link && link.shepherd !== this.props.item.shepherd) {
-        link = link.prev
+      while (link && link.shepherd !== item.shepherd) {
+        link = agenda[link.prev]
       };
 
       link = link || {
-        href: `../${this.props.item.shepherd}`,
+        href: `../${item.shepherd}`,
         title: "Shepherd"
       }
-    } else if (this.props.options.traversal === "flagged") {
+    } else if (options.traversal === "flagged") {
       prefix = "flagged/";
 
       while (link && link.skippable) {
@@ -82,7 +91,7 @@ class PrevLink extends React.Component {
           prefix = "";
           break
         } else {
-          link = link.prev
+          link = agenda[link.prev]
         }
       };
 
@@ -94,8 +103,8 @@ class PrevLink extends React.Component {
 
         link = link || { href: "flagged", title: "Flagged" }
       }
-    } else if (meetingDay && /\d/.test(this.props.item.attach) && link && /^[A-Z]/m.test(link.attach)) {
-      for (let item of Agenda.index) {
+    } else if (meetingDay && /\d/.test(item.attach) && link && /^[A-Z]/m.test(link.attach)) {
+      for (let item in agenda) {
         if (!item.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
           prefix = "flagged/";
           link = item
@@ -110,7 +119,7 @@ class PrevLink extends React.Component {
           : <Link className={"navbar-brand backlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
       </Colorize>
-    } else if (this.props.item?.prev || this.props.item?.next) {
+    } else if (item?.prev || item?.next) {
       return <a className="navbar-brand" />
     } else {
       return null
@@ -120,26 +129,29 @@ class PrevLink extends React.Component {
 
 class NextLink extends React.Component {
   render() {
-    let link = this.props.item?.next;
+    let { agenda, item, options } = this.props;
+
+    let link = item?.next;
+    if (link && !link.title) link = agenda[link];
     let prefix = '';
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
-    if (this.props.options.traversal === "queue") {
+    if (options.traversal === "queue") {
       while (link && !link.ready_for_review(User.initials)) {
-        link = link.next
+        link = agenda[link.next]
       };
 
       link = link || { href: "queue", title: "Queue" }
-    } else if (this.props.options.traversal === "shepherd") {
-      while (link && link.shepherd !== this.props.item.shepherd) {
-        link = link.next
+    } else if (options.traversal === "shepherd") {
+      while (link && link.shepherd !== item.shepherd) {
+        agenda[link] = link.next
       };
 
       link = link || {
-        href: `shepherd/${this.props.item.shepherd}`,
+        href: `shepherd/${item.shepherd}`,
         title: "shepherd"
       }
-    } else if (this.props.options.traversal === "flagged") {
+    } else if (options.traversal === "flagged") {
       prefix = "flagged/";
 
       while (link && link.skippable) {
@@ -147,14 +159,14 @@ class NextLink extends React.Component {
           prefix = "";
           break
         } else {
-          link = link.next
+          agenda[link] = link.next
         }
       };
 
       link = link || { href: "flagged", title: "Flagged" }
-    } else if (meetingDay && link && /^\d[A-Z]/m.test(this.props.item.attach) && /^\d/m.test(link.attach)) {
+    } else if (meetingDay && link && /^\d[A-Z]/m.test(item.attach) && /^\d/m.test(link.attach)) {
       while (link && link.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
-        link = link.next
+        agenda[link] = link.next
       };
 
       prefix = "flagged/"
@@ -167,7 +179,7 @@ class NextLink extends React.Component {
           : <Link className={"navbar-brand nextlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
       </Colorize>
-    } else if (this.props.item?.prev || this.props.item?.next) {
+    } else if (item?.prev || item?.next) {
       return <a className="navbar-brand" />
     } else {
       return null
@@ -175,4 +187,4 @@ class NextLink extends React.Component {
   }
 }
 
-export default Footer
+export default connect(mapStateToProps)(Footer)

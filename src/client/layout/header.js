@@ -124,7 +124,7 @@ class Header extends React.Component {
                 <Link id="agenda" to="/">Agenda</Link>
               </li>
 
-              {this.props.agenda.map(item => {
+              {/* this.props.agenda.map(item => {
                 if (item.index) {
                   return <li key={item.index}>
                     <Link to={item.href}>{item.index}</Link>
@@ -132,7 +132,7 @@ class Header extends React.Component {
                 } else {
                   return null
                 }
-              })}
+              }) */}
 
               <li className="divider" />
 
@@ -177,7 +177,7 @@ class Header extends React.Component {
     let count = 0;
     let link = null;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (/^[A-Z]+$/m.test(item.attach)) {
         count++;
         link = link || item.href
@@ -195,7 +195,7 @@ class Header extends React.Component {
     count = 0;
     link = null;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (/^7[A-Z]+$/m.test(item.attach)) {
         count++;
         link = link || item.href
@@ -213,7 +213,7 @@ class Header extends React.Component {
     count = 0;
     link = null;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (/^8[.A-Z]+$/m.test(item.attach)) {
         if (item.attach !== "8." || !!item.text) count++;
         link = link || item.href
@@ -230,7 +230,7 @@ class Header extends React.Component {
     // awaiting preapprovals
     count = 0;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (item.color === "ready" && item.title !== "Action Items") count++
     };
 
@@ -244,7 +244,7 @@ class Header extends React.Component {
     // flagged reports
     count = 0;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (item.flagged_by) count++
     };
 
@@ -258,7 +258,7 @@ class Header extends React.Component {
     // missing reports
     count = 0;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (item.missing) count++
     };
 
@@ -272,7 +272,7 @@ class Header extends React.Component {
     // rejected reports
     count = 0;
 
-    for (let item of agenda) {
+    for (let item in agenda) {
       if (item.rejected) count++
     };
 
