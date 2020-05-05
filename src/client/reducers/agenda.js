@@ -74,7 +74,7 @@ export default function reduce(state = null, action) {
       let item = Object.values(state).find(item => item.attach === action.attach);
 
       if (item) {
-        return { ...state, [item.href]: { ...agenda[index], minutes: action.minutes }}       
+        return { ...state, [item.href]: { ...item, minutes: action.minutes }}       
       }
 
       return state;
