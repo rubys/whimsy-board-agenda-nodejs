@@ -162,7 +162,6 @@ export class CachePage extends React.Component {
     return <>
       <h2>{this.state.response.url}</h2>
       <p>{`${this.state.response.status} ${this.state.response.statusText}`}</p>
-      <pre>{contentType}</pre>
 
       {
         this.state.response.headers ?

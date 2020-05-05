@@ -56,7 +56,7 @@ export default function reduce(state = null, action) {
       }
 
       // convert to an object, indexed by href
-agenda = Object.fromEntries(agenda.map(item => [item.href, item]))
+      agenda = Object.fromEntries(agenda.map(item => [item.href, item]))
 
       // remove president attachments from the normal flow
       if (first && last) { // && !Minutes.started
@@ -71,12 +71,10 @@ agenda = Object.fromEntries(agenda.map(item => [item.href, item]))
       return agenda;
 
     case Actions.POST_MINUTES:
-      let index = state.findIndex(item => item.attach === action.attach);
+      let item = Object.values(state).find(item => item.attach === action.attach);
 
-      if (index >= 0) {
-        let agenda = [...state];
-        agenda[index] = { ...agenda[index], minutes: action.minutes };
-        return agenda
+      if (item) {
+        return { ...state, [item.href]: { ...agenda[index], minutes: action.minutes }}       
       }
 
       return state;

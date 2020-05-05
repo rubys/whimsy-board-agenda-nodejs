@@ -1,5 +1,4 @@
-// proxy (and cache) requests to the live whimsy server for
-// development purposes.
+// proxy (and cache) requests to JIRA for a list of projects
 
 import https from 'https';
 import * as cache from '../cache.js';
