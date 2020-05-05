@@ -96,17 +96,19 @@ class Header extends React.Component {
                 </button>
 
                 <table className="table-bordered online dropdown-menu">
-                  <tbody>{summary.map((status) => {
+                  <tbody>{summary.map(status => {
                     let text = status.text;
                     if (status.count === 1) text = text.replace(/s$/m, "");
 
+                    let href = status.href || status.item?.href
+
                     return <tr className={status.color} key={text}>
                       <td>
-                        <Link to={status.href}>{status.count}</Link>
+                        <Link to={href}>{status.count}</Link>
                       </td>
 
                       <td>
-                        <Link to={status.href}>{text}</Link>
+                        <Link to={href}>{text}</Link>
                       </td>
                     </tr>
                   })}</tbody>
@@ -170,122 +172,87 @@ class Header extends React.Component {
 
   // summarize the state of the various reports
   summary = () => {
-    let results = [];
     let agenda = this.props.agenda;
 
-    // committee reports
-    let count = 0;
-    let link = null;
+    let tally = {
+      committeeReports: {
+        color: "available",
+        count: 0,
+        text: "committee reports"
+      },
 
-    for (let item in agenda) {
-      if (/^[A-Z]+$/m.test(item.attach)) {
-        count++;
-        link = link || item.href
-      }
-    };
+      specialOrders: {
+        color: "available",
+        count: 0,
+        text: "special orders"
+      },
 
-    results.push({
-      color: "available",
-      count,
-      href: link,
-      text: "committee reports"
-    });
+      discussionItems: {
+        color: "available",
+        count: 0,
+        href: "/Discussion-Items",
+        text: "discussion items"
+      },
 
-    // special orders
-    count = 0;
-    link = null;
+      awaitingPreapprovals: {
+        color: "ready",
+        count: 0,
+        href: "/queue",
+        text: "awaiting preapprovals"
+      },
 
-    for (let item in agenda) {
-      if (/^7[A-Z]+$/m.test(item.attach)) {
-        count++;
-        link = link || item.href
-      }
-    };
+      flaggedReports: {
+        color: "commented",
+        count : 0,
+        href: "/flagged",
+        text: "flagged reports"
+      },
 
-    results.push({
-      color: "available",
-      count,
-      href: link,
-      text: "special orders"
-    });
-
-    // discussion items
-    count = 0;
-    link = null;
-
-    for (let item in agenda) {
-      if (/^8[.A-Z]+$/m.test(item.attach)) {
-        if (item.attach !== "8." || !!item.text) count++;
-        link = link || item.href
-      }
-    };
-
-    results.push({
-      color: "available",
-      count,
-      href: link,
-      text: "discussion items"
-    });
-
-    // awaiting preapprovals
-    count = 0;
-
-    for (let item in agenda) {
-      if (item.color === "ready" && item.title !== "Action Items") count++
-    };
-
-    results.push({
-      color: "ready",
-      count,
-      href: "queue",
-      text: "awaiting preapprovals"
-    });
-
-    // flagged reports
-    count = 0;
-
-    for (let item in agenda) {
-      if (item.flagged_by) count++
-    };
-
-    results.push({
-      color: "commented",
-      count,
-      href: "flagged",
-      text: "flagged reports"
-    });
-
-    // missing reports
-    count = 0;
-
-    for (let item in agenda) {
-      if (item.missing) count++
-    };
-
-    results.push({
-      color: "missing",
-      count,
-      href: "missing",
-      text: "missing reports"
-    });
-
-    // rejected reports
-    count = 0;
-
-    for (let item in agenda) {
-      if (item.rejected) count++
-    };
-
-    if (Minutes.started || count > 0) {
-      results.push({
+      missingReports: {
         color: "missing",
-        count,
-        href: "rejected",
+        count: 0,
+        href: "/missing",
+        text: "missing reports"
+      },
+
+      notAccepted: {
+        color: "missing",
+        count: 0,
+        href: "/rejected",
         text: "not accepted"
-      })
+      }
     };
 
-    return results
+    function add(item, section) {
+      section.count++;
+      if (!section.item || section.item.sortOrder > item.sortOrder) section.item = item
+    }
+
+    for (let item of Object.values(agenda)) {
+      if (/^[A-Z]+$/m.test(item.attach)) {
+        add(item, tally.committeeReports);
+
+      } else if (/^7[A-Z]+$/m.test(item.attach)) {
+        add(item, tally.specialOrders)
+
+      } else if (/^8[A-Z]+$/m.test(item.attach)) {
+        add(item, tally.discussionItems)
+      }
+
+      if ('approved' in item && item.approved.length < 5) {
+        add(item, tally.awaitingPreapprovals)
+      }
+
+      if (item.flagged_by) {
+        add(item, tally.flaggedReports)
+      }
+
+      if (item.missing) {
+        add(item, tally.missingReports)
+      }
+    };
+
+    return Object.values(tally)
   };
 };
 

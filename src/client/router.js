@@ -442,7 +442,8 @@ class Router extends React.Component {
 
       <Route exact path="/Discussion-Items">
         {() => {
-          let item = this.props.agenda.find(item => /^8[.A-Z]/m.test(item.attach));
+          let item = Object.entries(this.props.agenda).find(item => /^8[.A-Z]/m.test(item.attach))
+            || this.props.agenda['/Discussion-Items'];
 
           return main({ view: Report, item })
         }}
