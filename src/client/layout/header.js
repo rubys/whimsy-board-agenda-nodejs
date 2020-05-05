@@ -2,7 +2,6 @@ import Minutes from "../models/minutes.js";
 import Colorize from "../elements/colorize.js";
 import Info from "../elements/info.js";
 import { Link } from "react-router-dom";
-import Pending from "../models/pending.js";
 import PodlingNameSearch from "../elements/pns.js";
 import React from "react";
 import { connect } from 'react-redux';
@@ -17,7 +16,7 @@ function mapStateToProps(state) {
   return {
     agenda: state.agenda,
     clock_counter: state.clock_counter,
-    pending: state.server.pending,
+    pendingCount: state.server.pending.count,
     user: state.server.user,
     offline: state.client.offline,
     forked: state.server.forked
@@ -28,15 +27,7 @@ class Header extends React.Component {
   state = { infodropdown: null };
 
   render() {
-    let { user, offline, forked, pending } = this.props;
-
-    let pendingCount =
-      Object.keys(pending.comments || {}).length +
-      pending.approved?.length || 0 +
-      pending.unapproved?.length || 0 +
-      pending.flagged?.length || 0 +
-      pending.unflagged?.length || 0 +
-      pending.status?.length || 0;
+    let { user, offline, forked, pendingCount } = this.props;
 
     /* eslint-disable jsx-a11y/anchor-is-valid */
     let props = this.props.item || this.props;
