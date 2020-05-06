@@ -101,7 +101,8 @@ class Report extends React.Component {
       this.todo,
       hotlink,
       this.privates,
-      this.jira
+      this.jira,
+      this.cve
     ];
 
     if (this.props.item.title === "Call to order") {
@@ -393,6 +394,17 @@ class Report extends React.Component {
 
     return text
   };
+
+  // hotlink to CVE
+  cve(text) {
+    let cve = /\bCVE-\d{4}-\d{4,}\b/g;
+
+    text = text.replace(cve, (id) => {
+        return `<a href='https://cve.mitre.org/cgi-bin/cvename.cgi?name=${id}'>${id}</a>`
+    });
+
+    return text
+  }
 
   draft(text) {
     return `<div class='private'>${text}</div>`
