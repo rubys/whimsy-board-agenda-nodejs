@@ -29,7 +29,7 @@ entry point is likely going to be different, and will make use of
 
 The current board agenda tool (implemented in Ruby) attacks the text file with
 regular expressions and custom logic.  In the new (Node.js/React.js)
-implementation, The regular expressions would be replaced by a YAML parser.
+implementation, The regular expressions could be replaced by a YAML parser.
 One or more directories would be no problem, we can parse each file and build
 an array of the results.
 
@@ -43,7 +43,7 @@ chair(s) is/are and where to send emails.
 
 The resulting code would be much smaller, and much easier to maintain/extend.
 
-This data would be sent down to the client in JSON format.
+This data would still be sent down to the client in JSON format.
 
 The client would post-process this information.  As an example, client
 *reducers* (slight misnomer here, but that's what Redux calls them) add next and
@@ -149,7 +149,7 @@ a given source file is an indication that the code needs to be updated.
 Components should only depend on `this.props` and `this.state`.
 
 The test
-[test](https://github.com/apache/whimsy/tree/master/www/board/agenda/spec) and
+[suite](https://github.com/apache/whimsy/tree/master/www/board/agenda/spec) and
 [data](https://github.com/apache/whimsy/tree/master/www/board/agenda/test) has
 not been ported over yet.  At the moment, there are only a [few client
 tests](https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/__tests__),
