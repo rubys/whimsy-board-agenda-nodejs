@@ -25,18 +25,59 @@ const committersUrl = 'https://svn.apache.org/repos/private/committers/board';
 
 let repoPath = `${workPath}/repo`;
 
+// new versions of svn support --password-from-stdin, and advertise such
+// when you pass a -v option on help.  Old versions of svn don't support
+// a -v option on help.  Assume --password-from-stdin is supported only
+// if the help command succeed and the option is mentioned in the output. 
+let _stdinPwdOK;
+async function stdinPwdOK() {
+  if (_stdinPwdOK === undefined) {
+    try {
+      let { stdout, stderr } = await exec('svn help checkout -v');
+      _stdinPwdOK = stdout.includes('--password-from-stdin');
+    } catch {
+      _stdinPwdOK = false;
+    }
+  }
+
+  return _stdinPwdOK;
+}
+
 // run an authenticated subversion command
 async function svncmd(request, args) {
   let svn = 'svn';
+  if (typeof args === 'string') args = args.split(' ');
   let { username, password } = credentials(request);
+  let stdin;
 
   if (password) {
-    svn = `${svn} --non-interactive --no-auth-cache ` +
-      shellEscape(['--username', username, '--password', password])
+    if (await stdinPwdOK()) {
+      args.unshift('--username', username, '--password-from-stdin');
+      stdin = password;
+    } else {
+      args.unshift('--username', username, '--password', password);
+    }
+    args.unshift('--non-interactive', '--no-auth-cache');
   };
 
   try {
-    return await exec(`${svn} ${args}`)
+    return await new Promise((resolve, reject) => {
+      let child = child_process.spawn(svn, args);
+      let stderr = '', stdout = '';
+      child.stdout.on('data', data => stdout += data.toString());
+      child.stderr.on('data', data => stderr += data.toString());
+      child.on('close', (code, signal) => {
+        if (code || signal) {
+          let error = new Error(`Command failed: ${svn} ${args.join(' ')}`);
+          Object.assign(error, { code, signal, stdout, stderr });
+          reject(error);
+        } else {
+          resolve({ stdout, stderr });
+        }
+      });
+      if (stdin) child.stdin.write(stdin);
+      child.stdin.end();
+    })
   } catch (error) {
     if (password) error.message = error.message.split(password).join('******')
     throw error;
