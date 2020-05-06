@@ -1,0 +1,78 @@
+INFORMATION ABOUT THE ASF COMMITTEES                         -*-indented-text-*-
+
+=============================================================================
+
+1. APACHE SOFTWARE FOUNDATION COMMITTEES
+
+
+The Apache Software Foundation has the following Project Management
+Committees (PMCs):
+
+    NAME                    CHAIR
+    ----------              ---------------
+    Whimsy                  Sam Ruby <rubys@apache.org>
+
+
+The ASF also has the following Board Committees:
+
+    NAME                      CHAIR
+    ----------                ---------------
+    Legal Affairs             Roman Shaposhnik <rvs@apache.org>
+    Security Team             Mark J. Cox <mjc@apache.org>
+
+
+The ASF also has the following President's Committees:
+
+    NAME                      CHAIR
+    ----------                ---------------
+
+
+The ASF also has the following Executive Officers:
+
+    Office                        Officer
+    ----------                    ---------------
+    Chairman                      Roy T. Fielding <fielding@apache.org>
+
+
+The ASF also has the following additional Officers:
+
+    Office                        Officer
+    ----------                    ---------------
+
+
+=============================================================================
+
+2. REPORTING PROCESS AND SCHEDULE
+
+The assigned quarterly reporting periods are:
+
+January, April, July, October
+-----------------------------
+
+February, May, August, November
+-------------------------------
+
+March, June, September, December
+--------------------------------
+
+Next month
+----------
+
+
+=============================================================================
+
+3. COMMITTEE MEMBERSHIP AND CHANGE PROCESS
+
+* Whimsy  (est. 05/2015)
+    Brett Porter               <brett@apache.org>               [2015-05-20]
+    Craig L Russell            <clr@apache.org>                 [2015-12-14]
+    Jake Farrell               <jfarrell@apache.org>            [2015-05-20]
+    James W. Carman            <jcarman@apache.org>             [2015-05-20]
+    John D. Ament              <johndament@apache.org>          [2017-06-12]
+    Matt Sicker                <mattsicker@apache.org>          [2020-04-12]
+    Ross Gardler               <rgardler@apache.org>            [2015-05-20]
+    Sam Ruby                   <rubys@apache.org>               [2015-05-20]
+    Sebastian Bazley           <sebb@apache.org>                [2015-11-16]
+    Shane Curcuru              <curcuru@apache.org>             [2015-05-20]
+
+=============================================================================

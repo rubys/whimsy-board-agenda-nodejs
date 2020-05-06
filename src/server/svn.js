@@ -132,7 +132,7 @@ class Repository {
   async exist(file, request) {
     await this.update(request);
 
-    return await fsp.stat(this.map(file)).then(() => true).catch(() => false);
+    return await fsp.stat(this.map(file)).then(() => true, () => false);
   }
 
   // get the last modification time for a file

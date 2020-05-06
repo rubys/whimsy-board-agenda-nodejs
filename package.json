@@ -39,7 +39,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development concurrently --kill-others-on-fail yarn:server yarn:client",
-    "test": "react-scripts test",
+    "test": "react-scripts test --detectOpenHandles",
     "client": "react-scripts start",
     "server": "node nodemon.js",
     "start": "react-scripts start",

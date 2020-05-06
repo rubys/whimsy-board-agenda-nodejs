@@ -126,9 +126,9 @@ export default async function (agenda, { request } = {}) {
 
       attrs.prior_reports = `${whimsy}/board/minutes/${name.replace(/\W/g, "_")}`;
 
-      if (text.match(/[<(][-.\w]+@(?:[-\w]+\.)+\w+[>)]/g).some(email => (
-        !email.includes("apache.org")
-      ))) attrs.warnings.push("non apache.org email address found");
+      if (text.match(/[<(][-.\w]+@(?:[-\w]+\.)+\w+[>)]/g)?.some(email => !email.includes("apache.org"))) {
+        attrs.warnings.push("non apache.org email address found");
+      }
 
       if (/chair|project|committee/i.test(fulltitle)) need_chair = true;
 
