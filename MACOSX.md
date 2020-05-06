@@ -50,7 +50,7 @@ Node is a JavaScript runtime for desktops and servers, and can be installed via 
 
     brew install node
 
-Make sure that the version of Node that you are running is a supported version (10, 12, 13, and coming late April 2020, version 14).
+Make sure that the version of Node that you are running is a supported version (12 or later).
 
     node --version
 
