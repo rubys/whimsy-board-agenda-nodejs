@@ -19,6 +19,8 @@ work
 .env.development.local
 .env.test.local
 .env.production.local
+*.iml
+.idea/
 
 npm-debug.log*
 yarn-debug.log*
