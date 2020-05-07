@@ -65,26 +65,26 @@ class PrevLink extends React.Component {
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (options.traversal === "queue") {
-      prefix = "queue/";
+      prefix = "/queue";
 
       while (link && !link.ready_for_review(User.initials)) {
         link = agenda[link.prev]
       };
 
-      link = link || { href: "../queue", title: "Queue" }
-    } else if (options.traversal === "shepherd") {
-      prefix = "shepherd/queue/";
+      link = link || { href: "/queue", title: "Queue" }
+    } else if (options.traversal === "/shepherd") {
+      prefix = "/shepherd/queue";
 
       while (link && link.shepherd !== item.shepherd) {
         link = agenda[link.prev]
       };
 
       link = link || {
-        href: `../${item.shepherd}`,
+        href: `/${item.shepherd}`,
         title: "Shepherd"
       }
     } else if (options.traversal === "flagged") {
-      prefix = "flagged/";
+      prefix = "/flagged";
 
       while (link && link.skippable) {
         if (/^\d[A-Z]/m.test(link.attach)) {
@@ -106,7 +106,7 @@ class PrevLink extends React.Component {
     } else if (meetingDay && /\d/.test(item.attach) && link && /^[A-Z]/m.test(link.attach)) {
       for (let item in agenda) {
         if (!item.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
-          prefix = "flagged/";
+          prefix = "/flagged";
           link = item
         }
       }
@@ -148,11 +148,11 @@ class NextLink extends React.Component {
       };
 
       link = link || {
-        href: `shepherd/${item.shepherd}`,
-        title: "shepherd"
+        href: `/shepherd/${item.shepherd}`,
+        title: "/shepherd"
       }
     } else if (options.traversal === "flagged") {
-      prefix = "flagged/";
+      prefix = "/flagged";
 
       while (link && link.skippable) {
         if (meetingDay && !/^(\d+|[A-Z]+)$/m.test(link.attach)) {
@@ -169,7 +169,7 @@ class NextLink extends React.Component {
         agenda[link] = link.next
       };
 
-      prefix = "flagged/"
+      prefix = "/flagged"
     };
 
     if (link) {
