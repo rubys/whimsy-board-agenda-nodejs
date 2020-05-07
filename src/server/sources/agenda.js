@@ -94,6 +94,9 @@ export async function parse(agenda, request) {
     // parse approved into invididual approvals
     if ('approved' in section) {
       section.approved = section.approved.trim().split(/, ?/);
+      if (section.approved.length === 1 && section.approved[0] === '') {
+        section.approved = []
+      }
     }
 
     if (section.title in flagged_reports) {
