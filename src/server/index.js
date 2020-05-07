@@ -41,8 +41,9 @@ app.use('/', (request, response, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-router(app);
-
-app.listen(port, () => {
-  console.log(`Whimsy board agenda app listening on port ${port}`);
+router(app).then(() => {
+  app.listen(port, () => {
+    console.log(`Whimsy board agenda app listening on port ${port}`);
+  })
 });
+
