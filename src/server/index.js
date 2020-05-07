@@ -41,9 +41,16 @@ app.use('/', (request, response, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-router(app).then(() => {
+(async () => {
+  await router(app);
+
+  if (process.env.NODE_ENV === 'test') {
+    const svn = await import('./svn.js');
+    await svn.demoMode();
+  }
+
   app.listen(port, () => {
     console.log(`Whimsy board agenda app listening on port ${port}`);
   })
-});
+})();
 

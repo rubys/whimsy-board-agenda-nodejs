@@ -42,7 +42,7 @@ ReactDOM.render(
     })
   });
 
-  if (base === '/' && server.env === 'development') {
+  if (base === '/') {
     // emulate the server side redirect to the latest agenda
     let latest = [...server.agendas].sort().pop();
     let date = latest.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-");

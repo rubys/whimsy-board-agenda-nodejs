@@ -221,7 +221,7 @@ class Repository {
   }
 }
 
-export const Board = new Repository({ dir: boardDir, url: boardUrl, depth: 'files' });
+export let Board = new Repository({ dir: boardDir, url: boardUrl, depth: 'files' });
 
 // return a list of agendas
 Board.agendas = async function (request) {
@@ -245,7 +245,7 @@ Minutes.map = function (file) {
   return `${Minutes.dir}/${year}/${file}`
 }
 
-export const Committers = new Repository({ dir: committersDir, url: committersUrl });
+export let Committers = new Repository({ dir: committersDir, url: committersUrl });
 
 export async function forked() {
   return await fsp.access(repoPath).then(() => true, () => false);
@@ -273,4 +273,12 @@ export async function reset() {
   })
 
   broadcast(Actions.setForked(false));
+}
+
+export async function demoMode() {
+  let mock = await import(`${__dirname}/__mocks__/svn.js`);
+  mock.Board.agendas = Board.agendas;
+  mock.Board.draftMinutes = Board.draftMinutes;
+  Board = mock.Board;
+  Committers = mock.Committers;
 }

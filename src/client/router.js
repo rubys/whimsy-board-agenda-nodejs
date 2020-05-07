@@ -174,7 +174,6 @@ class Router extends React.Component {
   // buttons and forms to show with this report
   buttons(item) {
     let list = [];
-    console.log(item)
 
     if (!(!/^\d+$/m.test(item.attach) && item.comments === undefined) && !Minutes.complete) {
       // some reports don't have comments

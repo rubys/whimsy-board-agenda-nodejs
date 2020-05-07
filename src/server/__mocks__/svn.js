@@ -4,8 +4,6 @@
 
 import { promises as fsp } from 'fs';
 
-const actual = jest.requireActual('../svn.js');
-
 class Repository {
   dir = null;
   updates = {};
@@ -16,6 +14,9 @@ class Repository {
 
   map(file) {
     return `${this.dir}/${file}`
+  }
+
+  async update() {
   }
 
   // check if a file exists in the working copy
