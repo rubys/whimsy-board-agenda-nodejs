@@ -82,11 +82,22 @@ export async function parse(agenda, request) {
   // convert back to an array
   items = Array.from(sections.values());
 
+  // extract flagged reports
+  let flagged_reports = Object.fromEntries(
+    Array.from(
+      agenda.match(/ \d\. Committee Reports.*?\n\s+A\./sm)?.[0]
+        ?.matchAll(/# (.*?) \[(.*)\]/g),
+      s => s.slice(1)));
+
   // cleanup
   for (let section of items) {
     // parse approved into invididual approvals
     if ('approved' in section) {
       section.approved = section.approved.trim().split(/, ?/);
+    }
+
+    if (section.title in flagged_reports) {
+      section.flagged_by = flagged_reports[section.title].split(/, */)
     }
 
     // unindent text or report
