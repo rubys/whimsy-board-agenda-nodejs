@@ -46,7 +46,7 @@ export default async function (request) {
     break;
 
   case "unflag":
-    index = lagged.indexOf(attach);
+    index = flagged.indexOf(attach);
     if (index >= 0) flagged.splice(index, 1);
 
     if (!unflagged.includes(attach) && !!agenda.find(item => (

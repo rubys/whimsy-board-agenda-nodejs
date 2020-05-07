@@ -62,7 +62,7 @@ export default async function router(app) {
           response.json(content);
         } else {
           response.setHeader('content-type', 'application/json');
-          response.send(content.toString);
+          response.send(content.toString());
         }
       } catch (error) {
         next(error)

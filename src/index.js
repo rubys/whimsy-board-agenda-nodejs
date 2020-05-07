@@ -51,9 +51,7 @@ ReactDOM.render(
     // fetch and store agenda information
     JSONStorage.fetch(`${base.slice(1, -1)}.json`, (error, agenda) => {
       if (!error && agenda) {
-        let date = new Date(agenda[0].timestamp).toISOString().slice(0, 10);
         store.dispatch(Actions.postAgenda(agenda));
-        store.dispatch(Actions.meetingDate(date));
       }
     })
   }
