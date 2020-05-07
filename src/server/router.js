@@ -88,7 +88,8 @@ export default async function router(app) {
           response.send(content.toString());
         }
       } catch (error) {
-      next(error)
-    }
-  })
+        next(error)
+      }
+    })
+  }
 }
