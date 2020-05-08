@@ -243,7 +243,7 @@ class Header extends React.Component {
         add(item, tally.awaitingPreapprovals)
       }
 
-      if (item.flagged_by) {
+      if (item.status.flagged_by) {
         add(item, tally.flaggedReports)
       }
 
