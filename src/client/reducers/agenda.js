@@ -39,6 +39,10 @@ export default function reduce(state = null, action) {
             }
           }
         }
+
+        if (item.approved?.length > 5) {
+          item.skippable = !item.flagged_by?.length
+        }
       });
 
       // remove president attachments from the normal flow
@@ -74,7 +78,7 @@ export default function reduce(state = null, action) {
       let item = Object.values(state).find(item => item.attach === action.attach);
 
       if (item) {
-        return { ...state, [item.href]: { ...item, minutes: action.minutes }}       
+        return { ...state, [item.href]: { ...item, minutes: action.minutes } }
       }
 
       return state;
