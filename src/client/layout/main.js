@@ -1,8 +1,6 @@
-import Agenda from "../models/agenda.js";
 import Footer from "./footer.js";
 import Header from "./header.js";
 import React from "react";
-import { Server } from "../utils.js";
 import { jQuery } from "jquery";
 import logo from "../react-logo.svg";
 import "../App.css";
@@ -48,7 +46,7 @@ class Main extends React.Component {
         if (button.form) {
           return React.createElement(
             button.form,
-            { item: this.props.item, server: Server, key: button.text, button }
+            { item: this.props.item, key: button.text, button }
           )
         } else {
           return null
@@ -71,9 +69,6 @@ class Main extends React.Component {
 
   // additional client side initialization
   componentDidMount() {
-    // export navigate and refresh methods as well as view
-    Main.item = Agenda;
-
     // whenever the window is resized, adjust margins of the main area to
     // avoid overlapping the header and footer areas
     window.onresize = () => {
