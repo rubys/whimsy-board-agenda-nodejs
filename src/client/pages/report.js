@@ -51,7 +51,7 @@ class Report extends React.Component {
         <pre className="report">{
           text
             ? <Text raw={text} filters={this.filters} />
-            : item.missing ? <>
+            : item.status.missing ? <>
               {draftReport ? <>
                 <p>
                   <em>Unposted draft being prepared at </em>

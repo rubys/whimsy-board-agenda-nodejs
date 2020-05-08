@@ -48,10 +48,11 @@ export default function reduce(state = null, action) {
           }
         }
 
-        let { flagged_by, approved } = item;
+        let { flagged_by, approved, missing } = item;
         delete item.flagged_by;
         delete item.approved;
-        item.status = status(state?.[item.href], { flagged_by, approved })
+        delete item.missing;
+        item.status = status(state?.[item.href], { flagged_by, approved, missing });
       });
 
       // remove president attachments from the normal flow
