@@ -1,6 +1,7 @@
 import Agenda from '../models/agenda.js';
 import * as Actions from '../../actions.js';
 import { splitComments } from "../utils.js";
+import deepEqual from 'deep-equal';
 
 export default function reduce(state = null, action) {
   switch (action.type) {
@@ -44,6 +45,11 @@ export default function reduce(state = null, action) {
         if (item.approved?.length > 5) {
           item.skippable = !item.flagged_by?.length
         }
+
+        let { flagged_by, approved } = item;
+        delete item.flagged_by;
+        delete item.approved;
+        item.status = status(state?.[item.href], { flagged_by, approved })
       });
 
       // remove president attachments from the normal flow
@@ -87,4 +93,26 @@ export default function reduce(state = null, action) {
     default:
       return state
   }
+}
+
+function status(originalState, updates) {
+  let state = originalState || {};
+
+  for (let [prop, value] of Object.entries(updates)) {
+    if (value) {
+      if (!deepEqual(state[prop], value)) state = { ...state, [prop]: value };
+    } else {
+      if (state[prop]) {
+        state = { ...state };
+        delete state[prop];
+      }
+    }
+  }
+
+  if (state !== originalState) {
+    // items are skippable if they are preapproved and not flagged  
+    state.skippable = (state.approved?.length > 5) && !state.flagged_by?.length
+  }
+
+  return state;
 }

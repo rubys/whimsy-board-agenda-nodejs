@@ -47,9 +47,9 @@ function Colorize({ item, minutes, pending, drafts, children }) {
   // determine if this item is flagged, accounting for pending actions
   function flagged() {
     if (pending.flagged?.includes(item.attach)) return true;
-    if (!item.flagged_by) return false;
+    if (!item.status.flagged_by) return false;
 
-    if (item.flagged_by.length === 1 && item.flagged_by[0] === pending.initials && pending.unflagged?.includes(item.attach)) {
+    if (item.status.flagged_by.length === 1 && item.status.flagged_by[0] === pending.initials && pending.unflagged?.includes(item.attach)) {
       return false
     };
 
