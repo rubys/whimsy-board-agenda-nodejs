@@ -117,7 +117,7 @@ class PrevLink extends React.Component {
       if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "/";
       
       return <Colorize item={link}>
-        {(!prefix && link.href.startsWith('../'))
+        {(prefix === '/' && link.href.startsWith('../'))
           ? <a className={"navbar-brand backlink"} rel="prev" href={link.href}>{link.title}</a>
           : <Link className={"navbar-brand backlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
@@ -179,7 +179,7 @@ class NextLink extends React.Component {
       if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "/";
 
       return <Colorize item={link}>
-        {(!prefix && link.href.startsWith('../'))
+        {(prefix === '/' && link.href.startsWith('../'))
           ? <a className={"navbar-brand nextlink"} rel="next" href={link.href}>{link.title}</a>
           : <Link className={"navbar-brand nextlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
         }
