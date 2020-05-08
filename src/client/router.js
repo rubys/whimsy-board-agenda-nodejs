@@ -328,19 +328,19 @@ class Router extends React.Component {
 
       <Route path="/flagged/:path">
         {({ match: { params: { path } } }) => (
-          main(this.find(path), { traversal: "flagged" })
+          main({ view: Report, item: this.find(path), traversal: "flagged" })
         )}
       </Route>
 
       <Route path="/queue/:path">
         {({ match: { params: { path } } }) => (
-          main(this.find(path), { traversal: "queue" })
+          main({ view: Report, item: this.find(path), traversal: "queue" })
         )}
       </Route>
 
       <Route path="/shepherd/queue/:path">
         {({ match: { params: { path } } }) => (
-          main(this.find(path), { traversal: "shepherd" })
+          main({ view: Report, item: this.find(path), traversal: "shepherd" })
         )}
       </Route>
 
