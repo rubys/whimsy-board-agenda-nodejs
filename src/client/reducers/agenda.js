@@ -149,8 +149,20 @@ function status(originalState, updates) {
   }
 
   if (state !== originalState) {
+    // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
+    state.flagged =
+      state.pending?.flagged ||
+      state.flagged_by?.length > 1 ||
+      state.flagged_by?.length === 1 && (state.flagged_by[0] !== user.initials || !state.pending?.unflagged);
+
+    // items are approved if number of approvals is > 5 after accounting for pending approvals and unapprovals
+    let approvedByMe = state.approved?.includes(user.initials);
+    state.approved = state.approved?.length
+      + (!approvedByMe && state.pending?.approve ? +1 : 0)
+      + (approvedByMe && state.pending?.unapprove ? -1 : 0) > 5
+
     // items are skippable if they are preapproved and not flagged  
-    state.skippable = (state.approved?.length > 5) && !state.flagged_by?.length
+    state.skippable = state.approved && !state.flagged
   }
 
   return state;
