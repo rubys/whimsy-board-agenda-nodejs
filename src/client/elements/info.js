@@ -24,12 +24,12 @@ class Info extends React.Component {
         <dd className="col-sm-9">{this.props.item.shepherd ? <Link to={`shepherd/${this.props.item.shepherd.split(" ")[0]}`}>{this.props.item.shepherd}</Link> : null}</dd>
       </> : null}
 
-      {this.props.item.flagged_by && this.props.item.flagged_by.length !== 0 ? <>
+      {this.props.item.status.flagged_by && this.props.item.status.flagged_by.length !== 0 ? <>
         <dt className="col-sm-3">Flagged By</dt>
-        <dd className="col-sm-9">{this.props.item.flagged_by.join(", ")}</dd>
+        <dd className="col-sm-9">{this.props.item.status.flagged_by.join(", ")}</dd>
       </> : null}
 
-      {this.props.item.approved && this.props.item.approved.length !== 0 ? <>
+      {this.props.item.status.approved && this.props.item.status.approved.length !== 0 ? <>
         <dt className="col-sm-3">Approved By</dt>
         <dd className="col-sm-9">{this.props.item.approved.join(", ")}</dd>
       </> : null}
