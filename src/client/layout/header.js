@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 function mapStateToProps(state) {
   return {
     agenda: state.agenda,
-    clock_counter: state.clock_counter,
+    clockCounter: state.clockCounter,
     pendingCount: state.server.pending.count,
     user: state.server.user,
     offline: state.client.offline,
@@ -49,7 +49,7 @@ class Header extends React.Component {
           ? <PodlingNameSearch item={props} />
           : null}
 
-        {this.props.clock_counter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
+        {this.props.clockCounter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
 
         <ul className="nav nav-pills navbar-right">
           {forked ? <li>
