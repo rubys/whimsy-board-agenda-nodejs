@@ -40,6 +40,7 @@ export default function reduce(state = null, action) {
           }
         }
 
+        // items are skippable if they are preapproved and not flagged        
         if (item.approved?.length > 5) {
           item.skippable = !item.flagged_by?.length
         }

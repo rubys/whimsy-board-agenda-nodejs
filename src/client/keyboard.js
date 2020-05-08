@@ -23,25 +23,28 @@ class Keyboard {
         "textarea"
       ].includes(document.activeElement.tagName.toLowerCase())) return;
 
-      if (event.keyCode === 37) {
+      if (event.keyCode === 37) { // left arrow
         let link = document.querySelector("a[rel=prev]");
 
         if (link) {
           link.click();
           return false
         }
-      } else if (event.keyCode === 39) {
+
+      } else if (event.keyCode === 39) { // right arrow
         let link = document.querySelector("a[rel=next]");
 
         if (link) {
           link.click();
           return false
         }
-      } else if (event.keyCode === 13) {
+
+      } else if (event.keyCode === 13) { // enter
         let link = document.querySelector(".default");
         if (link) navigate(link.getAttribute("href"));
         return false
-      } else if (event.keyCode === 67) {
+
+      } else if (event.keyCode === 67) { // C
         let link = document.getElementById("comments");
 
         if (link) {
@@ -51,20 +54,25 @@ class Keyboard {
         };
 
         return false
-      } else if (event.keyCode === 73) {
+
+      } else if (event.keyCode === 73) { // I
         let info = document.getElementById("info");
         if (info) info.click();
         return false
-      } else if (event.keyCode === 77) {
+
+      } else if (event.keyCode === 77) { // M
         navigate("/missing");
         return false
-      } else if (event.keyCode === 78) {
+
+      } else if (event.keyCode === 78) { // N
         document.getElementById("nav").click();
         return false
-      } else if (event.keyCode === 65) {
+
+      } else if (event.keyCode === 65) { // A
         navigate("/");
         return false
-      } else if (event.keyCode === 83) {
+
+      } else if (event.keyCode === 83) { // S
         if (event.shiftKey) {
           User.role = "secretary";
         } else {
@@ -73,7 +81,8 @@ class Keyboard {
         };
 
         return false
-      } else if (event.keyCode === 88) {
+
+      } else if (event.keyCode === 88) { // X
         if (Main.item.attach && Minutes.started && !Minutes.complete) {
           Chat.changeTopic({
             user: User.userid,
@@ -83,19 +92,24 @@ class Keyboard {
 
           return false
         }
-      } else if (event.keyCode === 81) {
+
+      } else if (event.keyCode === 81) { // Q
         navigate("/queue");
         return false
-      } else if (event.keyCode === 70) {
+
+      } else if (event.keyCode === 70) { // F
         navigate("/flagged");
         return false
-      } else if (event.keyCode === 66) {
+
+      } else if (event.keyCode === 66) { // 8
         navigate("/backchannel");
         return false
-      } else if (event.shiftKey && event.keyCode === 191) {
+
+      } else if (event.shiftKey && event.keyCode === 191) { // ?
         navigate("/help");
         return false
-      } else if (event.keyCode === 82) {
+
+      } else if (event.keyCode === 82) { // R
         Store.dispatch(Actions.clockIncrement());
 
         post("refresh", {agenda: Agenda.file}, (response) => {
@@ -104,7 +118,8 @@ class Keyboard {
         });
 
         return false
-      } else if (event.keyCode === 61 || event.keyCode === 187) {
+
+      } else if (event.keyCode === 61 || event.keyCode === 187) { // =
         if (event.shiftKey) {
           navigate("/cache/");
         } else {
