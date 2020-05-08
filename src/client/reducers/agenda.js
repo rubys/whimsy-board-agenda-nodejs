@@ -114,7 +114,7 @@ export default function reduce(state = null, action) {
       }
 
       for (let item of Object.values(state)) {
-        let newStatus = status(item.status, { pending: attachments[item.attach] });
+        let newStatus = status(item, { pending: attachments[item.attach] });
         if (item.status !== newStatus) state = { ...state, [item.href]: { ...item, status: newStatus } }
       }
 
@@ -134,8 +134,8 @@ export default function reduce(state = null, action) {
   }
 }
 
-function status(originalState, updates) {
-  let state = originalState?.status || {};
+function status(item, updates) {
+  let state = item?.status || {};
 
   for (let [prop, value] of Object.entries(updates)) {
     if (value) {
@@ -148,7 +148,7 @@ function status(originalState, updates) {
     }
   }
 
-  if (state !== originalState) {
+  if (state !== item?.status) {
     // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
     state.flagged =
       state.pending?.flagged ||
@@ -156,8 +156,8 @@ function status(originalState, updates) {
       state.flagged_by?.length === 1 && (state.flagged_by[0] !== user.initials || !state.pending?.unflagged);
 
     // items are approved if number of approvals is > 5 after accounting for pending approvals and unapprovals
-    let approvedByMe = state.approved?.includes(user.initials);
-    state.approved = state.approved?.length
+    let approvedByMe = state.approved_by?.includes(user.initials);
+    state.approved = state.approved_by?.length
       + (!approvedByMe && state.pending?.approve ? +1 : 0)
       + (approvedByMe && state.pending?.unapprove ? -1 : 0) > 5
 
