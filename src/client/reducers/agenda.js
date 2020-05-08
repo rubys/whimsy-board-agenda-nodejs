@@ -18,7 +18,7 @@ export default function reduce(state = null, action) {
         item.sortOrder = index;
 
         // compute href
-        item.href = '/' + item.title.replace(/[^a-zA-Z0-9]+/g, "-");
+        item.href = item.title.replace(/[^a-zA-Z0-9]+/g, "-");
 
         // set up next and prev links
         item.prev = prev?.href;
@@ -95,7 +95,7 @@ function status(originalState, updates) {
 
   for (let [prop, value] of Object.entries(updates)) {
     if (value) {
-      if (state[prop] != value && !deepEqual(state[prop], value)) state = { ...state, [prop]: value };
+      if (state[prop] !== value && !deepEqual(state[prop], value)) state = { ...state, [prop]: value };
     } else {
       if (state[prop]) {
         state = { ...state };

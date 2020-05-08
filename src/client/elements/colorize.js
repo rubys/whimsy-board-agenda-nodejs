@@ -12,7 +12,7 @@ function Colorize({ item, minutes, pending, drafts, children }) {
   let color = (() => {
     if (!item?.attach) {
       return "blank"
-    } if (flagged()) {
+    } else if (flagged()) {
       return "commented"
     } else if (item.color) {
       return item.color
@@ -47,7 +47,7 @@ function Colorize({ item, minutes, pending, drafts, children }) {
   // determine if this item is flagged, accounting for pending actions
   function flagged() {
     if (pending.flagged?.includes(item.attach)) return true;
-    if (!item.status.flagged_by) return false;
+    if (!item.status?.flagged_by) return false;
 
     if (item.status.flagged_by.length === 1 && item.status.flagged_by[0] === pending.initials && pending.unflagged?.includes(item.attach)) {
       return false

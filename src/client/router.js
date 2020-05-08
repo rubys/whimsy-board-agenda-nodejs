@@ -465,7 +465,7 @@ class Router extends React.Component {
 
   // find an agenda item that matches the path
   find = (path) => {
-    return this.props.agenda['/' + path];
+    return this.props.agenda[path];
   }
 
   componentDidMount() {

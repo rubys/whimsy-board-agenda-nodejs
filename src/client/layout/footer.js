@@ -62,11 +62,11 @@ class PrevLink extends React.Component {
 
     let link = item?.prev;
     if (link && !link.title) link = agenda[link];
-    let prefix = "";
+    let prefix = "/";
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (traversal === "queue") {
-      prefix = "/queue";
+      prefix = "/queue/";
 
       while (link && !link.ready_for_review(User.initials)) {
         link = agenda[link.prev]
@@ -74,7 +74,7 @@ class PrevLink extends React.Component {
 
       link = link || { href: "/queue", title: "Queue" }
     } else if (traversal === "shepherd") {
-      prefix = "/shepherd/queue";
+      prefix = "/shepherd/queue/";
 
       while (link && link.shepherd !== item.shepherd) {
         link = agenda[link.prev]
@@ -85,11 +85,11 @@ class PrevLink extends React.Component {
         title: "Shepherd"
       }
     } else if (traversal === "flagged") {
-      prefix = "/flagged";
+      prefix = "/flagged/";
 
       while (link && link.status.skippable) {
         if (/^\d[A-Z]/m.test(link.attach)) {
-          prefix = "";
+          prefix = "/";
           break
         } else {
           link = agenda[link.prev]
@@ -99,22 +99,22 @@ class PrevLink extends React.Component {
       if (!link) {
         if (meetingDay) {
           link = Agenda.index.find(item => item.next && /^\d+$/m.test(item.next.attach));
-          prefix = ""
+          prefix = "/"
         };
 
         link = link || { href: "flagged", title: "Flagged" }
       }
     } else if (meetingDay && /\d/.test(item.attach) && link && /^[A-Z]/m.test(link.attach)) {
       for (let item in agenda) {
-        if (!item.status.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
-          prefix = "/flagged";
+        if (!item.status?.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
+          prefix = "/flagged/";
           link = item
         }
       }
     };
 
     if (link) {
-      if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "";
+      if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "/";
       
       return <Colorize item={link}>
         {(!prefix && link.href.startsWith('../'))
@@ -136,7 +136,7 @@ class NextLink extends React.Component {
 
     let link = item?.next;
     if (link && !link.title) link = agenda[link];
-    let prefix = '';
+    let prefix = '/';
     let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (traversal === "queue") {
@@ -155,11 +155,11 @@ class NextLink extends React.Component {
         title: "/shepherd"
       }
     } else if (traversal === "flagged") {
-      prefix = "/flagged";
+      prefix = "/flagged/";
 
       while (link && link.status.skippable) {
         if (meetingDay && !/^(\d+|[A-Z]+)$/m.test(link.attach)) {
-          prefix = "";
+          prefix = "/";
           break
         } else {
           link = agenda[link.next]
@@ -172,11 +172,11 @@ class NextLink extends React.Component {
         link = agenda[link.next]
       };
 
-      prefix = "/flagged"
+      prefix = "/flagged/"
     };
 
     if (link) {
-      if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "";
+      if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "/";
 
       return <Colorize item={link}>
         {(!prefix && link.href.startsWith('../'))

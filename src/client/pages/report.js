@@ -13,7 +13,7 @@ import { hotlink, Flow, escapeRegExp } from "../utils.js";
 import { connect } from 'react-redux';
 
 function mapStateToProps(state, props) {
-  let title = props.item.title;
+  let title = props.item?.title;
   return {
     draftReport: state.reporter?.[title],
     draftMinutes: state.server.drafts
@@ -37,6 +37,7 @@ class Report extends React.Component {
     let { draftReport } = this.props;
 
     let item = this.props.item;
+    if (!item) return <p>Not Found</p>;
     let text = item.text || item.report;
 
     return <section className="flexbox">
