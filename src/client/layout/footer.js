@@ -113,6 +113,8 @@ class PrevLink extends React.Component {
     };
 
     if (link) {
+      if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "";
+      
       return <Colorize item={link}>
         {(!prefix && link.href.startsWith('../'))
           ? <a className={"navbar-brand backlink"} rel="prev" href={link.href}>{link.title}</a>
@@ -144,7 +146,7 @@ class NextLink extends React.Component {
       link = link || { href: "queue", title: "Queue" }
     } else if (options.traversal === "shepherd") {
       while (link && link.shepherd !== item.shepherd) {
-        agenda[link] = link.next
+        link = agenda[link.next]
       };
 
       link = link || {
@@ -159,20 +161,22 @@ class NextLink extends React.Component {
           prefix = "";
           break
         } else {
-          agenda[link] = link.next
+          link = agenda[link.next]
         }
       };
 
       link = link || { href: "flagged", title: "Flagged" }
     } else if (meetingDay && link && /^\d[A-Z]/m.test(item.attach) && /^\d/m.test(link.attach)) {
       while (link && link.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
-        agenda[link] = link.next
+        link = agenda[link.next]
       };
 
       prefix = "/flagged"
     };
 
     if (link) {
+      if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "";
+
       return <Colorize item={link}>
         {(!prefix && link.href.startsWith('../'))
           ? <a className={"navbar-brand nextlink"} rel="next" href={link.href}>{link.title}</a>
