@@ -3,6 +3,13 @@ import * as Actions from '../../actions.js';
 import { splitComments } from "../utils.js";
 import deepEqual from 'deep-equal';
 
+// pending updates which have not yet been applied as they came in
+// before an agenda was present.
+let pending_pending = null;
+
+// user information
+let user = {};
+
 export default function reduce(state = null, action) {
   switch (action.type) {
     case Actions.POST_AGENDA:
@@ -74,7 +81,43 @@ export default function reduce(state = null, action) {
         first.prev = pres
       }
 
+      if (pending_pending) {
+        state = reduce(state, Actions.postPending(pending_pending));
+        pending_pending = null;
+      }
+
       return agenda;
+
+    case Actions.POST_SERVER:
+    case Actions.POST_PENDING:
+      let pending = action.pending || action.server.pending;
+
+      if (action.server?.user) user = action.server.user;
+
+      if (!state) {
+        pending_pending = pending
+        return state;
+      }
+
+      let attachments = {};
+
+      for (let [attachment, comments] of Object.entries(pending.comments)) {
+        attachments[attachment].comments = comments;
+      }
+
+      for (let prop of ['approved', 'unapproved', 'flagged', 'unflagged']) {
+        for (let attachment of pending[prop]) {
+          if (!attachments[attachment]) attachments[attachment] = {};
+          attachments[attachment][prop] = true;
+        }
+      }
+
+      for (let item of Object.values(state)) {
+        let newStatus = status(item.status, { pending: attachments[item.attach] });
+        if (item.status !== newStatus) state = { ...state, [item.href]: { ...item, status: newStatus } }
+      }
+
+      return state;
 
     case Actions.POST_MINUTES:
       let item = Object.values(state).find(item => item.attach === action.attach);
@@ -91,7 +134,7 @@ export default function reduce(state = null, action) {
 }
 
 function status(originalState, updates) {
-  let state = originalState || {};
+  let state = originalState?.status || {};
 
   for (let [prop, value] of Object.entries(updates)) {
     if (value) {
