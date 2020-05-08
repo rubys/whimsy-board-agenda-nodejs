@@ -87,7 +87,7 @@ class PrevLink extends React.Component {
     } else if (traversal === "flagged") {
       prefix = "/flagged";
 
-      while (link && link.skippable) {
+      while (link && link.status.skippable) {
         if (/^\d[A-Z]/m.test(link.attach)) {
           prefix = "";
           break
@@ -106,7 +106,7 @@ class PrevLink extends React.Component {
       }
     } else if (meetingDay && /\d/.test(item.attach) && link && /^[A-Z]/m.test(link.attach)) {
       for (let item in agenda) {
-        if (!item.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
+        if (!item.status.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
           prefix = "/flagged";
           link = item
         }
@@ -157,7 +157,7 @@ class NextLink extends React.Component {
     } else if (traversal === "flagged") {
       prefix = "/flagged";
 
-      while (link && link.skippable) {
+      while (link && link.status.skippable) {
         if (meetingDay && !/^(\d+|[A-Z]+)$/m.test(link.attach)) {
           prefix = "";
           break
@@ -168,7 +168,7 @@ class NextLink extends React.Component {
 
       link = link || { href: "flagged", title: "Flagged" }
     } else if (meetingDay && link && /^\d[A-Z]/m.test(item.attach) && /^\d/m.test(link.attach)) {
-      while (link && link.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
+      while (link && link.status.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
         link = agenda[link.next]
       };
 

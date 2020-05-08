@@ -41,11 +41,6 @@ export default function reduce(state = null, action) {
           }
         }
 
-        // items are skippable if they are preapproved and not flagged        
-        if (item.approved?.length > 5) {
-          item.skippable = !item.flagged_by?.length
-        }
-
         let { flagged_by, approved } = item;
         delete item.flagged_by;
         delete item.approved;
@@ -100,7 +95,7 @@ function status(originalState, updates) {
 
   for (let [prop, value] of Object.entries(updates)) {
     if (value) {
-      if (!deepEqual(state[prop], value)) state = { ...state, [prop]: value };
+      if (state[prop] != value && !deepEqual(state[prop], value)) state = { ...state, [prop]: value };
     } else {
       if (state[prop]) {
         state = { ...state };
