@@ -13,7 +13,7 @@ import { hotlink } from "../utils.js";
 //
 class Backchannel extends React.Component {
   // place a message input field in the buttons area
-  static buttons() {
+  static get buttons() {
     return [{ button: Message }]
   };
 

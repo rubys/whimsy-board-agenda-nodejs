@@ -2,17 +2,17 @@ import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import React from "react";
 import { retrieve, post } from "../utils.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 
 //
 // Send initial and final reminders.  Note that this is a form (with an
 // associated button) as well as a second button.
 //
 export class InitialReminder extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "send initial reminders",
-      class: "btn_primary",
+      className: "btn-primary",
       disabled: true,
       data_toggle: "modal",
       data_target: "#reminder-form"
@@ -22,7 +22,7 @@ export class InitialReminder extends React.Component {
   state = {disabled: true, subject: "", message: ""};
 
   // fetch email template
-  loadText(event) {
+  loadText = (event) => {
     let reminder;
 
     if (event.target.textContent.includes("non-responsive")) {
@@ -66,14 +66,14 @@ export class InitialReminder extends React.Component {
       <h4>Email message</h4>
       <input id="email-subject" value={this.state.subject} disabled={this.state.disabled} label="subject" placeholder="loading..."/>
       <textarea id="email-text" value={this.state.message} rows={12} disabled={this.state.disabled} label="body" placeholder="loading..."/>
-      <button className="btn-default" data_dismiss="modal">Close</button>
+      <button className="btn-default" data-dismiss="modal">Close</button>
       <button className="btn-info" onClick={this.click} disabled={this.state.disabled}>Dry Run</button>
       <button className="btn-primary" onClick={this.click} disabled={this.state.disabled}>Submit</button>
     </ModalDialog>
   };
 
   // on click, disable the input fields and buttons and submit
-  click(event) {
+  click = (event) => {
     event.target.disabled = true;
     this.setState({disabled: true});
     let dryrun = event.target.textContent === "Dry Run";

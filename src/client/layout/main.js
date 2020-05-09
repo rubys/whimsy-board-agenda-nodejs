@@ -1,7 +1,7 @@
 import Footer from "./footer.js";
 import Header from "./header.js";
 import React from "react";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import logo from "../react-logo.svg";
 import "../App.css";
 

@@ -93,7 +93,7 @@ function preload(cache, base, text, toolate) {
 };
 
 // fetch from cache with a network fallback
-function fetch_from_cache(event) {
+function fetch_from_cache = (event) => {
   return caches.open("board/agenda").then(cache => (
     cache.match(event.request).then(response => (
       response || fetch(event.request).then((response) => {
@@ -107,7 +107,7 @@ function fetch_from_cache(event) {
 // Return latest bootstrap page from the cache; then update the bootstrap
 // from the server.  If the body has changed, broadcast that information to
 // all the browser window clients.
-function latest(event) {
+function latest = (event) => {
   return new Promise((fulfill, reject) => (
     caches.open("board/agenda").then(cache => (
       cache.matchAll().then((responses) => {

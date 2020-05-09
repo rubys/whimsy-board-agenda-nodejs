@@ -69,7 +69,7 @@ class Help extends React.Component {
     </>
   };
 
-  setRole(event) {
+  setRole = (event) => {
     User.role = event.target.value;
   }
 };

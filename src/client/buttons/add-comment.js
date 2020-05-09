@@ -3,7 +3,7 @@ import ModalDialog from "../elements/modal-dialog.js";
 import Pending from "../models/pending.js";
 import React from "react";
 import User from "../models/user.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
@@ -23,10 +23,10 @@ function mapStateToProps(state) {
 // form is dismissed.
 //
 class AddComment extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "add comment",
-      class: "btn_primary",
+      className: "btn-primary",
       data_toggle: "modal",
       data_target: "#comment-form"
     }
@@ -47,13 +47,13 @@ class AddComment extends React.Component {
       <textarea id="comment-text" value={this.state.comment} label="Comment" placeholder="comment" rows={5} disabled={this.state.disabled} />
       {User.role === "director" && /^([A-Z]+|[0-9]+)$/m.test(this.props.item.attach) ? <input id="flag" type="checkbox" label="item requires discussion or follow up" onClick={this.flag} checked={this.state.checked} /> : null}
 
-      <button className="btn-default" data_dismiss="modal" disabled={this.state.disabled}>Cancel</button>
+      <button className="btn-default" data-dismiss="modal" disabled={this.state.disabled}>Cancel</button>
       {this.state.comment ? <button className="btn-warning" onClick={this.delete} disabled={this.state.disabled}>Delete</button> : null}
       <button className="btn-primary" onClick={this.save} disabled={this.state.disabled || this.state.comment === this.state.base}>Save</button>
     </ModalDialog>
   };
 
-  mounted() {
+  componentDidMount() {
     // update comment text to match current item
     jQuery("#comment-form").on("show.bs.modal", () => (
       this.setState({
@@ -63,19 +63,18 @@ class AddComment extends React.Component {
     ));
 
     // autofocus on comment text
-    jQuery("#comment-form").on(
-      "shown.bs.modal",
-      () => document.getElementById("comment-text").focus()
-    )
+    jQuery("#comment-form").on("shown.bs.modal", () => {
+      document.getElementById("comment-text").focus()
+    })
   };
 
   // when delete button is pushed, clear the comment
-  delete(event) {
+  delete = (event) => {
     this.setState({ comment: "" })
   };
 
   // when save button is pushed, post comment and dismiss modal when complete
-  save(event) {
+  save = (event) => {
     let data = {
       agenda: Agenda.file,
       attach: this.props.item.attach,
@@ -93,7 +92,7 @@ class AddComment extends React.Component {
     })
   };
 
-  flag(event) {
+  flag = (event) => {
     this.setState({ checked: !this.state.checked });
 
     let data = {

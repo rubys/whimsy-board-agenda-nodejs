@@ -15,7 +15,7 @@ class ShowSeen extends React.Component {
     this.changeLabel()
   };
 
-  click(event) {
+  click = (event) => {
     Main.view.toggleseen();
     this.changeLabel()
   };

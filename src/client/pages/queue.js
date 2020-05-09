@@ -20,7 +20,7 @@ function mapStateToProps(state) {
 // that are ready for review.
 //
 class Queue extends React.Component {
-  static buttons() {
+  static get buttons() {
     let buttons = [{ button: Refresh }];
     if (Pending.count > 0) buttons.push({ form: Commit });
     if (Pending.offline_enabled) buttons.push({ button: Offline });

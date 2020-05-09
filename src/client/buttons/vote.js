@@ -2,14 +2,14 @@ import Agenda from "../models/agenda.js";
 import Minutes from "../models/minutes.js";
 import ModalDialog from "../elements/modal-dialog";
 import React from "react";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { post } from "../utils.js";
 
 class Vote extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "vote",
-      class: "btn_primary",
+      className: "btn-primary",
       data_toggle: "modal",
       data_target: "#vote-form"
     }
@@ -29,7 +29,7 @@ class Vote extends React.Component {
       <pre>{this.state.directors}</pre>
       <textarea id="vote-text" rows={4} placeholder="minutes" value={this.state.draft}/>
 
-      <button className="btn-default" type="button" data_dismiss="modal" onClick={() => (
+      <button className="btn-default" type="button" data-dismiss="modal" onClick={() => (
         this.setState({draft: this.state.base})
       )}>Cancel</button>
 
@@ -82,7 +82,7 @@ class Vote extends React.Component {
   };
 
   // post vote results
-  save(event) {
+  save = (event) => {
     let text;
 
     switch (event.target.textContent) {

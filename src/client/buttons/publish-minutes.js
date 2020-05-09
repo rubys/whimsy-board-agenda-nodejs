@@ -1,14 +1,14 @@
 import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import React from "react";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { post, retrieve, Server } from "../utils.js";
 
 class PublishMinutes extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "publish minutes",
-      class: "btn_danger",
+      className: "btn-danger",
       data_toggle: "modal",
       data_target: "#publish-minutes-form"
     }
@@ -21,7 +21,7 @@ class PublishMinutes extends React.Component {
       <h4 className="commented">Publish Minutes onto the ASF web site</h4>
       <textarea id="summary-text" className="form-control" rows={10} tabIndex={1} value={this.state.summary} disabled={this.state.disabled} label="Minutes summary"/>
       <input id="message" label="Commit message" value={this.state.message} disabled={this.state.disabled}/>
-      <button className="btn-default" type="button" data_dismiss="modal">Cancel</button>
+      <button className="btn-default" type="button" data-dismiss="modal">Cancel</button>
       <button className="btn-primary" type="button" onClick={this.publish} disabled={this.state.disabled}>Submit</button>
     </ModalDialog>
   };
@@ -101,7 +101,7 @@ class PublishMinutes extends React.Component {
     return `${date.getDate()} ${months[date.getMonth()]} ${date.getYear() + 1900}`
   };
 
-  publish(event) {
+  publish = (event) => {
     let data = {
       date: this.state.date,
       summary: this.state.summary,

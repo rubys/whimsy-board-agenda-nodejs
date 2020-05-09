@@ -4,13 +4,20 @@ import MarkSeen from "../buttons/markseen.js";
 import Pending from "../models/pending.js";
 import React from "react";
 import ShowSeen from "../buttons/showseen.js";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    pending: state.server.pending
+  }
+};
 
 //
 // A page showing all comments present across all agenda items
 // Conditionally hide comments previously marked as seen.
 //
 class Comments extends React.Component {
-  static buttons() {
+  static get buttons() {
     let buttons = [];
 
     if (MarkSeen.undo || Agenda.index.some(item => !item.unseen_comments.empty)) {
@@ -55,4 +62,4 @@ class Comments extends React.Component {
   }
 };
 
-export default Comments
+export default connect(mapStateToProps)(Comments)

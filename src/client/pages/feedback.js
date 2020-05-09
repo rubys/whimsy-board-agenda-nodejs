@@ -6,7 +6,7 @@ import React from "react";
 // Select and send item comments as feedback.
 //
 class Feedback extends React.Component {
-  static buttons() {
+  static get buttons() {
     return [{ button: SendFeedback }]
   };
 
@@ -77,7 +77,7 @@ class SendFeedback extends React.Component {
     this.setState({ list: list })
   };
 
-  click(event) {
+  click = (event) => {
     let $list = this.state.list;
 
     // gather a list of checked items

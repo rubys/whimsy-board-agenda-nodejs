@@ -3,16 +3,16 @@ import ModalDialog from "../elements/modal-dialog.js";
 import React from "react";
 import { CandidateAction } from "../pages/select-actions.js";
 import { post } from "../utils.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 
 //
 // Send reminders for action items
 //
 class ActionReminder extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "send reminders",
-      class: "btn_primary",
+      className: "btn-primary",
       data_toggle: "modal",
       data_target: "#reminder-form"
     }
@@ -35,13 +35,13 @@ class ActionReminder extends React.Component {
         <CandidateAction action={action} />
       ))}</pre>
 
-      <button className="btn-default" data_dismiss="modal">Close</button>
+      <button className="btn-default" data-dismiss="modal">Close</button>
       <button className="btn-info" onClick={this.click} disabled={this.state.disabled}>Dry Run</button>
       <button className="btn-primary" onClick={this.click} disabled={this.state.disabled}>Submit</button>
     </ModalDialog>
   };
 
-  click(event) {
+  click = (event) => {
     let dryrun = event.target.textContent === "Dry Run";
 
     let data = {

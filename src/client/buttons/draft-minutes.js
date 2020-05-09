@@ -1,14 +1,14 @@
 import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import React from "react";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { post, retrieve } from "../utils.js";
 
 class DraftMinutes extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "draft minutes",
-      class: "btn_danger",
+      className: "btn-danger",
       data_toggle: "modal",
       data_target: "#draft-minute-form"
     }
@@ -20,7 +20,7 @@ class DraftMinutes extends React.Component {
     return <ModalDialog id="draft-minute-form" className="wide-form" color="commented">
       <h4 className="commented">Commit Draft Minutes to SVN</h4>
       <textarea id="draft-minute-text" className="form-control" rows={17} tabIndex={1} placeholder="minutes" value={this.state.draft} disabled={this.state.disabled}/>
-      <button className="btn-default" type="button" data_dismiss="modal">Cancel</button>
+      <button className="btn-default" type="button" data-dismiss="modal">Cancel</button>
       <button className="btn-primary" type="button" onClick={this.save} disabled={this.state.disabled}>Save</button>
     </ModalDialog>
   };

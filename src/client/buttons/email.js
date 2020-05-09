@@ -3,7 +3,7 @@ import ModalDialog from "../elements/modal-dialog.js";
 import Posted from "../models/posted.js";
 import React from "react";
 import User from "../models/user.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { post } from "../utils.js";
 
 //
@@ -36,7 +36,7 @@ class Email extends React.Component {
   };
 
   // launch email client, pre-filling the destination, subject, and body
-  launch_email_client(event) {
+  launch_email_client = (event) => {
     let subject, body;
     let mail_list = this.props.item.mail_list;
     if (!mail_list.includes("@")) mail_list = `private@${mail_list}.apache.org`;
@@ -143,12 +143,12 @@ class EmailForm extends React.Component {
       </div>
 
       <textarea id="email-body" label="Body" placeholder="email text" disabled={this.state.disabled} value={this.props.email.body} rows={10}/>
-      <button className="btn-default" type="button" data_dismiss="modal">Cancel</button>
+      <button className="btn-default" type="button" data-dismiss="modal">Cancel</button>
       <button className="btn-primary" type="button" onClick={this.send} disabled={this.state.disabled}>Send</button>
     </ModalDialog>
   };
 
-  send(event) {
+  send = (event) => {
     this.setState({disabled: true});
 
     post("email", this.props.email, (response) => {

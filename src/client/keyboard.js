@@ -4,7 +4,7 @@ import Main from "./layout/main.js";
 import Minutes from "./models/minutes.js";
 import User from "./models/user.js";
 import { navigate } from "./router.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { post } from "./utils.js";
 import Store from './store.js';
 import * as Actions from "../actions.js";

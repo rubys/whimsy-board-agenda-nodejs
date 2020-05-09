@@ -3,13 +3,13 @@ import Minutes from "../models/minutes.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import React from "react";
 import { retrieve, post } from "../utils.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 
 class Summary extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "send summary",
-      class: "btn_danger",
+      className: "btn-danger",
       data_toggle: "modal",
       data_target: "#summary-form"
     }
@@ -21,7 +21,7 @@ class Summary extends React.Component {
     return <ModalDialog id="summary-form" className="wide-form" color="commented">
       <h4 className="commented">Send out meeting summary to committers</h4>
       <textarea id="summary-text" className="form-control" rows={17} tabIndex={1} placeholder="committers summary" value={this.state.summary} disabled={this.state.disabled}/>
-      <button className="btn-default" type="button" data_dismiss="modal">Cancel</button>
+      <button className="btn-default" type="button" data-dismiss="modal">Cancel</button>
       <button className="btn-primary" type="button" onClick={this.send} disabled={this.state.disabled}>Send</button>
     </ModalDialog>
   };
@@ -39,7 +39,7 @@ class Summary extends React.Component {
     ))
   };
 
-  send(event) {
+  send = (event) => {
     this.setState({disabled: true});
 
     post(

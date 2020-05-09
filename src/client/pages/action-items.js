@@ -7,14 +7,14 @@ import Pending from "../models/pending.js";
 import React from "react";
 import Text from "../elements/text.js";
 import { Server, post, hotlink } from "../utils.js";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 
 //
 // Action items.  Link to PMC reports when possible, highlight missing
 // action item status updates.
 //
 class ActionItems extends React.Component {
-  static buttons() {
+  static get buttons() {
     return [{ form: ActionReminder }]
   };
 
@@ -108,7 +108,7 @@ class ActionItems extends React.Component {
             };
 
             // launch edit dialog when there is a click on the status
-            let options = { on: { click: this.updateStatus }, class: ["clickable"] };
+            let options = { on: { click: this.updateStatus }, className: ["clickable"] };
             if (Minutes.complete) options = {};
             options.attrs = {};
 
@@ -179,7 +179,7 @@ class ActionItems extends React.Component {
           </p>
 
           <textarea ref="statusText" label="Status:" value={this.state.status} rows={5} />
-          <button className="btn-default" data_dismiss="modal" disabled={this.state.disabled}>Cancel</button>
+          <button className="btn-default" data-dismiss="modal" disabled={this.state.disabled}>Cancel</button>
           <button className="btn-primary" onClick={this.save} disabled={this.state.disabled || (this.state.baseline === this.state.status)}>Save</button>
         </ModalDialog> : null}
       </section>
@@ -240,7 +240,7 @@ class ActionItems extends React.Component {
   };
 
   // launch update status form when status text is clicked
-  updateStatus(event) {
+  updateStatus = (event) => {
     let parent = event.target.parentNode;
 
     // update state from data attributes
@@ -263,7 +263,7 @@ class ActionItems extends React.Component {
   };
 
   // when save button is pushed, post update and dismiss modal when complete
-  save(event) {
+  save = (event) => {
     let data = {
       agenda: Agenda.file,
       owner: this.state.owner,

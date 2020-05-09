@@ -2,14 +2,14 @@ import Agenda from "../models/agenda.js";
 import Minutes from "../models/minutes.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import React from "react";
-import { jQuery } from "jquery";
+import jQuery from "jquery";
 import { Flow, post } from "../utils.js";
 
 class AddMinutes extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "add minutes",
-      class: "btn_primary",
+      className: "btn-primary",
       data_toggle: "modal",
       data_target: "#minute-form"
     }
@@ -44,7 +44,7 @@ class AddMinutes extends React.Component {
 
       {/^[A-Z]+$/m.test(this.props.item.attach) ? <input id="flag" type="checkbox" label="report was not accepted" onClick={this.reject} checked={this.state.checked} /> : null}
 
-      <button className="btn-default" type="button" data_dismiss="modal" onClick={() => (
+      <button className="btn-default" type="button" data-dismiss="modal" onClick={() => (
         this.setState({ draft: this.state.base })
       )}>Cancel</button>
 
@@ -101,7 +101,7 @@ class AddMinutes extends React.Component {
   };
 
   // add an additional AI to the draft minutes for this item
-  addAI(event) {
+  addAI = (event) => {
     let $draft = this.state.draft;
     if ($draft) $draft += "\n";
     $draft += `@${this.state.ai_owner}: ${this.state.ai_text}`;
@@ -173,7 +173,7 @@ class AddMinutes extends React.Component {
     })
   };
 
-  reject(event) {
+  reject = (event) => {
     let $checked = this.state.checked;
     $checked = !$checked;
 

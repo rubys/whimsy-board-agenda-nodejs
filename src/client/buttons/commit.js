@@ -12,10 +12,10 @@ import jQuery from "jquery";
 // and allow it to be changed.
 //
 class Commit extends React.Component {
-  static button() {
+  static get button() {
     return {
       text: "commit",
-      class: "btn_primary",
+      className: "btn-primary",
       disabled: Server.offline || Minutes.complete || Minutes.draft_posted,
       data_toggle: "modal",
       data_target: "#commit-form"
@@ -29,7 +29,7 @@ class Commit extends React.Component {
     return <ModalDialog id="commit-form" color="blank">
       <h4>Commit message</h4>
       <textarea id="commit-text" value={this.state.message} rows={5} disabled={this.state.disabled} label="Commit message"/>
-      <button className="btn-default" data_dismiss="modal">Close</button>
+      <button className="btn-default" data-dismiss="modal">Close</button>
       <button className="btn-primary" onClick={this.click} disabled={this.state.disabled}>Submit</button>
     </ModalDialog>
   };
@@ -108,7 +108,7 @@ class Commit extends React.Component {
   };
 
   // on click, disable the input fields and buttons and submit
-  click(event) {
+  click = (event) => {
     this.setState({disabled: true});
 
     post(

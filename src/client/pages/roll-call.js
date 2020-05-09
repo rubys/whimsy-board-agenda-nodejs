@@ -2,7 +2,7 @@ import Agenda from "../models/agenda.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
 import { Server, post, retrieve } from "../utils.js";
-import { jQuery } from 'jquery';
+import jQuery from 'jquery';
 import Store from "../store.js";
 import * as Actions from "../../actions.js";
 import { connect } from 'react-redux'
@@ -190,14 +190,14 @@ class Attendee extends React.Component {
   };
 
   // when moving cursor over a list item, focus on the input field
-  focus(event) {
+  focus = (event) => {
     if (!RollCall.lockFocus) {
       event.target.parentNode.querySelector("input[type=text]").focus()
     }
   };
 
   // when checkbox is clicked, post update
-  click(event) {
+  click = (event) => {
     this.status.present = event.target.checked;
     this.post_update()
   };

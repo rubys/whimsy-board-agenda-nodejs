@@ -9,7 +9,7 @@ class Install extends React.Component {
     return <button className="btn-primary btn" onClick={this.click}>install</button>
   };
 
-  click(event) {
+  click = (event) => {
     PageCache.installPrompt.prompt();
 
     PageCache.installPrompt.userChoice.then((choice) => {

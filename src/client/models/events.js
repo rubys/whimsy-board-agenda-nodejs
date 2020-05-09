@@ -203,7 +203,7 @@ class Events {
   };
 
   // set message to all processes
-  static broadcast(event) {
+  static broadcast = (event) => {
     try {
       event = JSON.stringify(event);
       localStorage.setItem(`${Events.#$prefix}-event`, event);

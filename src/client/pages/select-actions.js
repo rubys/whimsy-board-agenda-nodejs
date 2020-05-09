@@ -9,7 +9,7 @@ import { retrieve, hotlink } from "../utils.js";
 // action item status updates.
 //
 class SelectActions extends React.Component {
-  static buttons() {
+  static get buttons() {
     return [{button: PostActions}]
   };
 

@@ -7,7 +7,7 @@ import React from "react";
 // A page showing status of caches and service workers
 //
 class CacheStatus extends React.Component {
-  static buttons() {
+  static get buttons() {
     return [{ button: ClearCache }, { button: UnregisterWorker }]
   };
 
