@@ -29,7 +29,7 @@ class Footer extends React.Component {
       <footer className="fixed-bottom navbar">
         <PrevLink item={item} agenda={this.props.agenda} traversal={traversal} />
 
-        <span>{this.props.buttons ? this.props.buttons.map((button) => {
+        <span>{this.props.buttons ? this.props.buttons.map(button => {
           let props;
 
           if (button.text) {
@@ -42,7 +42,9 @@ class Footer extends React.Component {
 
             return React.createElement("button", props, button.text)
           } else if (button.type) {
-            return React.createElement(button.type, { ...button.attrs, key: button.type.name })
+            let type = button.type;
+            if (type.WrappedComponent) type = type.WrappedComponent;
+            return React.createElement(button.type, { ...button.attrs, key: type.name })
           }
 
           return null

@@ -35,10 +35,7 @@ class Main extends React.Component {
     return <>
       <Header {...this.props}/>
 
-      <main>{React.createElement(
-        this.props.view,
-        { ...this.props, ref: Main.view }
-      )}</main>
+      <main>{React.createElement( this.props.view, this.props)}</main>
 
       <Footer {...this.props} />
 

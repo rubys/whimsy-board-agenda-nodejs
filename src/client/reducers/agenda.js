@@ -153,7 +153,7 @@ function status(item, updates) {
     state.flagged =
       state.pending?.flagged ||
       state.flagged_by?.length > 1 ||
-      state.flagged_by?.length === 1 && (state.flagged_by[0] !== user.initials || !state.pending?.unflagged);
+      (state.flagged_by?.length === 1 && (state.flagged_by[0] !== user.initials || !state.pending?.unflagged));
 
     // items are approved if number of approvals is > 5 after accounting for pending approvals and unapprovals
     let approvedByMe = state.approved_by?.includes(user.initials);

@@ -1,4 +1,3 @@
-import Minutes from "../models/minutes.js";
 import Colorize from "../elements/colorize.js";
 import Info from "../elements/info.js";
 import { Link } from "react-router-dom";

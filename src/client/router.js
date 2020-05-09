@@ -402,8 +402,8 @@ class Router extends React.Component {
       <Route exact path="/cache/">
         {main({
           view: CacheStatus,
-          next: { href: '/server/', title: 'Server' },
-          prev: { href: '/store/', title: 'Store' }
+          next: { href: 'server/', title: 'Server' },
+          prev: { href: 'store/', title: 'Store' }
         })}
       </Route>
 
@@ -414,16 +414,16 @@ class Router extends React.Component {
       <Route exact path="/server/">
         {main({
           view: Server,
-          next: { href: '/store/', title: 'Store' },
-          prev: { href: '/cache/', title: 'Cache' }
+          next: { href: 'store/', title: 'Store' },
+          prev: { href: 'cache/', title: 'Cache' }
         })}
       </Route>
 
       <Route exact path="/store/">
         {main({
           view: Store,
-          next: { href: '/cache/', title: 'Cache' },
-          prev: { href: '/server/', title: 'Server' }
+          next: { href: 'cache/', title: 'Cache' },
+          prev: { href: 'server/', title: 'Server' }
         })}
       </Route>
 
