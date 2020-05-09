@@ -61,12 +61,12 @@ class AdditionalInfo extends React.Component {
     let posted = item.missing && Posted.get(item.title);
 
     return <>
-      {item.rejected ? <p className="rejected">Report was not accepted</p> : null}
+      {item.status.rejected ? <p className="rejected">Report was not accepted</p> : null}
       {item.notes ? <p className={!/^new, monthly through/m.test(item.notes) ? "notes" : null}>{item.notes}</p> : null}
 
-      {minutes ? <>
+      {item.status.minutes ? <>
         <h4 id={`${this.state.prefix}minutes`}>Minutes</h4>
-        <pre className="comment">{minutes}</pre>
+        <pre className="comment">{item.status.minutes}</pre>
       </> : null}
 
       {item.missing && posted.length !== 0 ? <>
