@@ -135,12 +135,12 @@ class Report extends React.Component {
             if (!response.ok) throw response.statusText;
 
             response.text().then(minutes => (
-              Store.dispatch(Actions.postMinutes(this.props.item.attach, minutes))
+              Store.dispatch(Actions.postMinutesText(this.props.item.attach, minutes))
             ))
           })
             .catch(error => console.error(`fetch ${page}: ${error}`))
         } else {
-          Store.dispatch(Actions.postMinutes(this.props.item.attach, "missing"))
+          Store.dispatch(Actions.postMinutesText(this.props.item.attach, "missing"))
         }
       }
     };

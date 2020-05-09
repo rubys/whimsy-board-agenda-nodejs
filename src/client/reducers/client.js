@@ -34,7 +34,28 @@ export default function reduce(state = { offline: false }, action) {
 
       return state;
 
+    case Actions.POST_SECRETARY_MINUTES:
+      if (action.minutes.started !== state.meetingStarted) {
+        if (action.minutes.started) {
+          state = { ...state, meetingStarted: action.minutes.started }
+        } else {
+          state = { ...state }
+          delete state.meetingStarted
+        }
+      }
+
+      if (action.minutes.complete !== state.meetingComplete) {
+        if (action.minutes.complete) {
+          state = { ...state, meetingComplete: action.minutes.complete }
+        } else {
+          state = { ...state }
+          delete state.meetingComplete
+        }
+      }
+
+      return state;
+
     default:
-      return state
+      return state;
   }
 }

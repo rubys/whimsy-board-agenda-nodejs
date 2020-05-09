@@ -24,6 +24,7 @@ export const POST_MINUTES = 'POST_MINUTES';
 export const POST_PENDING = 'POST_PENDING';
 export const POST_REPORTER = "POST_REPORTER";
 export const POST_RESPONSES = "POST_RESPONSES";
+export const POST_SECRETARY_MINUTES = "POST_SECRETARY_MINUTES";
 export const POST_SERVER = 'POST_SERVER';
 export const SET_FORKED = "SET_FORKED";
 export const SET_MEETING_DATE = "SET_MEETING_DATE";
@@ -35,10 +36,11 @@ export const clockIncrement = () => ({ type: CLOCK_INCREMENT });
 export const postAgenda = index => ({ type: POST_AGENDA, index });
 export const postDigest = files => ({ type: POST_DIGEST, files });
 export const postHistoricalComments = comments => ({ type: POST_HISTORICAL_COMMENTS, comments });
-export const postMinutes = (attach, minutes) => ({ type: POST_MINUTES, attach, minutes });
+export const postMinutesText = (attach, minutes) => ({ type: POST_MINUTES, attach, minutes });
 export const postPending = pending => ({ type: POST_PENDING, pending });
 export const postReporter = drafts => ({ type: POST_REPORTER, drafts });
 export const postResponses = messages => ({ type: POST_RESPONSES, messages });
+export const postSecretaryMinutes = minutes => ({ type: POST_SECRETARY_MINUTES, minutes })
 export const postServer = server => ({ type: POST_SERVER, server });
 
 export const setRole = role => ({ type: SET_ROLE, role });

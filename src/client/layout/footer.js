@@ -128,7 +128,6 @@ class PrevLink extends React.Component {
 class NextLink extends React.Component {
   render() {
     let { agenda, item, traversal, meetingDay } = this.props;
-    console.log({ meetingDay })
 
     let link = item?.next;
     if (link && !link.title) link = agenda[link];

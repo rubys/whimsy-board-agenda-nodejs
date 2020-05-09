@@ -37,7 +37,7 @@ ReactDOM.render(
         if (response) store.dispatch(Actions.postServer(response));
         if (resolve) resolve(response);
       };
-      
+
       resolve = reject = null;
     })
   });
@@ -49,11 +49,28 @@ ReactDOM.render(
     window.location.href = `/${date}/`;
   } else {
     // fetch and store agenda information
-    JSONStorage.fetch(`${base.slice(1, -1)}.json`, (error, agenda) => {
-      if (!error && agenda) {
-        store.dispatch(Actions.postAgenda(agenda));
-      }
-    })
+    await new Promise((resolve, reject) => {
+      JSONStorage.fetch(`${base.slice(1, -1)}.json`, (error, agenda) => {
+        if (error) {
+          reject(error);
+        } else if (agenda) {
+          store.dispatch(Actions.postAgenda(agenda));
+          resolve(agenda);
+        }
+      })
+    });
+
+    // fetch and store minutes information
+    await new Promise((resolve, reject) => {
+      JSONStorage.fetch(`minutes/${base.slice(1, -1)}.json`, (error, minutes) => {
+        if (error) {
+          reject(error);
+        } else if (minutes) {
+          store.dispatch(Actions.postSecretaryMinutes(minutes));
+          resolve(minutes);
+        }
+      })
+    });
   }
 })();
 
