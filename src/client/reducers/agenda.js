@@ -48,11 +48,11 @@ export default function reduce(state = null, action) {
           }
         }
 
-        let { flagged_by, approved, missing } = item;
+        let { flagged_by, approved: approved_by, missing } = item;
         delete item.flagged_by;
         delete item.approved;
         delete item.missing;
-        item.status = status(state?.[item.href], { flagged_by, approved, missing });
+        item.status = status(state?.[item.href], { flagged_by, approved_by, missing });
       });
 
       // remove president attachments from the normal flow
@@ -135,35 +135,35 @@ export default function reduce(state = null, action) {
 }
 
 function status(item, updates) {
-  let state = item?.status || {};
+  let status = item?.status || {};
 
   for (let [prop, value] of Object.entries(updates)) {
     if (value) {
-      if (state[prop] !== value && !deepEqual(state[prop], value)) state = { ...state, [prop]: value };
+      if (status[prop] !== value && !deepEqual(status[prop], value)) status = { ...status, [prop]: value };
     } else {
-      if (state[prop]) {
-        state = { ...state };
-        delete state[prop];
+      if (status[prop]) {
+        status = { ...status };
+        delete status[prop];
       }
     }
   }
 
-  if (state !== item?.status) {
+  if (status !== item?.status) {
     // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
-    state.flagged =
-      state.pending?.flagged ||
-      state.flagged_by?.length > 1 ||
-      (state.flagged_by?.length === 1 && (state.flagged_by[0] !== user.initials || !state.pending?.unflagged));
+    status.flagged =
+      status.pending?.flagged ||
+      status.flagged_by?.length > 1 ||
+      (status.flagged_by?.length === 1 && (status.flagged_by[0] !== user.initials || !status.pending?.unflagged));
 
     // items are approved if number of approvals is > 5 after accounting for pending approvals and unapprovals
-    let approvedByMe = state.approved_by?.includes(user.initials);
-    state.approved = state.approved_by?.length
-      + (!approvedByMe && state.pending?.approve ? +1 : 0)
-      + (approvedByMe && state.pending?.unapprove ? -1 : 0) > 5
+    let approvedByMe = status.approved_by?.includes(user.initials);
+    status.approved = status.approved_by?.length
+      + (!approvedByMe && status.pending?.approve ? +1 : 0)
+      + (approvedByMe && status.pending?.unapprove ? -1 : 0) > 5
 
     // items are skippable if they are preapproved and not flagged  
-    state.skippable = state.approved && !state.flagged
+    status.skippable = status.approved && !status.flagged
   }
 
-  return state;
+  return status;
 }

@@ -15,8 +15,6 @@ import "../App.css";
 //  * Resizing view to leave room for the Header and Footer
 //
 class Main extends React.Component {
-  static view = React.createRef();
-
   // common layout for all pages: header, main, footer, and forms
   render() {
     if (!this.props.view) {

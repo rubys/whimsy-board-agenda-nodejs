@@ -29,9 +29,9 @@ class Info extends React.Component {
         <dd className="col-sm-9">{this.props.item.status.flagged_by.join(", ")}</dd>
       </> : null}
 
-      {this.props.item.status.approved && this.props.item.status.approved.length !== 0 ? <>
+      {this.props.item.status.approved_by && this.props.item.status.approved_by.length !== 0 ? <>
         <dt className="col-sm-3">Approved By</dt>
-        <dd className="col-sm-9">{this.props.item.approved.join(", ")}</dd>
+        <dd className="col-sm-9">{this.props.item.status.approved_by.join(", ")}</dd>
       </> : null}
 
       {this.props.item.roster || this.props.item.prior_reports || this.props.item.stats ? <>

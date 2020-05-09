@@ -1,6 +1,4 @@
-import Agenda from "../models/agenda.js";
 import Colorize from "../elements/colorize.js";
-import Minutes from "../models/minutes.js";
 import React from "react";
 import User from "../models/user.js";
 import { Link } from "react-router-dom";
@@ -9,6 +7,7 @@ import { connect } from 'react-redux';
 function mapStateToProps(state) {
   return {
     agenda: state.agenda,
+    meetingDay: state.client.meetingDay
   }
 };
 
@@ -23,11 +22,11 @@ function mapStateToProps(state) {
 class Footer extends React.Component {
   render() {
     let item = this.props.item || this.props;
-    let { traversal } = this.props;
+    let { traversal, meetingDay } = this.props;
 
     return <Colorize item={item}>
       <footer className="fixed-bottom navbar">
-        <PrevLink item={item} agenda={this.props.agenda} traversal={traversal} />
+        <PrevLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
 
         <span>{this.props.buttons ? this.props.buttons.map(button => {
           let props;
@@ -50,7 +49,7 @@ class Footer extends React.Component {
           return null
         }) : null}</span>
 
-        <NextLink item={item} agenda={this.props.agenda} traversal={traversal} />
+        <NextLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
       </footer>
     </Colorize>
   }
@@ -60,12 +59,11 @@ class Footer extends React.Component {
 
 class PrevLink extends React.Component {
   render() {
-    let { agenda, item, traversal } = this.props;
+    let { agenda, item, traversal, meetingDay } = this.props;
 
     let link = item?.prev;
     if (link && !link.title) link = agenda[link];
     let prefix = "/";
-    let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (traversal === "queue") {
       prefix = "/queue/";
@@ -99,20 +97,15 @@ class PrevLink extends React.Component {
       };
 
       if (!link) {
-        if (meetingDay) {
-          link = Agenda.index.find(item => item.next && /^\d+$/m.test(item.next.attach));
-          prefix = "/"
-        };
-
+        prefix = "/";
         link = link || { href: "flagged", title: "Flagged" }
       }
-    } else if (meetingDay && /\d/.test(item.attach) && link && /^[A-Z]/m.test(link.attach)) {
-      for (let item in agenda) {
-        if (!item.status?.skippable && /^([A-Z]|\d+$)/m.test(item.attach)) {
-          prefix = "/flagged/";
-          link = item
-        }
-      }
+    } else if (meetingDay && link && /^\d/m.test(item.attach) && /^[A-Z]/m.test(link.attach)) {
+      while (link && link.status.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
+        link = agenda[link.prev]
+      };
+
+      prefix = "/flagged/"
     };
 
     if (link) {
@@ -134,12 +127,12 @@ class PrevLink extends React.Component {
 
 class NextLink extends React.Component {
   render() {
-    let { agenda, item, traversal } = this.props;
+    let { agenda, item, traversal, meetingDay } = this.props;
+    console.log({ meetingDay })
 
     let link = item?.next;
     if (link && !link.title) link = agenda[link];
     let prefix = '/';
-    let meetingDay = Minutes.started || Agenda.meeting_day;
 
     if (traversal === "queue") {
       while (link && !link.ready_for_review(User.initials)) {
@@ -169,7 +162,7 @@ class NextLink extends React.Component {
       };
 
       link = link || { href: "flagged", title: "Flagged" }
-    } else if (meetingDay && link && /^\d[A-Z]/m.test(item.attach) && /^\d/m.test(link.attach)) {
+    } else if (meetingDay && link && /^\d/m.test(item.attach) && /^[A-Z]/m.test(link.attach)) {
       while (link && link.status.skippable && /^([A-Z]|\d+$)/m.test(link.attach)) {
         link = agenda[link.next]
       };

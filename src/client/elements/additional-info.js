@@ -109,7 +109,7 @@ class AdditionalInfo extends React.Component {
       {item.comments?.length || (Object.keys(historicalComments).length > 0 && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
-        {item.comments.map(comment => (
+        {item.comments?.map(comment => (
           <pre className="comment" key={comment}>
             <Text raw={comment} filters={[hotlink]} />
           </pre>
