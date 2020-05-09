@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import React from "react";
-import User from "../models/user.js";
 import { connect } from 'react-redux';
 import store from '../store';
 import * as Actions from "../../actions.js";

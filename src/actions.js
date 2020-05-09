@@ -26,6 +26,7 @@ export const POST_REPORTER = "POST_REPORTER";
 export const POST_RESPONSES = "POST_RESPONSES";
 export const POST_SERVER = 'POST_SERVER';
 export const SET_FORKED = "SET_FORKED";
+export const SET_MEETING_DATE = "SET_MEETING_DATE";
 export const SET_ROLE = "SET_ROLE";
 
 export const clockDecrement = () => ({ type: CLOCK_DECREMENT });
@@ -41,4 +42,5 @@ export const postResponses = messages => ({ type: POST_RESPONSES, messages });
 export const postServer = server => ({ type: POST_SERVER, server });
 
 export const setRole = role => ({ type: SET_ROLE, role });
+export const setMeetingDate = timestamp => ({ type: SET_MEETING_DATE, timestamp })
 export const setForked = state => ({ type: SET_FORKED, state });

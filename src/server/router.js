@@ -75,7 +75,6 @@ export default async function router(app) {
   for (let file of await fs.readdir(`${__dirname}/operations`)) {
     if (!file.endsWith(".js")) continue;
     let path = `/api/${file.split('.')[0]}`;
-    console.log(path)
     let callback = (await import(`./operations/${file}`)).default;
 
     app.post(path, async (request, response, next) => {
