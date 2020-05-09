@@ -51,7 +51,7 @@ export default class ModalDialog extends React.Component {
 
         body.push(React.createElement(
           "div",
-          { className: "form-group" },
+          { className: "form-group", key: child.props.id || child.props.name },
           label,
           child
         ))
