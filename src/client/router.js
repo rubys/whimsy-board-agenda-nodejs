@@ -116,7 +116,6 @@ class Router extends React.Component {
     // overrides, and any overrides provided by the agenda item itself
     let buttons = page.buttons || [];
     if (page.item) buttons = [...this.buttons(page.item), ...buttons];
-if (view.buttons && view !== page.view) console.log(page.view)
     if (view.buttons) buttons = [...view.buttons, ...buttons];
 
     if (buttons.length) {
