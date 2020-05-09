@@ -48,11 +48,16 @@ export default function reduce(state = null, action) {
           }
         }
 
+  // PMC has missed two consecutive months
+  let nonresponsive = item.notes?.includes("missing") 
+    && item.notes.replace(/^.*missing/m, "").split(",").length >= 2;
+
         let { flagged_by, approved: approved_by, missing } = item;
         delete item.flagged_by;
         delete item.approved;
         delete item.missing;
-        item.status = status(state?.[item.href], { flagged_by, approved_by, missing });
+        item.status = status(state?.[item.href],
+          { flagged_by, approved_by, missing, nonresponsive });
       });
 
       // remove president attachments from the normal flow
