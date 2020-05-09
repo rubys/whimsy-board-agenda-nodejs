@@ -25,7 +25,8 @@ export const POST_PENDING = 'POST_PENDING';
 export const POST_REPORTER = "POST_REPORTER";
 export const POST_RESPONSES = "POST_RESPONSES";
 export const POST_SERVER = 'POST_SERVER';
-export const SET_FORKED = "SET_FORKED"
+export const SET_FORKED = "SET_FORKED";
+export const SET_ROLE = "SET_ROLE";
 
 export const clockDecrement = () => ({ type: CLOCK_DECREMENT });
 export const clockIncrement = () => ({ type: CLOCK_INCREMENT });
@@ -39,4 +40,5 @@ export const postReporter = drafts => ({ type: POST_REPORTER, drafts });
 export const postResponses = messages => ({ type: POST_RESPONSES, messages });
 export const postServer = server => ({ type: POST_SERVER, server });
 
+export const setRole = role => ({ type: SET_ROLE, role });
 export const setForked = state => ({ type: SET_FORKED, state });

@@ -1,6 +1,15 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import User from "../models/user.js";
+import { connect } from 'react-redux';
+import store from '../store';
+import * as Actions from "../../actions.js";
+
+function mapStateToProps(state) {
+  return {
+    user: state.server.user
+  }
+};
 
 class Help extends React.Component {
   render() {
@@ -58,9 +67,9 @@ class Help extends React.Component {
       <h3>Change Role</h3>
 
       <form id="role">{["Secretary", "Director", "Guest"].map(role => (
-        <div>
-          <input type="radio" name="role" value={role.toLowerCase()} checked={role.toLowerCase() === User.role} onChange={this.setRole}/>
-          {role}
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="role" id={role} value={role.toLowerCase()} checked={role.toLowerCase() === this.props.user.role} onChange={this.setRole}/>
+          <label class="form-check-label" for={role}>{role}</label>
         </div>
       ))}</form>
 
@@ -70,8 +79,8 @@ class Help extends React.Component {
   };
 
   setRole = (event) => {
-    User.role = event.target.value;
+    store.dispatch(Actions.setRole(event.target.value));
   }
 };
 
-export default Help
+export default connect(mapStateToProps)(Help)

@@ -41,6 +41,9 @@ export default function reduce(state = {}, action) {
     case Actions.SET_FORKED:
       return { ...state, forked: action.state }
 
+    case Actions.SET_ROLE:
+      return { ...state, user: { ...state.user, role: action.role }}
+
     default:
       return state
   }
