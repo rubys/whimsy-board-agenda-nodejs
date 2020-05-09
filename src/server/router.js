@@ -1,5 +1,6 @@
 import * as websocket from "./websocket.js";
 import * as ldap from "./ldap.js";
+import secretaryMinutes from "./sources/minutes.js";
 import { Board, Minutes } from './svn.js';
 import { read } from './sources/agenda.js';
 import { promises as fs } from "fs";
@@ -35,6 +36,15 @@ export default async function router(app) {
       response.send(minutes);
     } catch (error) {
       if (error.code === 'ENOENT') next();
+      next(error);
+    }
+  });
+
+  app.get('/api/minutes/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
+    try {
+      let minutes = await secretaryMinutes(request, request.params.date);
+      response.json(minutes);
+    } catch (error) {
       next(error);
     }
   });

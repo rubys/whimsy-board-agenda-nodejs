@@ -16,11 +16,11 @@ function Server( { agendas, drafts }) {
     '/api/committee-info',
     '/api/historical-comments',
     '/api/jira',
+    ...agendas.map(agenda => `/api/minutes/${agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-")}.json`),
     '/api/posted-reports',
     '/api/reporter',
     '/api/responses',
     '/api/server'
-
   ];
 
   return <>

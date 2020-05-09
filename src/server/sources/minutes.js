@@ -9,7 +9,7 @@
 import devproxy from './devproxy.js';
 import yaml from 'yaml';
 
-export default async function responses(request, date) {
+export default async function minutes(request, date) {
 
   function desymbolize(object) {
     for (let key in object) {
@@ -27,8 +27,20 @@ export default async function responses(request, date) {
     return object;
   }
 
-  let minutes = await devproxy(request, `${date}.yaml`);
-  if (!minutes) return null;
-  return desymbolize(yaml.parse(minutes));
+  let source = await devproxy(request, `${date}.yaml`);
+  if (!source) return null;
+  let items = desymbolize(yaml.parse(source));
 
+  let minutes = {};
+
+  for (let prop of ['started', 'attendance', 'complete', 'rejected', 'todos']) {
+    if (items[prop]) {
+      minutes[prop] = items[prop];
+      delete items[prop];
+    }
+  }
+
+  minutes.items = items;
+
+  return minutes;
 }
