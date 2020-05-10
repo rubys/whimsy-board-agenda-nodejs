@@ -113,8 +113,8 @@ class Keyboard {
         Store.dispatch(Actions.clockIncrement());
 
         post("refresh", {agenda: Agenda.file}, (response) => {
+          Store.dispatch(Actions.postAgenda(response.agenda));
           Store.dispatch(Actions.clockDecrement());
-          Agenda.load(response.agenda, response.digest);
         });
 
         return false

@@ -2,6 +2,8 @@ import Agenda from "../models/agenda.js";
 import React from "react";
 import User from "../models/user.js";
 import { post } from "../utils.js";
+import Store from '../store.js';
+import * as Actions from "../../actions.js";
 
 //
 // Indicate intention to attend / regrets for meeting
@@ -41,7 +43,7 @@ class Attend extends React.Component {
 
     post("attend", data, (response) => {
       this.setState({disabled: false});
-      Agenda.load(response.agenda, response.digest)
+      Store.dispatch(Actions.postAgenda(response.agenda));
     })
   }
 };

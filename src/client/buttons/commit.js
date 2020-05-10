@@ -6,6 +6,8 @@ import React from "react";
 import User from "../models/user.js";
 import { Server, post } from "../utils.js";
 import jQuery from "jquery";
+import Store from '../store.js';
+import * as Actions from "../../actions.js";
 
 //
 // Commit pending comments and approvals.  Build a default commit message,
@@ -116,7 +118,7 @@ class Commit extends React.Component {
       {message: this.state.message, initials: User.initials},
 
       (response) => {
-        Agenda.load(response.agenda, response.digest);
+        Store.dispatch(Actions.postAgenda(response.agenda));
         Pending.load(response.pending);
         this.setState({disabled: false});
 

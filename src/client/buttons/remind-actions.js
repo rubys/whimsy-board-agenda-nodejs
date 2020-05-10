@@ -4,6 +4,8 @@ import React from "react";
 import { CandidateAction } from "../pages/select-actions.js";
 import { post } from "../utils.js";
 import jQuery from "jquery";
+import Store from '../store.js';
+import * as Actions from "../../actions.js";
 
 //
 // Send reminders for action items
@@ -69,7 +71,7 @@ class ActionReminder extends React.Component {
       };
 
       this.setState({ disabled: false });
-      Agenda.load(response.agenda, response.digest);
+      Store.dispatch(Actions.postAgenda(response.agenda));
       jQuery("#reminder-form").modal("hide");
       document.body.classList.remove("modal-open")
     })

@@ -2,6 +2,8 @@ import Agenda from "../models/agenda.js";
 import EventBus from "../event-bus.js";
 import React from "react";
 import { post } from "../utils.js";
+import Store from '../store.js';
+import * as Actions from "../../actions.js";
 
 //
 // Post Action items
@@ -36,7 +38,7 @@ class PostActions extends React.Component {
 
     post("post-actions", data, (response) => {
       this.setState({disabled: false});
-      Agenda.load(response.agenda, response.digest)
+      Store.dispatch(Actions.postAgenda(response.agenda));
     })
   }
 };
