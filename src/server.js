@@ -26,4 +26,4 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // Start the server
-require('./server/index.js');
+require('./server/express.js');

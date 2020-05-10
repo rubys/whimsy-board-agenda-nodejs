@@ -1,5 +1,4 @@
 import credentials from './credentials.js';
-import shellEscape from "shell-escape";
 import fs, { promises as fsp } from 'fs';
 import { Mutex } from 'async-mutex';
 import { workPath } from './config.js';
