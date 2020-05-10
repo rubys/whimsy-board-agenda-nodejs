@@ -31,7 +31,7 @@ class Refresh extends React.Component {
 
     post("refresh", { agenda: this.props.agendaFile }, response => {
       this.setState({ disabled: false });
-      store.dispatch(Actions.postAgenda(response.agenda))
+      if (response) store.dispatch(Actions.postAgenda(response.agenda))
     })
   }
 };

@@ -1,4 +1,3 @@
-import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import Pending from "../models/pending.js";
 import React from "react";
@@ -40,16 +39,34 @@ class AddComment extends React.Component {
   };
 
   render() {
+    let { disabled, comment, base, checked } = this.state;
+    let { pending, user, item } = this.props;
+
     return <ModalDialog id="comment-form" color="commented">
-      {this.state.base ? <h4>Edit comment</h4> : <h4>Enter a comment</h4>}
+      {base ? <h4>Edit comment</h4> : <h4>Enter a comment</h4>}
 
-      <input id="comment-initials" label="Initials" placeholder="initials" disabled={this.state.disabled} value={this.props.pending.initials || this.props.user.initials} />
-      <textarea id="comment-text" value={this.state.comment} label="Comment" placeholder="comment" rows={5} disabled={this.state.disabled} />
-      {this.props.user.role === "director" && /^([A-Z]+|[0-9]+)$/m.test(this.props.item.attach) ? <input id="flag" type="checkbox" label="item requires discussion or follow up" onClick={this.flag} checked={this.state.checked} /> : null}
+      <input id="comment-initials" label="Initials" placeholder="initials"
+        disabled={disabled} defaultValue={pending.initials || user.initials} />
 
-      <button className="btn-default" data-dismiss="modal" disabled={this.state.disabled}>Cancel</button>
-      {this.state.comment ? <button className="btn-warning" onClick={this.delete} disabled={this.state.disabled}>Delete</button> : null}
-      <button className="btn-primary" onClick={this.save} disabled={this.state.disabled || this.state.comment === this.state.base}>Save</button>
+      <textarea id="comment-text" value={comment} label="Comment"
+        placeholder="comment" rows={5} disabled={disabled}
+        onChange={event => this.setState({ comment: event.target.value })}/>
+
+      {user.role === "director" && /^([A-Z]+|[0-9]+)$/m.test(item.attach)
+	? <input id="flag" type="checkbox" checked={checked}
+	  label="item requires discussion or follow up" onClick={this.flag} />
+        : null}
+
+      <button className="btn-default" data-dismiss="modal"
+        disabled={disabled}>Cancel</button>
+
+      {comment
+	? <button className="btn-warning" onClick={this.delete}
+	  disabled={disabled}>Delete</button>
+        : null}
+
+      <button className="btn-primary" onClick={this.save}
+        disabled={disabled || comment === base}>Save</button>
     </ModalDialog>
   };
 
@@ -78,7 +95,8 @@ class AddComment extends React.Component {
     let data = {
       agenda: this.props.agendaFile,
       attach: this.props.item.attach,
-      initials: document.getElementById("comment-initials").value || this.props.user.initials,
+      initials: document.getElementById("comment-initials").value ||
+        this.props.user.initials,
       comment: this.state.comment
     };
 
