@@ -176,7 +176,7 @@ class Router extends React.Component {
 
     if (!(!/^\d+$/m.test(item.attach) && item.comments === undefined) && !Minutes.complete) {
       // some reports don't have comments
-      if (this.pending) {
+      if (item.status?.pending?.comments) {
         list.push({ form: AddComment, text: "edit comment" })
       } else {
         list.push({ form: AddComment, text: "add comment" })

@@ -88,7 +88,7 @@ export default function reduce(state = null, action) {
       }
 
       if (pending_pending) {
-        state = reduce(state, Actions.postPending(pending_pending));
+        agenda = reduce(agenda, Actions.postPending(pending_pending));
         pending_pending = null;
       }
 

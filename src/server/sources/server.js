@@ -48,10 +48,7 @@ export default async function server(request) {
 
   server.digests = await digest();
 
-  let pending = await Pending.read(request);
-  for (let attr in pending) {
-    if (pending[attr].length) server.pending[attr] = pending[attr];
-  }
+  server.pending = await Pending.read(request);
 
   return server;
 }

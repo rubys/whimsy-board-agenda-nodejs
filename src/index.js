@@ -62,7 +62,6 @@ ReactDOM.render(
     });
 
     // fetch and store minutes information
-console.log('fetching');
     await new Promise((resolve, reject) => {
       JSONStorage.fetch(`minutes/${base.slice(1, -1)}.json`, (error, minutes) => {
         if (error) {

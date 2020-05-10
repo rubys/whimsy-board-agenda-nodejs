@@ -74,12 +74,10 @@ class AddComment extends React.Component {
 
   componentDidMount() {
     // update comment text to match current item
-    jQuery("#comment-form").on("show.bs.modal", () => (
-      this.setState({
-        base: this.props.item.pending,
-        comment: this.props.item.pending
-      })
-    ));
+    jQuery("#comment-form").on("show.bs.modal", () => {
+      let base = this.props.item.status?.pending?.comments;
+      this.setState({ base, comment: base })
+    });
 
     // autofocus on comment text
     jQuery("#comment-form").on("shown.bs.modal", () => {
