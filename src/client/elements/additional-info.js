@@ -22,7 +22,8 @@ function mapStateToProps(state, props) {
     historicalComments: lookup('historicalComments')[title] || {},
     responses: responses[title] || {},
     loading: !responses,
-    draft: lookup('reporter')[title] || {}
+    draft: lookup('reporter')[title] || {},
+    initials: state.server.user.initials
   }
 };
 
@@ -115,15 +116,15 @@ class AdditionalInfo extends React.Component {
           </pre>
         ))}
 
-        {item.pending ? <div className="clickable commented comment" onClick={() => (
+        {item.status.pending?.comments ? <div className="clickable commented comment" onClick={() => (
           navigate("/queue")
         )}>
 
           <h5 id={`${this.state.prefix}pending`}>Pending Comment</h5>
 
           <pre className="commented">{Flow.comment(
-            item.pending,
-            User.initials
+            item.status.pending?.comments,
+            this.props.initials
           )}</pre>
         </div> : null}
 
@@ -184,7 +185,7 @@ class AdditionalInfo extends React.Component {
 
         <pre className="commented">{Flow.comment(
           item.pending,
-          User.initials
+          this.props.initials
         )}</pre>
       </div> : null}
     </>

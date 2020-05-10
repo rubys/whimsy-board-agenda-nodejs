@@ -42,4 +42,12 @@ export async function write(request, pending) {
   return pending;
 }
 
+// convenience method bundling the read and write of an agenda,
+// ensuring that pending is wiped clean if you move to a new agenda.
+export async function update(request, agenda, callback) {
+  let pending = await read(request);
+  if (pending.agenda !== agenda) pending = {...empty, agenda};
+  return await write(request, callback(pending));
+}
+
 export default read;

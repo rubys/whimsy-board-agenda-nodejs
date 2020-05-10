@@ -108,7 +108,7 @@ export default function reduce(state = null, action) {
       let attachments = {};
 
       for (let [attachment, comments] of Object.entries(pending.comments)) {
-        attachments[attachment].comments = comments;
+        attachments[attachment] = { comments };
       }
 
       for (let prop of ['approved', 'unapproved', 'flagged', 'unflagged']) {

@@ -3,6 +3,8 @@ import Pending from "../models/pending.js";
 import React from "react";
 import jQuery from "jquery";
 import { connect } from 'react-redux';
+import Store from '../store.js';
+import * as Actions from "../../actions.js";
 
 function mapStateToProps(state) {
   return {
@@ -50,19 +52,19 @@ class AddComment extends React.Component {
 
       <textarea id="comment-text" value={comment} label="Comment"
         placeholder="comment" rows={5} disabled={disabled}
-        onChange={event => this.setState({ comment: event.target.value })}/>
+        onChange={event => this.setState({ comment: event.target.value })} />
 
       {user.role === "director" && /^([A-Z]+|[0-9]+)$/m.test(item.attach)
-	? <input id="flag" type="checkbox" checked={checked}
-	  label="item requires discussion or follow up" onClick={this.flag} />
+        ? <input id="flag" type="checkbox" checked={checked}
+          label="item requires discussion or follow up" onClick={this.flag} />
         : null}
 
       <button className="btn-default" data-dismiss="modal"
         disabled={disabled}>Cancel</button>
 
       {comment
-	? <button className="btn-warning" onClick={this.delete}
-	  disabled={disabled}>Delete</button>
+        ? <button className="btn-warning" onClick={this.delete}
+          disabled={disabled}>Delete</button>
         : null}
 
       <button className="btn-primary" onClick={this.save}
@@ -106,7 +108,8 @@ class AddComment extends React.Component {
       jQuery("#comment-form").modal("hide");
       document.body.classList.remove("modal-open");
       this.setState({ disabled: false });
-      Pending.load(pending)
+      console.log(pending);
+      Store.dispatch(Actions.postPending(pending));
     })
   };
 
@@ -120,7 +123,9 @@ class AddComment extends React.Component {
       request: event.target.checked ? "flag" : "unflag"
     };
 
-    Pending.update("approve", data, pending => Pending.load(pending))
+    Pending.update("approve", data, pending => {
+      Store.dispatch(Actions.postPending(pending))
+  })
   }
 };
 
