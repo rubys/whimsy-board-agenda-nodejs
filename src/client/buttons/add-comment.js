@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
+    agendaFile: state.client.agendaFile,
     pending: state.server.pending,
     user: state.server.user
   }
@@ -76,7 +77,7 @@ class AddComment extends React.Component {
   // when save button is pushed, post comment and dismiss modal when complete
   save = (event) => {
     let data = {
-      agenda: Agenda.file,
+      agenda: this.props.agendaFile,
       attach: this.props.item.attach,
       initials: document.getElementById("comment-initials").value || User.initials,
       comment: this.state.comment
@@ -96,7 +97,7 @@ class AddComment extends React.Component {
     this.setState({ checked: !this.state.checked });
 
     let data = {
-      agenda: Agenda.file,
+      agenda: this.props.agendaFile,
       initials: User.initials,
       attach: this.props.item.attach,
       request: event.target.checked ? "flag" : "unflag"

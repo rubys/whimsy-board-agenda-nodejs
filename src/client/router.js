@@ -2,7 +2,6 @@ import AddComment from "./buttons/add-comment.js";
 import AddMinutes from "./buttons/add-minutes.js";
 import Approve from "./buttons/approve.js";
 import Attend from "./buttons/attend.js";
-import Agenda from "./models/agenda.js";
 import Adjournment from "./pages/adjournment.js";
 import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
@@ -269,9 +268,7 @@ class Router extends React.Component {
           };
 
           if (this.props.role === "secretary") {
-            if (Agenda.approved === "approved") {
-              buttons.push({ form: PublishMinutes })
-            } else if (Minutes.ready_to_post_draft) {
+            if (Minutes.ready_to_post_draft) {
               buttons.push({ form: DraftMinutes })
             }
           };
@@ -318,7 +315,7 @@ class Router extends React.Component {
         {() => {
           let buttons = [{ form: InitialReminder }, { button: FinalReminder }];
 
-          if (Agenda.index.some(item => item.nonresponsive)) {
+          if (Object.values(this.props.agenda).some(item => item.status.nonresponsive)) {
             buttons.push({ form: ProdReminder })
           };
 
@@ -355,8 +352,8 @@ class Router extends React.Component {
           };
 
           // determine next/previous links
-          for (let i of Agenda.index) {
-            if (i.shepherd && i.comments) {
+          for (let i of Object.values(this.props.agenda)) {
+            if (i.shepherd && 'comments' in i) {
               if (i.shepherd.includes(" ")) continue;
               let href = `shepherd/${i.shepherd}`;
 
