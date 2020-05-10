@@ -57,7 +57,7 @@ class JSONStorage {
   static fetch(name, callback) {
     if (typeof fetch !== 'undefined' && typeof caches !== 'undefined' && (window.location.protocol === "https:" || window.location.hostname === "localhost")) {
       caches.open("board/agenda").then((cache) => {
-        let fetched = null;
+        let fetched = undefined;
         Store.dispatch(Actions.clockIncrement());
 
         // construct request
@@ -73,23 +73,23 @@ class JSONStorage {
           cache.put(request, response.clone());
 
           response.json().then(json => {
-            if (!fetched || JSON.stringify(fetched) !== JSON.stringify(json)) {
-              if (!fetched) Store.dispatch(Actions.clockDecrement());
+            if (fetched === undefined || JSON.stringify(fetched) !== JSON.stringify(json)) {
+              if (fetched === undefined) Store.dispatch(Actions.clockDecrement());
               fetched = json;
-              if (json) callback(null, json)
+              callback(null, json)
             }
           })
             .catch(error => {
               console.error(`fetch ${request.url}:\n${error}`)
             })
             .finally(() => {
-              if (!fetched) Store.dispatch(Actions.clockDecrement());
+              if (fetched === undefined) Store.dispatch(Actions.clockDecrement());
             })
         });
 
         // check cache
         cache.match(`../api/${name}`).then(response => {
-          if (response && !fetched) {
+          if (response && fetched === undefined) {
             try {
               response.json().then(json => {
                 Store.dispatch(Actions.clockDecrement());

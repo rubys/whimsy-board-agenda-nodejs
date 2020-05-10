@@ -55,20 +55,23 @@ ReactDOM.render(
           reject(error);
         } else if (agenda) {
           store.dispatch(Actions.postAgenda(agenda));
-          resolve(agenda);
         }
+
+        resolve(agenda);
       })
     });
 
     // fetch and store minutes information
+console.log('fetching');
     await new Promise((resolve, reject) => {
       JSONStorage.fetch(`minutes/${base.slice(1, -1)}.json`, (error, minutes) => {
         if (error) {
           reject(error);
         } else if (minutes) {
           store.dispatch(Actions.postSecretaryMinutes(minutes));
-          resolve(minutes);
         }
+
+        resolve(minutes);
       })
     });
   }
