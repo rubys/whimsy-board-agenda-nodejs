@@ -1,58 +1,62 @@
-import { read } from "../sources/agenda.js";
-import * as Pending from "../sources/pending.js";
+import { update } from '../sources/pending.js'
+import { read } from '../sources/agenda.js';
 
 //
-// Pre-app approval/unapproval/flagging/unflagging of an agenda item
+// Flag (or unflag) an agenda item
+//
 
 export default async function (request) {
   let { agenda, initials, attach } = request.body;
-  let pending = await Pending.read(request);
 
-  agenda = await read(agenda);
-  initials = initials || pending.initials;
-  let { approved, unapproved, flagged, unflagged } = pending;
+  let item = (await read(agenda, request)).find(item => item.attach === attach);
 
-  let index;
+  return update(request, agenda, pending => {
+    pending.initials = initials;
 
-  switch (request.body.request) {
-  case "approve":
-    index = unapproved.indexOf(attach);
-    if (index >= 0) unapproved.splice(index, 1);
+    let { approved, unapproved, flagged, unflagged } = pending;
 
-    if (!approved.includes(attach) && !agenda.find(item => (
-      item.attach == attach && item.approved.includes(initials)
-    ))) approved.push(attach);
+    let index;
 
-    break;
+    switch (request.body.request) {
+      case "approve":
+        index = unapproved.indexOf(attach);
+        if (index !== -1) unapproved.splice(index, 1);
 
-  case "unapprove":
-    index = approved.indexOf(attach);
-    if (index >= 0) approved.splice(index, 1);
+        if (!approved.includes(attach) && !item?.approved?.includes(initials)) {
+          approved.push(attach);
+        }
 
-    if (!unapproved.includes(attach) && !!agenda.find(item => (
-      item.attach == attach && item.approved.includes(initials)
-    ))) unapproved.push(attach);
+        break;
 
-    break;
+      case "unapprove":
+        index = approved.indexOf(attach);
+        if (index !== -1) approved.splice(index, 1);
 
-  case "flag":
-    index = unflagged.indexOf(attach);
-    if (index >= 0) unflagged.splice(index, 1);
+        if (!unapproved.includes(attach) && item?.approved?.includes(initials)) {
+          unapproved.push(attach)
+        }
 
-    if (!flagged.includes(attach) && !agenda.find(item => (
-      item.attach == attach && Array.from(item.flagged_by).includes(initials)
-    ))) flagged.push(attach);
+        break;
 
-    break;
+      case "flag":
+        index = unflagged.indexOf(attach);
+        if (index !== -1) unflagged.splice(index, 1);
 
-  case "unflag":
-    index = flagged.indexOf(attach);
-    if (index >= 0) flagged.splice(index, 1);
+        if (!flagged.includes(attach) && !item?.flagged?.includes(initials)) {
+          flagged.push(attach);
+        }
 
-    if (!unflagged.includes(attach) && !!agenda.find(item => (
-      item.attach == attach && Array.from(item.flagged_by).includes(initials)
-    ))) unflagged.push(attach)
-  }
+        break;
 
-  return Pending.write(request, pending)
+      case "unflag":
+        index = flagged.indexOf(attach);
+        if (index !== -1) flagged.splice(index, 1);
+
+        if (!unflagged.includes(attach) && item?.flagged?.includes(initials)) {
+          unflagged.push(attach)
+        }
+    }
+
+    return pending;
+  })
 }
