@@ -39,10 +39,9 @@ export default class ModalDialog extends React.Component {
           let props = { htmlFor: child.props.id };
 
           if (child.props.type === "checkbox") {
-            props.className = "checkbox";
-            label = React.createElement("label", props, child, child.props.label);
-            delete child.props.label;
-            child = null
+            props = { ...child.props, ...props, className: 'checkbox' }
+            child = React.createElement("label", props, child, child.props.label);
+            label = null
           } else {
             label = React.createElement("label", props, child.props.label);
             child = React.cloneElement(child, { label: null })
@@ -51,7 +50,7 @@ export default class ModalDialog extends React.Component {
 
         body.push(React.createElement(
           "div",
-          { className: "form-group", key: child.props.id || child.props.name },
+          { className: "form-group", key: child?.props?.id || child?.props?.name },
           label,
           child
         ))

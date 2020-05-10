@@ -2,7 +2,6 @@ import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import Pending from "../models/pending.js";
 import React from "react";
-import User from "../models/user.js";
 import jQuery from "jquery";
 import { connect } from 'react-redux';
 
@@ -46,7 +45,7 @@ class AddComment extends React.Component {
 
       <input id="comment-initials" label="Initials" placeholder="initials" disabled={this.state.disabled} value={this.props.pending.initials || this.props.user.initials} />
       <textarea id="comment-text" value={this.state.comment} label="Comment" placeholder="comment" rows={5} disabled={this.state.disabled} />
-      {User.role === "director" && /^([A-Z]+|[0-9]+)$/m.test(this.props.item.attach) ? <input id="flag" type="checkbox" label="item requires discussion or follow up" onClick={this.flag} checked={this.state.checked} /> : null}
+      {this.props.user.role === "director" && /^([A-Z]+|[0-9]+)$/m.test(this.props.item.attach) ? <input id="flag" type="checkbox" label="item requires discussion or follow up" onClick={this.flag} checked={this.state.checked} /> : null}
 
       <button className="btn-default" data-dismiss="modal" disabled={this.state.disabled}>Cancel</button>
       {this.state.comment ? <button className="btn-warning" onClick={this.delete} disabled={this.state.disabled}>Delete</button> : null}
@@ -79,7 +78,7 @@ class AddComment extends React.Component {
     let data = {
       agenda: this.props.agendaFile,
       attach: this.props.item.attach,
-      initials: document.getElementById("comment-initials").value || User.initials,
+      initials: document.getElementById("comment-initials").value || this.props.user.initials,
       comment: this.state.comment
     };
 
@@ -98,7 +97,7 @@ class AddComment extends React.Component {
 
     let data = {
       agenda: this.props.agendaFile,
-      initials: User.initials,
+      initials: this.props.user.initials,
       attach: this.props.item.attach,
       request: event.target.checked ? "flag" : "unflag"
     };
