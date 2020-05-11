@@ -5,7 +5,11 @@ import { Provider } from 'react-redux';
 import Report from '../pages/report.js';
 
 it('converts mentions of JIRA to hotlinks', () => {
-  let item = {title: 'PMC', text: 'we fixed CVE-2020-0001 this month'}
+  let item = {
+    title: 'PMC',
+    text: 'we fixed CVE-2020-0001 this month',
+    status: {}
+  }
 
   const output = mount(
     <Provider store={store}>

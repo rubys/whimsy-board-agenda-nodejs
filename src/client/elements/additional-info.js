@@ -23,7 +23,7 @@ function mapStateToProps(state, props) {
     responses: responses[title] || {},
     loading: !responses,
     draft: lookup('reporter')[title] || {},
-    initials: state.server.user.initials
+    initials: state.server.user?.initials
   }
 };
 
