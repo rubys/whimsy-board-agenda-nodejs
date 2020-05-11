@@ -48,15 +48,15 @@ export default function reduce(state = null, action) {
           }
         }
 
-  // PMC has missed two consecutive months
-  let nonresponsive = item.notes?.includes("missing") 
-    && item.notes.replace(/^.*missing/m, "").split(",").length >= 2;
+        // PMC has missed two consecutive months
+        let nonresponsive = item.notes?.includes("missing")
+          && item.notes.replace(/^.*missing/m, "").split(",").length >= 2;
 
         let { flagged_by, approved: approved_by, missing } = item;
         delete item.flagged_by;
         delete item.approved;
         delete item.missing;
-        item.status = status(state?.[item.href],
+        item.status = status(state?.[item.href] || item,
           { flagged_by, approved_by, missing, nonresponsive });
       });
 
@@ -150,8 +150,9 @@ export default function reduce(state = null, action) {
 }
 
 function status(item, updates) {
-  let status = item?.status || {};
+  let status = item.status || {};
 
+  // if updates are actual changes, apply them to the status
   for (let [prop, value] of Object.entries(updates)) {
     if (value) {
       if (status[prop] !== value && !deepEqual(status[prop], value)) status = { ...status, [prop]: value };
@@ -163,7 +164,7 @@ function status(item, updates) {
     }
   }
 
-  if (status !== item?.status) {
+  if (status !== item.status) {
     // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
     status.flagged =
       status.pending?.flagged ||
@@ -177,7 +178,36 @@ function status(item, updates) {
       + (approvedByMe && status.pending?.unapprove ? -1 : 0) > 5
 
     // items are skippable if they are preapproved and not flagged  
-    status.skippable = status.approved && !status.flagged
+    status.skippable = status.approved && !status.flagged;
+
+    // determine color based on status
+    status.color = (() => {
+      if (!item) {
+        return "blank";
+      } else if (status.flagged) {
+        return "commented"
+      } else if (status.missing) {
+        return "missing"
+      } else if (status.approved) {
+        return "reviewed"
+      } else if ('approved_by' in status) {
+        return "ready"
+      } else if (item.title === "Action Items") {
+        if (item.actions.length === 0) {
+          return "missing"
+        } else if (item.actions.some(action => action.status.length === 0)) {
+          return "ready"
+        } else {
+          return "reviewed"
+        }
+      } else if (item.text || item.report) {
+        return "available"
+      } else if (item.text === undefined) {
+        return "missing"
+      } else {
+        return "reviewed"
+      }
+    })();
   }
 
   return status;
