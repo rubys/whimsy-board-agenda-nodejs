@@ -1,5 +1,3 @@
-import Agenda from "../models/agenda.js";
-import Minutes from "../models/minutes.js";
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -16,12 +14,12 @@ function mapStateToProps(state) {
 //
 class Index extends React.Component {
   render() {
+    if (!this.props.agenda) return null;
+
     let { meetingDay } = this.props;
 
-    let agenda = this.props.agenda
-     ? Object.values(this.props.agenda)
+    let agenda = Object.values(this.props.agenda)
       .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
-      : [];
 
     return <>
       <header>
