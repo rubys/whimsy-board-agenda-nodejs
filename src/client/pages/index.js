@@ -2,13 +2,26 @@ import Agenda from "../models/agenda.js";
 import Minutes from "../models/minutes.js";
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    agenda: state.agenda,
+    meetingDay: state.client.meetingDay
+  }
+};
 
 //
 // Overall Agenda page: simple table with one row for each item in the index
 //
 class Index extends React.Component {
   render() {
-    let started = Minutes.started;
+    let { meetingDay } = this.props;
+
+    let agenda = this.props.agenda
+     ? Object.values(this.props.agenda)
+      .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
+      : [];
 
     return <>
       <header>
@@ -26,20 +39,24 @@ class Index extends React.Component {
         </thead>
 
         <tbody>
-          {Agenda.index.map(row => (
-            <tr className={row.color} key={row.attach}>
-              <td>{row.attach}</td>
+          {agenda.map(item => (
+            <tr className={item.status.color} key={item.attach}>
+              <td>{item.attach}</td>
 
-              {started && /^(\d+|[A-Z]+)$/m.test(row.attach) && !row.skippable ? <td>
-                <Link to={"flagged/" + row.href}>{row.title}</Link>
-              </td> : <td>
-                  <Link to={row.href}>{row.title}</Link>
+              {meetingDay && /^(\d+|[A-Z]+)$/m.test(item.attach) && !item.skippable
+                ? <td>
+                  <Link to={"flagged/" + item.href}>{item.title}</Link>
+                </td>
+                : <td>
+                  <Link to={item.href}>{item.title}</Link>
                 </td>}
 
-              <td>{row.owner || row.chair_name}</td>
-              <td>{row.shepherd ?
-                <Link to={`shepherd/${row.shepherd.split(" ")[0]}`}>{row.shepherd}</Link>
-                : null}</td>
+              <td>{item.owner || item.chair_name}</td>
+
+              <td>{item.shepherd
+                ? <Link to={`shepherd/${item.shepherd.split(" ")[0]}`}>{item.shepherd}</Link>
+                : null
+              }</td>
             </tr>
           ))}
         </tbody>
@@ -48,4 +65,4 @@ class Index extends React.Component {
   }
 };
 
-export default Index
+export default connect(mapStateToProps)(Index)
