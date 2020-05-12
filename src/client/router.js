@@ -7,6 +7,7 @@ import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
 import CacheStatus, { CachePage } from "./pages/cache.js";
 import Comments from "./pages/comments.js";
+import Demo from "./demo/router.js";
 import DraftMinutes from "./buttons/draft-minutes.js";
 import Feedback from "./pages/feedback.js";
 import Events from "./models/events.js";
@@ -443,6 +444,10 @@ class Router extends React.Component {
 
           return main({ view: Report, item })
         }}
+      </Route>
+
+      <Route path="/demo">
+        <Demo main={main} />
       </Route>
 
       <Route path="/:path">

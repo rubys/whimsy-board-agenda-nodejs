@@ -39,7 +39,7 @@ class Header extends React.Component {
       }
     }
 
-    let color = this.props.item?.status.color || 'blank';
+    let color = this.props.color || this.props.item?.status.color || 'blank';
 
     return <header className={`navbar fixed-top ${color}`}>
       <div className="navbar-brand">{props.title}</div>

@@ -23,7 +23,7 @@ class Footer extends React.Component {
     let item = this.props.item || this.props;
     let { traversal, meetingDay } = this.props;
 
-    let color = item?.status?.color || 'blank'
+    let color = this.props.color || item?.status?.color || 'blank'
 
     return <footer className={`fixed-bottom navbar ${color}`}>
       <PrevLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
