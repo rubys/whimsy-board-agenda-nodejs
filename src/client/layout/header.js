@@ -1,4 +1,3 @@
-import Colorize from "../elements/colorize.js";
 import Info from "../elements/info.js";
 import { Link } from "react-router-dom";
 import PodlingNameSearch from "../elements/pns.js";
@@ -40,133 +39,133 @@ class Header extends React.Component {
       }
     }
 
-    return <Colorize item={props}>
-      <header className="navbar fixed-top">
-        <div className="navbar-brand">{props.title}</div>
+    let color = this.props.item?.status.color || 'blank';
 
-        {/^7/m.test(props.attach) && /^Establish .* Project/m.test(props.fulltitle)
-          ? <PodlingNameSearch item={props} />
-          : null}
+    return <header className={`navbar fixed-top ${color}`}>
+      <div className="navbar-brand">{props.title}</div>
 
-        {this.props.clockCounter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
+      {/^7/m.test(props.attach) && /^Establish .* Project/m.test(props.fulltitle)
+        ? <PodlingNameSearch item={props} />
+        : null}
 
-        <ul className="nav nav-pills navbar-right">
-          {forked ? <li>
-            <span className="badge badge-warning">FORKED</span>
-          </li> : null}
+      {this.props.clockCounter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
 
-          {pendingCount > 0 || offline ? <li>
-            <h4><span className="badge badge-danger">
-              {offline ? <span>OFFLINE: </span> : null}
-              <Link to="/queue">{pendingCount}</Link>
-            </span></h4>
-          </li> : null}
+      <ul className="nav nav-pills navbar-right">
+        {forked ? <li>
+          <span className="badge badge-warning">FORKED</span>
+        </li> : null}
 
-          {props.attach ?
-            <li className={"report-info dropdown"} data-toggle="dropdown">
-              <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
-                info
+        {pendingCount > 0 || offline ? <li>
+          <h4><span className="badge badge-danger">
+            {offline ? <span>OFFLINE: </span> : null}
+            <Link to="/queue">{pendingCount}</Link>
+          </span></h4>
+        </li> : null}
+
+        {props.attach ?
+          <li className={"report-info dropdown"} data-toggle="dropdown">
+            <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
+              info
               </button>
 
-              <Info item={props} position="dropdown-menu" />
+            <Info item={props} position="dropdown-menu" />
+          </li>
+
+          : props.online ?
+
+            <li className="dropdown">
+              <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
+                online
+                </button>
+
+              <ul className="online dropdown-menu">
+                {props.online.map(id =>
+                  <li>
+                    <a href={`/roster/committer/${id}`}>{id}</a>
+                  </li>
+                )}
+              </ul>
             </li>
 
-            : props.online ?
+            :
 
-              <li className="dropdown">
-                <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
-                  online
+            <li className="dropdown">
+              <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
+                summary
                 </button>
 
-                <ul className="online dropdown-menu">
-                  {props.online.map(id =>
-                    <li>
-                      <a href={`/roster/committer/${id}`}>{id}</a>
-                    </li>
-                  )}
-                </ul>
-              </li>
+              <table className="table-bordered online dropdown-menu">
+                <tbody>{summary.map(status => {
+                  let text = status.text;
+                  if (status.count === 1) text = text.replace(/s$/m, "");
 
-              :
+                  let href = status.href || status.item?.href
 
-              <li className="dropdown">
-                <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
-                  summary
-                </button>
+                  return <tr className={status.color} key={text}>
+                    <td>
+                      <Link to={href}>{status.count}</Link>
+                    </td>
 
-                <table className="table-bordered online dropdown-menu">
-                  <tbody>{summary.map(status => {
-                    let text = status.text;
-                    if (status.count === 1) text = text.replace(/s$/m, "");
+                    <td>
+                      <Link to={href}>{text}</Link>
+                    </td>
+                  </tr>
+                })}</tbody>
+              </table>
+            </li>
+        }
 
-                    let href = status.href || status.item?.href
-
-                    return <tr className={status.color} key={text}>
-                      <td>
-                        <Link to={href}>{status.count}</Link>
-                      </td>
-
-                      <td>
-                        <Link to={href}>{text}</Link>
-                      </td>
-                    </tr>
-                  })}</tbody>
-                </table>
-              </li>
-          }
-
-          <li className="dropdown">
-            <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
-              navigation
+        <li className="dropdown">
+          <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
+            navigation
             </button>
 
-            <ul className="dropdown-menu">
-              <li>
-                <Link id="agenda" to="/">Agenda</Link>
-              </li>
+          <ul className="dropdown-menu">
+            <li>
+              <Link id="agenda" to="/">Agenda</Link>
+            </li>
 
-              {Object.values(this.props.agenda)
-                .filter(item => item.index)
-                .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
-                .map(item => (
-                  <li key={item.index}>
-                    <Link to={item.href}>{item.index}</Link>
-                  </li>
-                ))
-              }
+            {Object.values(this.props.agenda)
+              .filter(item => item.index)
+              .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
+              .map(item => (
+                <li key={item.index}>
+                  <Link to={item.href}>{item.index}</Link>
+                </li>
+              ))
+            }
 
-              <li className="divider" />
+            <li className="divider" />
 
-              <li>
-                <Link to="/search">Search</Link>
-              </li>
+            <li>
+              <Link to="/search">Search</Link>
+            </li>
 
-              <li>
-                <Link to="/comments">Comments</Link>
-              </li>
+            <li>
+              <Link to="/comments">Comments</Link>
+            </li>
 
-              {user.role === 'director' ? <li>
-                <Link id="shepherd" to={`/shepherd/${user.firstname}`}>Shepherd</Link>
-              </li> : null}
+            {user.role === 'director' ? <li>
+              <Link id="shepherd" to={`/shepherd/${user.firstname}`}>Shepherd</Link>
+            </li> : null}
 
-              <li>
-                <Link id="queue" to="queue">Queue</Link>
-              </li>
+            <li>
+              <Link id="queue" to="queue">Queue</Link>
+            </li>
 
-              <li className="divider" />
+            <li className="divider" />
 
-              <li>
-                <Link id="backchannel" to="/backchannel">Backchannel</Link>
-              </li>
+            <li>
+              <Link id="backchannel" to="/backchannel">Backchannel</Link>
+            </li>
 
-              <li>
-                <Link id="help" to="/help">Help</Link>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </header>
-    </Colorize>
+            <li>
+              <Link id="help" to="/help">Help</Link>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </header>
   };
 
   // summarize the state of the various reports

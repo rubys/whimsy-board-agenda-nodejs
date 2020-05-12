@@ -1,4 +1,3 @@
-import Colorize from "../elements/colorize.js";
 import React from "react";
 import User from "../models/user.js";
 import { Link } from "react-router-dom";
@@ -24,34 +23,34 @@ class Footer extends React.Component {
     let item = this.props.item || this.props;
     let { traversal, meetingDay } = this.props;
 
-    return <Colorize item={item}>
-      <footer className="fixed-bottom navbar">
-        <PrevLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
+    let color = item?.status?.color || 'blank'
 
-        <span>{this.props.buttons ? this.props.buttons.map(button => {
-          let props;
+    return <footer className={`fixed-bottom navbar ${color}`}>
+      <PrevLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
 
-          if (button.text) {
-            props = { ...button.attrs, key: button.text };
+      <span>{this.props.buttons ? this.props.buttons.map(button => {
+        let props;
 
-            if (button.attrs.class) {
-              props.className = button.attrs.class.split(" ");
-              delete props.class;
-            };
+        if (button.text) {
+          props = { ...button.attrs, key: button.text };
 
-            return React.createElement("button", props, button.text)
-          } else if (button.type) {
-            let type = button.type;
-            if (type.WrappedComponent) type = type.WrappedComponent;
-            return React.createElement(button.type, { ...button.attrs, key: type.name })
-          }
+          if (button.attrs.class) {
+            props.className = button.attrs.class.split(" ");
+            delete props.class;
+          };
 
-          return null
-        }) : null}</span>
+          return React.createElement("button", props, button.text)
+        } else if (button.type) {
+          let type = button.type;
+          if (type.WrappedComponent) type = type.WrappedComponent;
+          return React.createElement(button.type, { ...button.attrs, key: type.name })
+        }
 
-        <NextLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
-      </footer>
-    </Colorize>
+        return null
+      }) : null}</span>
+
+      <NextLink item={item} agenda={this.props.agenda} traversal={traversal} meetingDay={meetingDay} />
+    </footer>
   }
 };
 
@@ -110,13 +109,12 @@ class PrevLink extends React.Component {
 
     if (link) {
       if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "/";
-      
-      return <Colorize item={link}>
-        {(prefix === '/' && link.href.startsWith('../'))
-          ? <a className={"navbar-brand backlink"} rel="prev" href={link.href}>{link.title}</a>
-          : <Link className={"navbar-brand backlink"} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
-        }
-      </Colorize>
+
+      let color = link?.status?.color || 'blank';
+
+      return prefix === '/' && link.href.startsWith('../')
+        ? <a className={`navbar-brand backlink ${color}`} rel="prev" href={link.href}>{link.title}</a>
+        : <Link className={`navbar-brand backlink ${color}`} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
     } else if (item?.prev || item?.next) {
       return <a className="navbar-brand" />
     } else {
@@ -172,12 +170,11 @@ class NextLink extends React.Component {
     if (link) {
       if (!/^([A-Z]|\d+$)/m.test(link.attach)) prefix = "/";
 
-      return <Colorize item={link}>
-        {(prefix === '/' && link.href.startsWith('../'))
-          ? <a className={"navbar-brand nextlink"} rel="next" href={link.href}>{link.title}</a>
-          : <Link className={"navbar-brand nextlink"} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
-        }
-      </Colorize>
+      let color = link?.status?.color || 'blank';
+
+      return prefix === '/' && link.href.startsWith('../')
+        ? <a className={`navbar-brand nextlink ${color}`} rel="next" href={link.href}>{link.title}</a>
+        : <Link className={`navbar-brand nextlink ${color}`} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
     } else if (item?.prev || item?.next) {
       return <a className="navbar-brand" />
     } else {
