@@ -504,6 +504,13 @@ class Router extends React.Component {
       Events.monitor();
     }
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.location.pathname != prevProps.location.pathname) {
+      window.scrollTo(0, 0);
+    }
+  }
+
 }
 
 export default connect(mapStateToProps)(withRouter(Router))
