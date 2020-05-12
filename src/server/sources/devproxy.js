@@ -29,7 +29,7 @@ export default async function devproxy(request, path, method = "get", data) {
       method
     };
 
-    if (method == 'post' && data) {
+    if (method === 'post' && data) {
       if (typeof data === "string") {
         options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
       } else {
@@ -61,7 +61,7 @@ export default async function devproxy(request, path, method = "get", data) {
       });
     });
 
-    if (method == "post" && data) {
+    if (method === "post" && data) {
       request.write(data);
     }
 

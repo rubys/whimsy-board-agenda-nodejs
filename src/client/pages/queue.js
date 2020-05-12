@@ -5,12 +5,10 @@ import Offline from "../buttons/offline.js";
 import Pending from "../models/pending.js";
 import React from "react";
 import Refresh from "../buttons/refresh.js";
-import User from "../models/user.js";
 import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
-    pending: state.server.pending,
     user: state.user
   };
 }
@@ -28,7 +26,7 @@ class Queue extends React.Component {
   };
 
   render() {
-    let { user, pending } = this.props;
+    let { user } = this.props;
 
     return <div className="col-xs-12">
       {user?.role === "director" ? <>

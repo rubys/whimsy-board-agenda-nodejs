@@ -102,7 +102,7 @@ export async function projectCommitters(project) {
     attributes: ['member']
   }
 
-  members = [];
+  let members = [];
 
   return new Promise((resolve, reject) => {
     client.search(base, options, (err, res) => {

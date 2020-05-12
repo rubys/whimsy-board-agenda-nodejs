@@ -87,8 +87,6 @@ export default async function (request) {
   // Note: this includes the non-PMC entries
   // Scan for entries even if there is a missing extra space before the chair column
   for (let line of head.match(/^[ \t]+\w.*?[ \t]+.*[ \t]+<.*?@apache\.org>/gm)) {
-    let committee, name, id;
-
     // Now weed out the malformed lines
     let m = line.match(/^[ \t]+(\w.*?)[ \t][ \t]+(.*)[ \t]+<(.*?)@apache\.org>/m);
 
@@ -111,7 +109,7 @@ export default async function (request) {
 
   // Extract officers
   // first drop leading text so we only match officers at end of section
-  let officers = [... new Set(head.replace(/.*?also has .*? Officers/ms, "")
+  let officers = [...new Set(head.replace(/.*?also has .*? Officers/ms, "")
     .match(/^[ \t]+(\w.*?)(?:[ \t][ \t]|[ \t]?$)/gm)
     .flat(Infinity))].map(name => list.get(name));
 
@@ -170,7 +168,7 @@ export default async function (request) {
     s => s.slice(1)
   )) {
     for (let committee of Array.from(
-      committees.matchAll(/^   [ \t]*(.*)/gm),
+      committees.matchAll(/^ {3}[ \t]*(.*)/gm),
       s => s.slice(1)
     )) {
       let comment;
@@ -208,51 +206,39 @@ export default async function (request) {
       switch (pmc.id.toLowerCase()) {
         case "comdev":
           return "community";
-          break;
 
         case "httpcomponents":
           return "hc";
-          break;
 
         case "whimsy":
           return "whimsical";
-          break;
 
         case "brandmanagement":
           return "trademarks@apache.org";
-          break;
 
         case "infrastructure":
           return "infra";
-          break;
 
         case "dataprivacy":
           return "privacy@apache.org";
-          break;
 
         case "legalaffairs":
           return "legal-internal@apache.org";
-          break;
 
         case "fundraising":
           return "fundraising-private@apache.org";
-          break;
 
         case "marketingandpublicity":
           return "press@apache.org";
-          break;
 
         case "tac":
           return "travel-assistance@apache.org";
-          break;
 
         case "w3crelations":
           return "w3c@apache.org";
-          break;
 
         case "concom":
           return "planners@apachecon.com";
-          break;
 
         default:
           return pmc.id

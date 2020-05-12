@@ -2,12 +2,10 @@
 import Agenda from "../models/agenda.js";
 import { Link } from "react-router-dom";
 import { navigate } from "../router.js";
-import Minutes from "../models/minutes.js";
 import Posted from "../models/posted.js";
 import React from "react";
 import { lookup } from '../store.js';
 import Text from "./text.js";
-import User from "../models/user.js";
 import { hotlink, Flow, splitComments } from "../utils.js";
 import { connect } from 'react-redux';
 import { Server } from '../utils.js';
@@ -58,7 +56,6 @@ class AdditionalInfo extends React.Component {
   render() {
     const { item, historicalComments, responses, draft, loading } = this.props;
 
-    let minutes = Minutes.get(item.title);
     let posted = item.missing && Posted.get(item.title);
 
     return <>

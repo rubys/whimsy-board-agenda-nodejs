@@ -32,7 +32,7 @@ let _stdinPwdOK;
 async function stdinPwdOK() {
   if (_stdinPwdOK === undefined) {
     try {
-      let { stdout, stderr } = await exec('svn help checkout -v');
+      let { stdout } = await exec('svn help checkout -v');
       _stdinPwdOK = stdout.includes('--password-from-stdin');
     } catch {
       _stdinPwdOK = false;

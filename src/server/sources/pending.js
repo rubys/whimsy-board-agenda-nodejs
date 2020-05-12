@@ -27,14 +27,13 @@ export async function read(request) {
     if (error.code !== 'ENOENT') throw error;
   }
 
-  pending = { ...empty, agenda, ... pending };
+  pending = { ...empty, agenda, ...pending };
 
   return pending;
 }
 
 export async function write(request, pending) {
   let { username } = credentials(request);
-  let agenda = (await Board.agendas()).sort().pop();
 
   await fs.mkdir(agendaPath, { recursive: true });
   await fs.writeFile(`${agendaPath}/${username}.yml`, yaml.stringify(pending));
@@ -46,7 +45,7 @@ export async function write(request, pending) {
 // ensuring that pending is wiped clean if you move to a new agenda.
 export async function update(request, agenda, callback) {
   let pending = await read(request);
-  if (pending.agenda !== agenda) pending = {...empty, agenda};
+  if (pending.agenda !== agenda) pending = { ...empty, agenda };
   return await write(request, callback(pending));
 }
 

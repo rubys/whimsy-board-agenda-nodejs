@@ -2,7 +2,6 @@ import Agenda from "../models/agenda.js";
 import ModalDialog from "../elements/modal-dialog.js";
 import Posted from "../models/posted.js";
 import React from "react";
-import User from "../models/user.js";
 import jQuery from "jquery";
 import { post } from "../utils.js";
 import { connect } from 'react-redux';

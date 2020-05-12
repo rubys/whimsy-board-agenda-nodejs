@@ -10,9 +10,9 @@ export default async function (request) {
   let { agenda, message, attach, report, title, digest } = request.body;
 
   // special case for new special orders
-  if (attach == "7?") {
+  if (attach === "7?") {
     message = `Post Special Order 7X: ${title}`
-  } else if (attach == "8?") {
+  } else if (attach === "8?") {
     message = `Post Discussion Item 8X: ${title}`
   };
 
@@ -31,7 +31,7 @@ export default async function (request) {
       // convert unicode blank characters to an ASCII space
       report = report.replace(/\p{gc=Space_Separator}/gu, " ");
 
-      if (attach == "7?") {
+      if (attach === "7?") {
         // new special order
         // adjust indentation
         let indent = report.match(/^ +/gm)?.sort()?.[0];
@@ -53,7 +53,7 @@ export default async function (request) {
         // insert into agenda
         let insertionPoint = agenda.match(/\n() 8\. Discussion Items/).index;
         agenda = agenda.slice(0, insertionPoint) + `\n${title}${report}\n\n` + agenda.slice(insertionPoint + 1)
-      } else if (attach == "8?") {
+      } else if (attach === "8?") {
         // new discussion item
         // adjust indentation
         let indent = report.match(/^ +/gm)?.sort()?.[0];
@@ -87,7 +87,7 @@ export default async function (request) {
         let pmc = ASF.Committee.find(attach.slice(1));
 
         if (!pmc.dn) {
-          throw new Exception(`${JSON.stringify(attach.slice(1))} PMC not found`)
+          throw new Error(`${JSON.stringify(attach.slice(1))} PMC not found`)
         };
 
         // select shepherd
@@ -96,7 +96,7 @@ export default async function (request) {
         )).group_by(n => n).map((n, list) => [n, list.length]);
 
         let min = shepherds.map((name, count) => count).min;
-        let shepherd = shepherds.filter((name, count) => count == min).sample[0];
+        let shepherd = shepherds.filter((name, count) => count === min).sample[0];
 
         // insert section into committee-reports
         agenda[/\n() 7\. Special Orders/, 1] = `    ${attach}. Apache ${pmc.display_name} Project [${pmc.chair.public_name} / ${shepherd}]
@@ -118,12 +118,12 @@ ${report.trim()}
 
 `
       } else {
-        let item = parsed.find(item => item.attach == attach);
+        let item = parsed.find(item => item.attach === attach);
 
         if (!item) {
-          throw new Exception(`Attachment ${JSON.stringify(attach)} not found`)
+          throw new Error(`Attachment ${JSON.stringify(attach)} not found`)
         } else if (digest != item.digest) {
-          throw new Exception("Merge conflict")
+          throw new Error("Merge conflict")
         };
 
         let spacing = "\n\n";
@@ -136,7 +136,7 @@ ${report.trim()}
           title = item.fulltitle || item.title;
           pattern = new RegExp(`(^\\s+${attach[attach.length - 1]}\\.\\s+${title})\\n.*?\\n( {1,6}\\w\\.)`, "m");
           report = report.replace(/^(.)/gm, "       $1")
-        } else if (attach == "8.") {
+        } else if (attach === "8.") {
           title = "Discussion Items";
           pattern = new RegExp(`^(\\s8\\. ${title})\\n.*\\n( 9\\.)`, "m");
           report = report.replace(/^(.)/gm, "    $1")
@@ -145,11 +145,11 @@ ${report.trim()}
           spacing = "\n\n\n"
         };
 
-        if (report.length == 0) spacing = "";
+        if (report.length === 0) spacing = "";
 
         // President report has a custom footer - retain it
-        if (item.title == "President" && agenda[pattern]) {
-          let footer = (agenda[pattern].match(/\n\n(\s+Additionally.*?)\s+\w\.\Z/m) || [])[1];
+        if (item.title === "President" && agenda[pattern]) {
+          let footer = (agenda[pattern].match(/\n\n(\s+Additionally.*?)\s+\w\.$/m) || [])[1];
           if (footer) report += `\n\n${footer}`
         };
 
@@ -159,7 +159,7 @@ ${report.trim()}
             () => `${RegExp.$1}\n\n${report}${spacing}${RegExp.$2}`
           )
         } else {
-          throw new Exception("report merge failed")
+          throw new Error("report merge failed")
         }
       };
 

@@ -55,6 +55,11 @@ export default async function (request) {
         if (!unflagged.includes(attach) && item?.flagged?.includes(initials)) {
           unflagged.push(attach)
         }
+
+        break;
+
+      default:
+        throw new Error(`unexpected request: ${request.body.request}`);
     }
 
     return pending;
