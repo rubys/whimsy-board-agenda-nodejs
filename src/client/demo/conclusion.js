@@ -26,6 +26,11 @@ class Conclusion extends React.Component {
           </p>
         </li>
       </ul>
+
+      <p>You may be interested in perusing the&nbsp;
+        <a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/demo">source</a>&nbsp;
+      to this demo, it is implemented using the techniques described in the demo itself.  In particular,
+      it pulled your information from the server and the list of attendees from this month's roll call.</p>
     </div>
   }
 }
