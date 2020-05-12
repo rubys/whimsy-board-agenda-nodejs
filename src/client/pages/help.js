@@ -6,7 +6,8 @@ import * as Actions from "../../actions.js";
 
 function mapStateToProps(state) {
   return {
-    role: state.server.user.role
+    role: state.server.user.role,
+    env: state.server.env
   }
 };
 
@@ -42,6 +43,11 @@ class Help extends React.Component {
         <dd class="col-sm-9">Set the topic during a meeting (a.k.a. mark the spot)</dd>
         <dt class="text-right col-sm-3 col-lg-2">?</dt>
         <dd class="col-sm-9">Help (this page)</dd>
+
+        {this.props.env === 'development' ? <>
+          <dt class="text-right col-sm-3 col-lg-2">D</dt>
+          <dd class="col-sm-9">Developer information / Documentation</dd>
+        </> : null}
       </dl>
 
       <h3>Common Actions</h3>
@@ -67,12 +73,12 @@ class Help extends React.Component {
 
       <form id="role">{["Secretary", "Director", "Guest"].map(role => (
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="role" id={role} value={role.toLowerCase()} checked={role.toLowerCase() === this.props.role} onChange={this.setRole}/>
+          <input class="form-check-input" type="radio" name="role" id={role} value={role.toLowerCase()} checked={role.toLowerCase() === this.props.role} onChange={this.setRole} />
           <label class="form-check-label" for={role}>{role}</label>
         </div>
       ))}</form>
 
-      <br/>
+      <br />
       <Link to="secrets">Insider Secrets / Advanced Help</Link>
     </div>
   };

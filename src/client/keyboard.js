@@ -119,6 +119,10 @@ class Keyboard {
 
         return false
 
+      } else if (event.keyCode === 68) { // D
+        navigate("/developer");
+        return false
+
       } else if (event.keyCode === 61 || event.keyCode === 187) { // =
         if (event.shiftKey) {
           navigate("/cache/");

@@ -7,7 +7,9 @@ import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
 import CacheStatus, { CachePage } from "./pages/cache.js";
 import Comments from "./pages/comments.js";
+import Developer from "./pages/developer.js";
 import Demo from "./demo/router.js";
+import Docs from "./pages/docs.js";
 import DraftMinutes from "./buttons/draft-minutes.js";
 import Feedback from "./pages/feedback.js";
 import Events from "./models/events.js";
@@ -400,18 +402,20 @@ class Router extends React.Component {
       <Route exact path="/cache/">
         {main({
           view: CacheStatus,
+          color: "devpage",
           next: { href: 'server/', title: 'Server' },
           prev: { href: 'store/', title: 'Store' }
         })}
       </Route>
 
       <Route path="/cache/:page">
-        {main({ view: CachePage })}
+        {main({ view: CachePage, color: "devpage" })}
       </Route>
 
       <Route exact path="/server/">
         {main({
           view: Server,
+          color: "devpage",
           next: { href: 'store/', title: 'Store' },
           prev: { href: 'cache/', title: 'Cache' }
         })}
@@ -420,6 +424,7 @@ class Router extends React.Component {
       <Route exact path="/store/">
         {main({
           view: Store,
+          color: "devpage",
           next: { href: 'cache/', title: 'Cache' },
           prev: { href: 'server/', title: 'Server' }
         })}
@@ -445,6 +450,22 @@ class Router extends React.Component {
           return main({ view: Report, item })
         }}
       </Route>
+
+      <Route path="/developer">
+      {main({
+          view: Developer,
+          color: "devpage",
+          next: { href: 'store/', title: 'Store' },
+          prev: { href: 'cache/', title: 'Cache' }
+        })}
+      </Route>
+
+      <Route path="/docs">
+      {main({
+          view: Docs,
+          color: "docpage",
+          next: { href: 'demo', title: 'Demo' }
+        })}      </Route>
 
       <Route path="/demo">
         <Demo main={main} />

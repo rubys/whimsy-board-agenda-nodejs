@@ -8,7 +8,7 @@ function mapStateToProps(state) {
   }
 };
 
-class TemplateArray extends React.Component {
+class TemplateIteration extends React.Component {
 
   render() {
     let people = Object.entries(this.props.people)
@@ -81,4 +81,4 @@ class TemplateArray extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(TemplateArray);
+export default connect(mapStateToProps)(TemplateIteration);

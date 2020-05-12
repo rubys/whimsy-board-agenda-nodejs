@@ -5,11 +5,12 @@ import './demo.css';
 import Index from './index.js';
 import DemoObject from './object.js';
 import TemplateVariable from './template-variable.js';
-import TemplateArray from './template-array.js';
+import TemplateIteration from './template-iteration.js';
 import TemplateCondition from './template-condition.js';
 import ComponentState from './component-state.js';
 import ComponentProps from './component-props.js';
 import ConnectStore from './connect-store.js';
+import Conclusion from './conclusion.js';
 
 export default function (props) {
   let { main } = props;
@@ -17,7 +18,7 @@ export default function (props) {
   return <Switch>
     <Route exact path="/demo/">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: Index,
         next: { href: 'demo/object', title: 'Object' },
       })}
@@ -25,7 +26,7 @@ export default function (props) {
 
     <Route path="/demo/object">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: DemoObject,
         title: 'Object',
         next: { href: 'demo/template-variable', title: 'Template Variable' },
@@ -35,19 +36,19 @@ export default function (props) {
 
     <Route path="/demo/template-variable">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: TemplateVariable,
         title: 'Template - Variable',
-        next: { href: 'demo/template-array', title: 'Template Array' },
+        next: { href: 'demo/template-array', title: 'Template Iteration' },
         prev: { href: 'demo/object', title: 'Object' }
       })}
     </Route>
 
     <Route path="/demo/template-array">
       {main({
-        color: 'purple',
-        view: TemplateArray,
-        title: 'Template - Array',
+        color: 'docpage',
+        view: TemplateIteration,
+        title: 'Template - Iteration',
         next: { href: 'demo/template-condition', title: 'Template Condition' },
         prev: { href: 'demo/template-variable', title: 'Template Variable' },
       })}
@@ -55,17 +56,17 @@ export default function (props) {
 
     <Route path="/demo/template-condition">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: TemplateCondition,
         title: 'Template - Condition',
         next: { href: 'demo/component-state', title: 'Condition State' },
-        prev: { href: 'demo/template-array', title: 'Template Array' },
+        prev: { href: 'demo/template-array', title: 'Template Iteration' },
       })}
     </Route>
 
     <Route path="/demo/component-state">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: ComponentState,
         title: 'Component State',
         next: { href: 'demo/component-props', title: 'Component Props' },
@@ -75,7 +76,7 @@ export default function (props) {
 
     <Route path="/demo/component-props">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: ComponentProps,
         title: 'Component Properties',
         next: { href: 'demo/connect-store', title: 'Connect Store' },
@@ -85,10 +86,21 @@ export default function (props) {
 
     <Route path="/demo/connect-store">
       {main({
-        color: 'purple',
+        color: 'docpage',
         view: ConnectStore,
         title: 'Component Properties',
+        next: { href: 'demo/conclusion', title: 'Conclusion' },
         prev: { href: 'demo/component-props', title: 'Component Props' },
+      })}
+    </Route>
+
+    <Route path="/demo/conclusion">
+      {main({
+        color: 'docpage',
+        view: Conclusion,
+        title: 'Demo Conclusion',
+        prev: { href: 'demo/connect-store', title: 'Connect Store' },
+        next: { href: 'docs', title: 'Documentation' },
       })}
     </Route>
   </Switch>

@@ -51,6 +51,10 @@ class ComponentCondition extends React.Component {
       <p>This is accomplished via the use of a&nbsp;
         <a href="https://reactjs.org/docs/faq-internals.html">Virtual DOM</a>.
       </p>
+
+      <p>Note the above 
+        &nbsp;<a href="https://reactjs.org/docs/react-component.html#render">render</a> method returns a 
+        &nbsp;<a href="https://reactjs.org/docs/fragments.html">React Fragment</a></p>
     </div>
   }
 

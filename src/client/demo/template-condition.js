@@ -43,6 +43,29 @@ class TemplateCondition extends React.Component {
             : null
         ))}
       </ul>
+
+      <p>
+        While at first using <tt>map</tt> methods and ternary operators may seem, well, <em>klunky</em>,
+        the focus of JSX seems to be to make easy things easy and hard things possible:
+      </p>
+
+      <ul>
+        <li>
+          <p>
+            Most templates should not need more than simple variable substitution, conditions,
+            and iteration.  If you find yourself needing more than that, that often is an indication
+            that the component that defines the template should be broken up into multiple components.
+          </p>
+        </li>
+
+        <li>
+          <p>
+            Should you happen to need it, the full power of JavaScript is available.  In particular, you
+            can call methods and functions.  This is particularly handy when defining <tt>onClick</tt>&nbsp;
+            and <tt>onChange</tt> event handlers.
+          </p>
+        </li>
+      </ul>
     </div>
   }
 }

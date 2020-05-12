@@ -28,8 +28,8 @@ class DemoObject extends React.Component {
       this a hash, map, or dictionary.</p>
 
       <p>This truly is an object in that it can have methods, but for now
-      we are only focusing on objects that only contain strings, numbers,
-      arrays, and other objects.</p>
+      we are only focusing on simple objects that only contain strings, numbers,
+      arrays, and other simple objects.</p>
 
       <p>You can find out more at&nbsp;
       <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics">JavaScript object basics</a>.
