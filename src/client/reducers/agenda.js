@@ -52,6 +52,10 @@ export default function reduce(state = null, action) {
         let nonresponsive = item.notes?.includes("missing")
           && item.notes.replace(/^.*missing/m, "").split(",").length >= 2;
 
+        // default to cc board on emails
+        item.cc = 'board@apache.org';
+
+        // move status fields to a separate status object
         let { flagged_by, approved: approved_by, missing } = item;
         delete item.flagged_by;
         delete item.approved;
@@ -64,12 +68,15 @@ export default function reduce(state = null, action) {
       let pres = agenda.find(item => item.title === "President");
       let match = pres?.report?.match(/Additionally, please see Attachments (\d) through (\d)/);
 
-      // find first and last president report; update shepherd along the way
+      // find first and last president report; update shepherd and cc along the way
       let first, last;
       if (match) {
         for (let item of agenda) {
           if (item.attach === match[1]) first = item;
-          if (first && !last) item.shepherd = item.shepherd || pres.shepherd;
+          if (first && !last) {
+            item.shepherd = item.shepherd || pres.shepherd;
+            item.cc = "operations@apache.org";
+          }
           if (item.attach === match[2]) last = item
         }
       }

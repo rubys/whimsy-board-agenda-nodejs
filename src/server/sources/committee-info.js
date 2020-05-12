@@ -202,6 +202,64 @@ export default async function (request) {
 
   let pmcs = [...list.values()].filter(value => !officers.includes(value) && !nonpmcs.includes(value));
 
+  // add mail info
+  for (let pmc of pmcs) {
+    pmc.mail_list = (() => {
+      switch (pmc.id.toLowerCase()) {
+        case "comdev":
+          return "community";
+          break;
+
+        case "httpcomponents":
+          return "hc";
+          break;
+
+        case "whimsy":
+          return "whimsical";
+          break;
+
+        case "brandmanagement":
+          return "trademarks@apache.org";
+          break;
+
+        case "infrastructure":
+          return "infra";
+          break;
+
+        case "dataprivacy":
+          return "privacy@apache.org";
+          break;
+
+        case "legalaffairs":
+          return "legal-internal@apache.org";
+          break;
+
+        case "fundraising":
+          return "fundraising-private@apache.org";
+          break;
+
+        case "marketingandpublicity":
+          return "press@apache.org";
+          break;
+
+        case "tac":
+          return "travel-assistance@apache.org";
+          break;
+
+        case "w3crelations":
+          return "w3c@apache.org";
+          break;
+
+        case "concom":
+          return "planners@apachecon.com";
+          break;
+
+        default:
+          return pmc.id
+      }
+    })();
+  }
+
   committeeInfo = { pmcs, nonpmcs, officers }
 
   cache.write(cacheFile, JSON.stringify(committeeInfo));

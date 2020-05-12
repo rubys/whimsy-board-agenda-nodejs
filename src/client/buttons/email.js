@@ -5,6 +5,13 @@ import React from "react";
 import User from "../models/user.js";
 import jQuery from "jquery";
 import { post } from "../utils.js";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    user: state.server.user
+  }
+};
 
 //
 // Send email
@@ -22,13 +29,13 @@ class Email extends React.Component {
   // render 'send email' as a primary button if the viewer is the shepherd for
   // the report, otherwise render the text as a simple link.
   mailto_class() {
-    if (User.firstname && this.props.item.shepherd && User.firstname.startsWith(this.props.item.shepherd.toLowerCase())) {
+    if (this.props.user.firstname && this.props.item.shepherd && this.props.user.firstname.startsWith(this.props.item.shepherd.toLowerCase())) {
       if (this.props.item.missing && Posted.get(this.props.item.title).length !== 0) {
         return "btn-link"
       } else {
         return "btn-primary"
       }
-    } else if (this.props.item.owner === User.username && !this.props.item.missing && this.props.item.comments.length === 0) {
+    } else if (this.props.item.owner === this.props.user.username && !this.props.item.missing && this.props.item.comments.length === 0) {
       return "btn-primary"
     } else {
       return "btn-link"
@@ -43,7 +50,7 @@ class Email extends React.Component {
     let to = this.props.item.chair_email;
     let cc = `${mail_list},${this.props.item.cc}`;
 
-    if (this.props.item.missing) {
+    if (this.props.item.status.missing) {
       subject = `Missing ${this.props.item.title} Board Report`;
 
       if (/^\d/m.test(this.props.item.attach)) {
@@ -56,7 +63,7 @@ class Email extends React.Component {
 
           Thanks,
 
-          ${User.username}
+          ${this.props.user.username}
         `
       } else {
         body = `
@@ -71,7 +78,7 @@ class Email extends React.Component {
 
           Thanks,
 
-          ${User.username}
+          ${this.props.user.username}
 
           (on behalf of the ASF Board)
         `
@@ -123,6 +130,8 @@ class Email extends React.Component {
 };
 
 class EmailForm extends React.Component {
+  state = {disabled: false};
+
   render() {
     return <ModalDialog color="commented" id={"email-" + this.props.id}>
       <h4>{`Send email - ${this.props.email.subject}`}</h4>
@@ -160,4 +169,4 @@ class EmailForm extends React.Component {
   }
 };
 
-export default Email
+export default connect(mapStateToProps)(Email)
