@@ -12,7 +12,7 @@ and the [client router](../../src/client/router.js).
 There are three parts to adding a comment to a report:
 
   - the button
-      - defined in a `static get button` property
+      - defined in a `static get button` method
       - connected to a page in the client router
   - the form
       - state is initialized when the modal dialog is shown
