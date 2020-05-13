@@ -2,7 +2,7 @@ import React from "react";
 
 class Index extends React.Component {
   render() {
-    return <div class="container">
+    return <div class="demo container">
       <h1>React/Redux demo</h1>
 
       <p>What follows is a <em>gentle</em> introduction to React/Redux.</p>

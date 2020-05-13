@@ -11,7 +11,7 @@ class TemplateVariable extends React.Component {
   render() {
     let { userid, username, role } = this.props.user;
 
-    return <div class="container">
+    return <div class="demo container">
       <h1>JSX Templates - variable substitution</h1>
 
       <p>While syntaxes vary, templating engines in general take as input an
@@ -35,7 +35,7 @@ class TemplateVariable extends React.Component {
         }</code>
       </pre>
 
-      <p><a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a>&nbsp;
+      <p><a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a> {' '}
       templates would render this as follows:</p>
 
       <dl class="example">

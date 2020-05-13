@@ -16,7 +16,7 @@ require('@babel/register')({
   ]
 });
 
-// Log unhadled exceptions in promises
+// Log unhandled exceptions in promises
 process.on('unhandledRejection', (reason, promise) => {
   if (reason.stack) {
     console.log(reason.stack)

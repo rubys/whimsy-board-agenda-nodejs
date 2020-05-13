@@ -5,7 +5,7 @@ class ComponentProps extends React.Component {
   state = { count: 0 };
 
   render() {
-    return <div class="container">
+    return <div class="demo container">
       <h1>Component - Properties</h1>
 
       <p>A React component can pass state as a property to another

@@ -13,11 +13,11 @@ class TemplateCondition extends React.Component {
     let people = Object.entries(this.props.people)
       .map(([id, person]) => ({ ...person, id }));
 
-    return <div class="container">
+    return <div class="demo container">
       <h1>JSX Templates - Conditions</h1>
 
       <p>With JSX, conditional processing can be done using the
-      JavaScript&nbsp;
+      JavaScript {' '}
       <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator">Conditional (ternary) operator</a>:
       </p>
 
@@ -61,7 +61,7 @@ class TemplateCondition extends React.Component {
         <li>
           <p>
             Should you happen to need it, the full power of JavaScript is available.  In particular, you
-            can call methods and functions.  This is particularly handy when defining <tt>onClick</tt>&nbsp;
+            can call methods and functions.  This is particularly handy when defining <tt>onClick</tt> {' '}
             and <tt>onChange</tt> event handlers.
           </p>
         </li>

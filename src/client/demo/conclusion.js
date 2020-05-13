@@ -2,7 +2,7 @@ import React from "react";
 
 class Conclusion extends React.Component {
   render() {
-    return <div class="container">
+    return <div class="demo container">
       <h1>Conclusions</h1>
 
       <p>With most templating engines, a template plus a snapshot of data equals static HTML.</p>
@@ -15,7 +15,7 @@ class Conclusion extends React.Component {
 
         <li>
           <p>Getting correct data into the store.  That is beyond the scope of this demo,
-            but covered by later walkt-hroughs.  The beauty of this approach is that you can
+            but covered by later walk-throughs.  The beauty of this approach is that you can
             directly examine the store and verify its contents.
           </p>
         </li>
@@ -27,10 +27,11 @@ class Conclusion extends React.Component {
         </li>
       </ul>
 
-      <p>You may be interested in perusing the&nbsp;
-        <a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/demo">source</a>&nbsp;
-      to this demo, it is implemented using the techniques described in the demo itself.  In particular,
-      it pulled your information from the server and the list of attendees from this month's roll call.</p>
+      <p>You may be interested in perusing the {' '}
+        <a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/demo">source</a> {' '}
+      to this demo.  The demo is implemented using the techniques described in the demo itself.  In particular,
+      it pulled your information from the server, the list of attendees from this month's roll call,
+      and the pending count is based on whatever comments, approvals, etc. you may have pending at this time.</p>
     </div>
   }
 }

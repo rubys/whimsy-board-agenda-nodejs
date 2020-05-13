@@ -9,7 +9,7 @@ function mapStateToProps(state) {
 
 class DemoObject extends React.Component {
   render() {
-    return <div class="container">
+    return <div class="demo container">
       <h1>Objects</h1>
 
       <p>Consider the following:</p>
@@ -31,7 +31,7 @@ class DemoObject extends React.Component {
       we are only focusing on simple objects that only contain strings, numbers,
       arrays, and other simple objects.</p>
 
-      <p>You can find out more at&nbsp;
+      <p>You can find out more at {' '}
       <a href="https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Basics">JavaScript object basics</a>.
       </p>
     </div>

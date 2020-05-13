@@ -5,7 +5,7 @@ class ComponentCondition extends React.Component {
   state = { count: 0 };
 
   render() {
-    return <div class="container">
+    return <div class="demo container">
       <h1>Component - State</h1>
 
       <p>A React component couples state with a render method that uses JSX:</p>
@@ -48,13 +48,13 @@ class ComponentCondition extends React.Component {
       it will increment <tt>count</tt>.  Changing the state will cause the
       template to be rerendered.</p>
 
-      <p>This is accomplished via the use of a&nbsp;
+      <p>This is accomplished via the use of a {' '}
         <a href="https://reactjs.org/docs/faq-internals.html">Virtual DOM</a>.
       </p>
 
-      <p>Note the above 
-        &nbsp;<a href="https://reactjs.org/docs/react-component.html#render">render</a> method returns a 
-        &nbsp;<a href="https://reactjs.org/docs/fragments.html">React Fragment</a></p>
+      <p>Note: the above 
+         {' '}<a href="https://reactjs.org/docs/react-component.html#render">render</a> method returns a 
+         {' '}<a href="https://reactjs.org/docs/fragments.html">React Fragment</a>.</p>
     </div>
   }
 

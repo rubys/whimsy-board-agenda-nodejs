@@ -1,5 +1,14 @@
 # Adding a comment to a PMC report
 
+In general, you should be able to add a new form by cloning this module,
+changing the few things that need to be changed, and adding the button
+to the appropriate place in the [client router](../../src/client/router.js).
+
+Doing this successfully requires a knowledge of the
+[React Component lifecycle](https://reactjs.org/docs/react-component.html#the-component-lifecycle),
+[Boostrap Modal events](https://getbootstrap.com/docs/4.0/components/modal/#events),
+and the [client router](../../src/client/router.js).
+
 There are three parts to adding a comment to a report:
 
   - the button
@@ -59,7 +68,7 @@ with an id that matches the <tt>data_target</tt> property of
 the button.
 
 Implementing such a form requires a large number of `<div>` elements.
-The board agenda tool implements a `ModalDialog` component that helps
+The board agenda tool provides a `ModalDialog` component that helps
 with this.  Instead of separating things into a header, body, and footer
 and quadruple (or more!) wrapping each in `<div>` elements, one merely
 defines a list of elements, and `ModalDialog` will place the header
@@ -68,6 +77,11 @@ in the body.  In addition for form elements that contain a `label`
 property and `id` element, the label will be extracted and used to
 create an separate element, with both wrapped in (yet another!)
 `<div>` element.
+
+It is important to realize that as you traverse from report to report
+in the agenda React will reuse the hidden form and button.  This means
+that unless you hook into an lifecycle or dialog event, the state
+will not be updated to reflect the new component.
 
 Bootstrap provides a number of
 [events](https://getbootstrap.com/docs/4.0/components/modal/#events)
@@ -104,8 +118,10 @@ state and optionally issue HTTP POST requests and/or
 dispatch actions to update the Redux store (often based on
 responses to POSt requests).
 
-Such functions can dismiss the modal entirely by executing
-`document.body.classList.remove("modal-open")`.
+Such functions can dismiss the modal entirely by executing:
+
+    jQuery("#comment-form").modal("hide");
+    document.body.classList.remove("modal-open");
 
 This component also demonstrates buttons that enable or
 disable based on conditions, and even buttons that disappear

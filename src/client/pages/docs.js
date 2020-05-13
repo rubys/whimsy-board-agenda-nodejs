@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 class Docs extends React.Component {
   render() {
-    let walkthrough = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/walkthrough/"
+    let walkthrough = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/walkthrough"
 
     return <div class="container">
       <h1>Documentation/Guides</h1>
@@ -20,7 +20,7 @@ class Docs extends React.Component {
         </dd>
 
         <dt class="col-sm-2">
-          <a href={`${walkthrough}/refresh.md`}>Refresh Walkthrough</a>
+          <a href={`${walkthrough}/refresh.md#refreshing-the-agenda`}>Refresh Walkthrough</a>
         </dt>
         <dd class="col-sm-10">
           <p>A full-stack walkthrough of refreshing the agenda from the latest svn, initiated by
@@ -32,7 +32,7 @@ class Docs extends React.Component {
         </dd>
 
         <dt class="col-sm-2">
-          <a href={`${walkthrough}/add-comment.md`}>Add Comment Walkthrough</a>
+          <a href={`${walkthrough}/add-comment.md#adding-a-comment-to-a-pmc-report`}>Add Comment Walkthrough</a>
         </dt>
         <dd class="col-sm-10">
           <p>A walkthrough on adding a comment to report.</p>

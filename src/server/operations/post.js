@@ -122,7 +122,7 @@ ${report.trim()}
 
         if (!item) {
           throw new Error(`Attachment ${JSON.stringify(attach)} not found`)
-        } else if (digest != item.digest) {
+        } else if (digest !== item.digest) {
           throw new Error("Merge conflict")
         };
 
