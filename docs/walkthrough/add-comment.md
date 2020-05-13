@@ -7,13 +7,16 @@ to the appropriate place in the [client router](../../src/client/router.js).
 There are three parts to adding a comment to a report:
 
   - the button
+      - placed in [src/client/buttons](../../src/client/buttons)
       - defined in a `static get button` method
       - connected to a page in the client router
   - the form
-      - state is initialized when the modal dialog is shown
-      - a header, one or more input/textarea/radio/select elements, and
-        one or more buttons.
-      - events modify state, issue HTTP POST requests, dispatch actions
+      - placed in the same file as the button that launches it
+      - state is initialized each time the modal dialog is shown
+      - consists of a header, one or more input/textarea/radio/select elements,
+        and one or more buttons.
+      - `onClick` and `onChange` event handlers modify state, issue HTTP POST
+        requests, dispatch actions
   - the operation
       - placed in [src/server/operations](../../src/server/operations)
       - input is in `request.body`
