@@ -53,6 +53,34 @@ class Docs extends React.Component {
           are processed to provide a coherent and up to date view of Agenda items for rendering.</p>
         </dd>
       </dl>
+
+      <h3>Other resources</h3>
+
+      <p>
+        This project was bootstrapped with <a href="https://github.com/facebook/create-react-app">Create React App</a>.
+        You can learn more in the <a href="https://facebook.github.io/create-react-app/docs/getting-started">Create React App documentation</a>.
+      </p>
+
+      <p>Significant components:</p>
+      <ul>
+        <li><a href="https://getbootstrap.com/">Bootstrap</a> styles</li>
+        <li><a href="https://expressjs.com/">Express</a> web framework</li>
+        <li><a href="https://nodejs.org/en/docs/guides/">Node.js</a> [<a href="https://nodejs.dev/">tutorial</a>] Server-side JavaScript runtime</li>
+        <li><a href="https://reactjs.org/">React</a> [<a href="https://reactjs.org/tutorial/tutorial.html">tutorial</a>] user interface library</li>
+        <li><a href="https://react-redux.js.org/">React Redux</a> predictable state container</li>
+        <li><a href="https://reacttraining.com/react-router/">React Router</a> declarative routing</li>
+      </ul>
+
+      <p>Supporting cast:</p>
+      <ul>
+        <li><a href="https://babeljs.io/">babel</a> javascript transpiler</li>
+        <li><a href="https://www.npmjs.com/package/express-ws">express-ws</a> websocket support</li>
+        <li><a href="https://jestjs.io/">jest</a> testing framework</li>
+        <li><a href="https://jquery.com/">jQuery</a> library for DOM traversal and manipulation</li>
+        <li><a href="http://ldapjs.org/">ldapjs</a> LDAP client</li>
+        <li><a href="https://webpack.js.org/">webpack</a> module bundler</li>
+        <li><a href="https://yarnpkg.com/">yarn</a> package manager</li>
+      </ul>
     </div>
   }
 }
