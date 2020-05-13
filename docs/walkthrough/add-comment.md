@@ -4,11 +4,6 @@ In general, you should be able to add a new form by cloning this module,
 changing the few things that need to be changed, and adding the button
 to the appropriate place in the [client router](../../src/client/router.js).
 
-Doing this successfully requires a knowledge of the
-[React Component lifecycle](https://reactjs.org/docs/react-component.html#the-component-lifecycle),
-[Boostrap Modal events](https://getbootstrap.com/docs/4.0/components/modal/#events),
-and the [client router](../../src/client/router.js).
-
 There are three parts to adding a comment to a report:
 
   - the button

@@ -40,13 +40,12 @@ class ComponentCondition extends React.Component {
 
       <p>Go ahead and click the button a few times.</p>
 
-      <p>React components are <em>reactive</em> in that they rerender the template
+      <p>React components are <em>reactive</em> in that they re-render the template
       any time state is updated.</p>
 
       <p>Clicking the button will cause <tt>this.increment</tt> to be called.
-      Calling <tt>this.increment</tt> will cause the state to be changed, specifically
-      it will increment <tt>count</tt>.  Changing the state will cause the
-      template to be rerendered.</p>
+      Calling <tt>this.increment</tt> will cause the state to be changed.
+      Changing the state will cause the template to be re-rendered.</p>
 
       <p>This is accomplished via the use of a {' '}
         <a href="https://reactjs.org/docs/faq-internals.html">Virtual DOM</a>.

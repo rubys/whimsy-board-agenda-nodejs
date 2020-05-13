@@ -28,7 +28,7 @@ class Conclusion extends React.Component {
       </ul>
 
       <p>You may be interested in perusing the {' '}
-      ß<a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/demo">source</a> {' '}
+      <a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/demo">source</a> {' '}
       to this demo.  The demo is implemented using the techniques described in the demo itself.  In particular,
       it pulled your information from the server, the list of attendees from this month's roll call,
       and the pending count is based on whatever comments, approvals, etc. you may have pending at this time.</p>

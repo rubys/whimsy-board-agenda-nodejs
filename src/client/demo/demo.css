@@ -1,7 +1,11 @@
-.example {
+.demo .example {
   padding: 1em;
   margin: 1em 2em;
   background-color: #EEE;
+}
+
+.demo .example li {
+  margin-left: 1em;
 }
 
 .demo a {
