@@ -12,8 +12,19 @@ and the [client router](../../src/client/router.js).
 There are three parts to adding a comment to a report:
 
   - the button
+      - defined in a `static get button` property
+      - connected to a page in the client router
   - the form
+      - state is initialized when the modal dialog is shown
+      - a header, one or more input/textarea/radio/select elements, and
+        one or more buttons.
+      - events modify state, issue HTTP POST requests, dispatch actions
   - the operation
+      - placed in [src/server/operations](../../src/server/operations)
+      - input is in `request.body`
+      - result is serialized as JSON
+
+Longer version follows...
 
 ### The button
 
@@ -40,7 +51,7 @@ rendering of the button itself.
 For buttons with forms, the button has four properties, and
 these are defined in the `static get button` method of the
 component.  For <tt>add comment</tt> this file can be found
-in [src/buttons/add-comment.js](src/buttons/add-comment.js).
+in [src/buttons/add-comment.js](../../src/buttons/add-comment.js).
 
 The properties are:
 
@@ -61,7 +72,7 @@ as a hidden modal dialog immediately after the footer.
 ### The form
 
 The form is defined in the same
-[src/buttons/add-comment.js](src/buttons/add-comment.js) module.
+[src/buttons/add-comment.js](../../src/buttons/add-comment.js) module.
 It needs to implement a
 [bootstrap modal dialog](https://getbootstrap.com/docs/4.0/components/modal/)
 with an id that matches the <tt>data_target</tt> property of
