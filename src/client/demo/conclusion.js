@@ -15,7 +15,7 @@ class Conclusion extends React.Component {
 
         <li>
           <p>Getting correct data into the store.  That is beyond the scope of this demo,
-            but covered by later walkthroughs.  The beauty of this approach is that you con
+            but covered by later walkt-hroughs.  The beauty of this approach is that you can
             directly examine the store and verify its contents.
           </p>
         </li>
