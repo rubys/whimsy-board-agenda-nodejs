@@ -33,12 +33,7 @@ class AddComment extends React.Component {
     }
   };
 
-  state = {
-    base: this.props.item.pending,
-    comment: this.props.item.pending,
-    disabled: false,
-    checked: this.props.item.flagged
-  };
+  state = {};
 
   render() {
     let { disabled, comment, base, checked } = this.state;
@@ -76,7 +71,8 @@ class AddComment extends React.Component {
     // update comment text to match current item
     jQuery("#comment-form").on("show.bs.modal", () => {
       let base = this.props.item.status?.pending?.comments;
-      this.setState({ base, comment: base })
+      let checked = this.props.item.flagged;
+      this.setState({ base, checked, comment: base, disabled: false })
     });
 
     // autofocus on comment text
@@ -106,7 +102,6 @@ class AddComment extends React.Component {
       jQuery("#comment-form").modal("hide");
       document.body.classList.remove("modal-open");
       this.setState({ disabled: false });
-      console.log(pending);
       Store.dispatch(Actions.postPending(pending));
     })
   };
