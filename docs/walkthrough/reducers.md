@@ -16,7 +16,7 @@ underlying data structure, and while that data structure did change, the
 references did not.  Now let's look at a different implementation:
 
     let a = { type: "counter", value: 1 };
-    let b = { ...a, a.value + 1 };
+    let b = { ...a, value: a.value + 1 };
 
 This uses the vintage 2018 JavaScript [spread
 syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
