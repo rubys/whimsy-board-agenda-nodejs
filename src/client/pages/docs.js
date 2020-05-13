@@ -81,6 +81,15 @@ class Docs extends React.Component {
         <li><a href="https://webpack.js.org/">webpack</a> module bundler</li>
         <li><a href="https://yarnpkg.com/">yarn</a> package manager</li>
       </ul>
+
+      <h5>Relatively new and notable JavaScript features:</h5>
+      <ul>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Object_destructuring">Object destructuring</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">spread syntax</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow function expressions</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015">shorthand and computed property names</a></li>
+      </ul>
     </div>
   }
 }
