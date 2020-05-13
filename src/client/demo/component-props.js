@@ -39,6 +39,11 @@ class DisplayCount extends React.component {
         }</code>
       </pre>
 
+      <p>In the above, the <tt>Demo</tt> component passes {' '}
+      <tt>this.state.count</tt> as <tt>count</tt> to the {' '}
+      <tt>DisplayCount</tt> component.  The <tt>DisplayCount</tt> {' '}
+      component accesses this value as <tt>this.props.count</tt>.</p>
+
       <p>Such a component would render identically as befores:</p>
 
       <div class="example">

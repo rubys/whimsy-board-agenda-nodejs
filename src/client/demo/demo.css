@@ -7,3 +7,7 @@
 .demo a {
   text-decoration: underline;
 }
+
+.demo tt {
+  font-size: large
+}

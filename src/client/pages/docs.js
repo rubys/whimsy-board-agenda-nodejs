@@ -50,7 +50,7 @@ class Docs extends React.Component {
           <p>A walkthrough of the Agenda <a href="https://redux.js.org/basics/reducers">Reducer</a>.</p>
 
           <p>This will show how multiple streams of <a href="https://redux.js.org/basics/actions">actions</a>
-          are processed to provide a coherent and up to date view of Agenda items for rendering.</p>
+          {' '} are processed to provide a coherent and up to date view of Agenda items for rendering.</p>
         </dd>
       </dl>
 
@@ -61,7 +61,7 @@ class Docs extends React.Component {
         You can learn more in the <a href="https://facebook.github.io/create-react-app/docs/getting-started">Create React App documentation</a>.
       </p>
 
-      <p>Significant components:</p>
+      <h5>Significant components:</h5>
       <ul>
         <li><a href="https://getbootstrap.com/">Bootstrap</a> styles</li>
         <li><a href="https://expressjs.com/">Express</a> web framework</li>
@@ -71,7 +71,7 @@ class Docs extends React.Component {
         <li><a href="https://reacttraining.com/react-router/">React Router</a> declarative routing</li>
       </ul>
 
-      <p>Supporting cast:</p>
+      <h5>Supporting cast:</h5>
       <ul>
         <li><a href="https://babeljs.io/">babel</a> javascript transpiler</li>
         <li><a href="https://www.npmjs.com/package/express-ws">express-ws</a> websocket support</li>
