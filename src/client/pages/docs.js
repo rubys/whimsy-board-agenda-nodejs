@@ -19,7 +19,9 @@ class Docs extends React.Component {
           and to render a live view using a template, state data, and data from a React Redux store.</p>
         </dd>
 
-        <dt class="col-sm-2"><a href={`${walkthrough}/refresh.md`}>Refresh Walkthrough</a></dt>
+        <dt class="col-sm-2">
+          <a href={`${walkthrough}/refresh.md`}>Refresh Walkthrough</a>
+        </dt>
         <dd class="col-sm-10">
           <p>A full-stack walkthrough of refreshing the agenda from the latest svn, initiated by
           pressing <tt>R</tt> on the keyboard.</p>
@@ -28,18 +30,21 @@ class Docs extends React.Component {
           of interest.  Understanding how the pieces are put together will make it easier to
           locate where to make changes.</p>
         </dd>
+
+        <dt class="col-sm-2">
+          <a href={`${walkthrough}/add-comment.md`}>Add Comment Walkthrough</a>
+        </dt>
+        <dd class="col-sm-10">
+          <p>A walkthrough on adding a comment to report.</p>
+
+          <p>This provides more detail with an actual example of how to
+          wire up buttons, forms, and operations to work together.</p>
+        </dd>
       </dl>
 
       <h3>Planned/Coming Soon</h3>
 
       <dl class="row">
-        <dt class="col-sm-2">Add Comment Walkthrough</dt>
-        <dd class="col-sm-10">
-          <p>A walkthrough on adding a comment to report.</p>
-
-          <p>This will show how buttons and forms work.</p>
-        </dd>
-
         <dt class="col-sm-2">Agenda Reducer</dt>
         <dd class="col-sm-10">
           <p>A walkthrough of the Agenda <a href="https://redux.js.org/basics/reducers">Reducer</a>.</p>
