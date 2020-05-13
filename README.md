@@ -32,7 +32,7 @@ with the main line application logic starting in
 entry point is likely going to be different, and will make use of
 [server side rendering](https://reactjs.org/docs/react-dom-server.html).
 
-Client [reducers](./src/client/reducers/ (slight misnomer here, but that's what
+Client [reducers](./src/client/reducers/) (slight misnomer here, but that's what
 Redux calls them) maintain a [Redux](https://react-redux.js.org/) store based
 on [actions](./src/actions.js) that are
 [dispatched](https://redux.js.org/api/store#dispatchaction).  Individual React
