@@ -13,40 +13,40 @@ function mapStateToProps(state) {
 
 class Help extends React.Component {
   render() {
-    return <div class="container">
+    return <div className="container">
       <h3>Keyboard shortcuts</h3>
 
       <dl className="row">
-        <dt class="text-right col-sm-3 col-lg-2">left arrow</dt>
-        <dd class="col-sm-9">previous page</dd>
-        <dt class="text-right col-sm-3 col-lg-2">right arrow</dt>
-        <dd class="col-sm-9">next page</dd>
-        <dt class="text-right col-sm-3 col-lg-2">enter</dt>
-        <dd class="col-sm-9">On Shepherd and Queue pages, go to the first report listed</dd>
-        <dt class="text-right col-sm-3 col-lg-2">C</dt>
-        <dd class="col-sm-9">Scroll to comment section (if any)</dd>
-        <dt class="text-right col-sm-3 col-lg-2">I</dt>
-        <dd class="col-sm-9">Toggle Info dropdown</dd>
-        <dt class="text-right col-sm-3 col-lg-2">N</dt>
-        <dd class="col-sm-9">Toggle Navigation dropdown</dd>
-        <dt class="text-right col-sm-3 col-lg-2">A</dt>
-        <dd class="col-sm-9">Navigate to the overall agenda page</dd>
-        <dt class="text-right col-sm-3 col-lg-2">F</dt>
-        <dd class="col-sm-9">Show flagged items</dd>
-        <dt class="text-right col-sm-3 col-lg-2">M</dt>
-        <dd class="col-sm-9">Show missing items</dd>
-        <dt class="text-right col-sm-3 col-lg-2">Q</dt>
-        <dd class="col-sm-9">Show queued approvals/comments</dd>
-        <dt class="text-right col-sm-3 col-lg-2">S</dt>
-        <dd class="col-sm-9">Show shepherded items (and action items)</dd>
-        <dt class="text-right col-sm-3 col-lg-2">X</dt>
-        <dd class="col-sm-9">Set the topic during a meeting (a.k.a. mark the spot)</dd>
-        <dt class="text-right col-sm-3 col-lg-2">?</dt>
-        <dd class="col-sm-9">Help (this page)</dd>
+        <dt className="text-right col-sm-3 col-lg-2">left arrow</dt>
+        <dd className="col-sm-9">previous page</dd>
+        <dt className="text-right col-sm-3 col-lg-2">right arrow</dt>
+        <dd className="col-sm-9">next page</dd>
+        <dt className="text-right col-sm-3 col-lg-2">enter</dt>
+        <dd className="col-sm-9">On Shepherd and Queue pages, go to the first report listed</dd>
+        <dt className="text-right col-sm-3 col-lg-2">C</dt>
+        <dd className="col-sm-9">Scroll to comment section (if any)</dd>
+        <dt className="text-right col-sm-3 col-lg-2">I</dt>
+        <dd className="col-sm-9">Toggle Info dropdown</dd>
+        <dt className="text-right col-sm-3 col-lg-2">N</dt>
+        <dd className="col-sm-9">Toggle Navigation dropdown</dd>
+        <dt className="text-right col-sm-3 col-lg-2">A</dt>
+        <dd className="col-sm-9">Navigate to the overall agenda page</dd>
+        <dt className="text-right col-sm-3 col-lg-2">F</dt>
+        <dd className="col-sm-9">Show flagged items</dd>
+        <dt className="text-right col-sm-3 col-lg-2">M</dt>
+        <dd className="col-sm-9">Show missing items</dd>
+        <dt className="text-right col-sm-3 col-lg-2">Q</dt>
+        <dd className="col-sm-9">Show queued approvals/comments</dd>
+        <dt className="text-right col-sm-3 col-lg-2">S</dt>
+        <dd className="col-sm-9">Show shepherded items (and action items)</dd>
+        <dt className="text-right col-sm-3 col-lg-2">X</dt>
+        <dd className="col-sm-9">Set the topic during a meeting (a.k.a. mark the spot)</dd>
+        <dt className="text-right col-sm-3 col-lg-2">?</dt>
+        <dd className="col-sm-9">Help (this page)</dd>
 
         {this.props.env === 'development' ? <>
-          <dt class="text-right col-sm-3 col-lg-2">D</dt>
-          <dd class="col-sm-9">Developer information / Documentation</dd>
+          <dt className="text-right col-sm-3 col-lg-2">D</dt>
+          <dd className="col-sm-9">Developer information / Documentation</dd>
         </> : null}
       </dl>
 
@@ -72,9 +72,9 @@ class Help extends React.Component {
       <h3>Change Role</h3>
 
       <form id="role">{["Secretary", "Director", "Guest"].map(role => (
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="role" id={role} value={role.toLowerCase()} checked={role.toLowerCase() === this.props.role} onChange={this.setRole} />
-          <label class="form-check-label" for={role}>{role}</label>
+        <div className="form-check" key={role}>
+          <input className="form-check-input" type="radio" name="role" id={role} value={role.toLowerCase()} checked={role.toLowerCase() === this.props.role} onChange={this.setRole} />
+          <label className="form-check-label" htmlFor={role}>{role}</label>
         </div>
       ))}</form>
 
