@@ -3,11 +3,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-function mapStateToProps({ server: { agendas, drafts }}) {
-  return { agendas, drafts }
+function mapStateToProps({ server: { agendas, drafts, env } }) {
+  return { agendas, drafts, env }
 };
 
-function Server( { agendas, drafts }) {
+function Server({ agendas, drafts, env }) {
 
   let links = [
     ...agendas.map(agenda => `/api/${agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-")}.json`),
@@ -20,7 +20,8 @@ function Server( { agendas, drafts }) {
     '/api/posted-reports',
     '/api/reporter',
     '/api/responses',
-    '/api/server'
+    '/api/server',
+    ...(env === 'development' ? ['/api/websocket'] : [])
   ];
 
   return <>

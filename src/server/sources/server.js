@@ -9,7 +9,7 @@
 //   TODO
 
 import devproxy from './devproxy.js';
-import { session } from '../websocket.js';
+import * as websocket from '../websocket.js';
 import { Board, forked } from '../svn.js';
 import { digest } from '../cache.js';
 import * as Pending from './pending.js';
@@ -24,7 +24,7 @@ export default async function server(request) {
   let wsProtocol = request.secure ? 'wss' : 'ws';
 
   server.websocket = `${wsProtocol}://${request.get('host')}${request.baseUrl}/websocket`;
-  server.session = session;
+  server.session = websocket.sessionFor(request);
 
   server.env = process.env.NODE_ENV;
 

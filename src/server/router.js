@@ -7,9 +7,11 @@ import { promises as fs } from "fs";
 
 export default async function router(app) {
 
-  app.get('/api/session', async (request, response) => {
-    response.json({ session: websocket.session });
-  });
+  if (process.env.NODE_ENV === 'development') {
+    app.get('/api/websocket', (request, response) => {
+      response.json(websocket.debug_status());
+    })
+  }
 
   app.get('/api/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
     let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
