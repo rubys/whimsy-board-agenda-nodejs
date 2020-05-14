@@ -5,24 +5,24 @@ class Docs extends React.Component {
   render() {
     let walkthrough = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/walkthrough"
 
-    return <div class="container">
+    return <div className="container">
       <h1>Documentation/Guides</h1>
 
       <h3>Available now</h3>
 
-      <dl class="row">
-        <dt class="col-sm-2"><Link to="/demo/">React/Redux Demo</Link></dt>
-        <dd class="col-sm-10">
+      <dl className="row">
+        <dt className="col-sm-2"><Link to="/demo/">React/Redux Demo</Link></dt>
+        <dd className="col-sm-10">
           <p>A live demo of the <a href="https://react-redux.js.org/">React Redux</a> store.</p>
 
           <p>Shows how to define a <a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a> template,
           and to render a live view using a template, state data, and data from a React Redux store.</p>
         </dd>
 
-        <dt class="col-sm-2">
+        <dt className="col-sm-2">
           <a href={`${walkthrough}/refresh.md#refreshing-the-agenda`}>Refresh Walkthrough</a>
         </dt>
-        <dd class="col-sm-10">
+        <dd className="col-sm-10">
           <p>A full-stack walkthrough of refreshing the agenda from the latest svn, initiated by
           pressing <tt>R</tt> on the keyboard.</p>
 
@@ -31,22 +31,30 @@ class Docs extends React.Component {
           locate where to make changes.</p>
         </dd>
 
-        <dt class="col-sm-2">
+        <dt className="col-sm-2">
           <a href={`${walkthrough}/add-comment.md#adding-a-comment-to-a-pmc-report`}>Add Comment Walkthrough</a>
         </dt>
-        <dd class="col-sm-10">
+        <dd className="col-sm-10">
           <p>A walkthrough on adding a comment to report.</p>
 
           <p>This provides more detail with an actual example of how to
           wire up buttons, forms, and operations to work together.</p>
         </dd>
+
+        <dt className="col-sm-2">
+          <a href={`${walkthrough}/redux-store.md#redux-store`}>Redux Store</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A catalog of the information stored in the {' '}
+            <Link to="/store">Redux store</Link>.</p>
+        </dd>
       </dl>
 
       <h3>Planned/Coming Soon</h3>
 
-      <dl class="row">
-        <dt class="col-sm-2">Agenda Reducer</dt>
-        <dd class="col-sm-10">
+      <dl className="row">
+        <dt className="col-sm-2">Agenda Reducer</dt>
+        <dd className="col-sm-10">
           <p>A walkthrough of the Agenda <a href="https://redux.js.org/basics/reducers">Reducer</a>.</p>
 
           <p>This will show how multiple streams of <a href="https://redux.js.org/basics/actions">actions</a>
