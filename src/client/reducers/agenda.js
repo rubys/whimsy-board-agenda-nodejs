@@ -2,6 +2,7 @@ import Agenda from '../models/agenda.js';
 import * as Actions from '../../actions.js';
 import { splitComments } from "../utils.js";
 import deepEqual from 'deep-equal';
+import deepMerge from '../deepMerge.js';
 
 // pending updates which have not yet been applied as they came in
 // before an agenda was present.
@@ -94,6 +95,21 @@ export default function reduce(state = null, action) {
         first.prev = pres
       }
 
+      // merge with original state to minimize changes
+      if (state) {
+        let changed = false;
+
+        for (let href in agenda) {
+          agenda[href] = deepMerge(state[href], agenda[href]);
+          if (agenda[href] != state[href]) changed = true;
+        }
+
+        if (!changed && Object.keys(state).length === Object.keys(agenda).length) {
+          agenda = state;
+        }
+      }
+
+      // apply any pending pending changes
       if (pending_pending) {
         agenda = reduce(agenda, Actions.postPending(pending_pending));
         pending_pending = null;
