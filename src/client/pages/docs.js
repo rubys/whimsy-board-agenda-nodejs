@@ -48,6 +48,20 @@ class Docs extends React.Component {
           <p>A catalog of the information stored in the {' '}
             <Link to="/store">Redux store</Link>.</p>
         </dd>
+
+        <dt className="col-sm-2">
+          <a href={`${walkthrough}/websocket.md#websockets`}>WebSocket</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>Covers:</p>
+          <ul>
+            <li>Startup / Authentication</li>
+            <li>Sharing WebSockets between Tabs</li>
+            <li>Server API</li>
+            <li>Client Routing</li>
+            <li>Development WebSocket</li>
+          </ul>
+        </dd>
       </dl>
 
       <h3>Planned/Coming Soon</h3>
