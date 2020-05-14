@@ -10,23 +10,29 @@
 // same, but perhaps only one item as changed or inserted, or alternately multiple items
 // were approved but were otherwise unchanged.
 
-import deepEqual from 'deep-equal';
-
 export default function deepMerge(source, target) {
-  if (deepEqual(source, target)) return source;
+  if (!source || source === target) return target;
 
   if (Array.isArray(source)) {
     if (!Array.isArray(target)) return target;
+    let changed = false;
 
     for (let i in target) {
       target[i] = deepMerge(source[i], target[i]);
+      changed = changed || target[i] !== source[i];
     }
+
+    if (!changed && Object.keys(source).length === Object.keys(target).length) return source;
   } else if (typeof source === 'object') {
     if (typeof target !== 'object') return target;
+    let changed = false;
 
     for (let i in target) {
       target[i] = deepMerge(source[i], target[i]);
+      changed = changed || target[i] !== source[i];
     }
+
+    if (!changed &&source.length === target.length) return source;
   }
 
   return target;

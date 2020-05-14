@@ -100,9 +100,7 @@ class Router extends React.Component {
     // bail unless an page was found
     if (!page) return <Main />;
 
-    // provide defaults for required properties
-    page.color = page.color || "blank";
-
+    // find the view
     let view = page.view;
     if (view.WrappedComponent) view = view.WrappedComponent;
 

@@ -42,9 +42,9 @@ export default function reduce(state = null, action) {
         if (/^7\w/m.test(item.attach) && item.roster) {
           let order = item;
           for (let item of agenda) {
-            if (item.roster === order.roster) {
+            if (item !== order && item.roster === order.roster) {
               if (!item.special_orders) item.special_orders = [];
-              item.special_orders.push(order);
+              item.special_orders.push(order.href);
             }
           }
         }
@@ -96,18 +96,7 @@ export default function reduce(state = null, action) {
       }
 
       // merge with original state to minimize changes
-      if (state) {
-        let changed = false;
-
-        for (let href in agenda) {
-          agenda[href] = deepMerge(state[href], agenda[href]);
-          if (agenda[href] != state[href]) changed = true;
-        }
-
-        if (!changed && Object.keys(state).length === Object.keys(agenda).length) {
-          agenda = state;
-        }
-      }
+      agenda = deepMerge(state, agenda);
 
       // apply any pending pending changes
       if (pending_pending) {
