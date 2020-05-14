@@ -2,6 +2,7 @@ import watch from 'node-watch';
 import https from 'https';
 import deepEqual from 'deep-equal';
 import credentials from './credentials.js';
+import { Board } from './svn.js';
 import { workPath } from './config.js';
 import { broadcast, broadcastDigest } from './websocket.js';
 import { read } from './sources/agenda.js';
@@ -68,6 +69,8 @@ export async function start(request) {
     active = true;
   });
 
+  let agendaDigests = {};
+
   ws.on('message', (event) => {
     try {
       let message = JSON.parse(event.data);
@@ -76,7 +79,14 @@ export async function start(request) {
         lastMessage = message;
 
         switch (message.type) {
-          case 'login':
+          case 'agenda':
+            broadcast(message);
+
+            if (message.digest !== agendaDigests[message.file]) {
+              Board.update(request, 0);
+              agendaDigests[message.file] = message.digest;
+            }
+            
             break;
 
           default:
