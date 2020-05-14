@@ -21,7 +21,7 @@ With the current (Ruby) based webserver, you can see that token in
 `session`.  With the Node.js version running in development mode, the same
 data is placed in [/api/server](http://localhost:3000/api/server).
 
-[src/server/websocket.js](../../src/server/websocket.js] maintains
+[src/server/websocket.js](../../src/server/websocket.js) maintains
 the list of current connections with three separate
 [Maps](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), `authorized`, 'sessions`, and `users`.
 
@@ -55,7 +55,7 @@ WebSockets to one way smallish messages.
 There are a number of ways to address these limitions.  One is to have only
 one WebSocket and to send the data between tabs.
 
-[Sending data across different browser tabs](https://blog.arnellebalane.com/sending-data-across-different-browser-tabs-6225daac93ec
+[Sending data across different browser tabs](https://blog.arnellebalane.com/sending-data-across-different-browser-tabs-6225daac93ec)
  is a blog post providing a good overview of the available options..
 
 Unfortunately, the best option,
