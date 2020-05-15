@@ -2,6 +2,13 @@ import { Link } from "react-router-dom";
 import JsonTree from 'react-json-tree';
 import { theme } from "./store.js";
 import React from "react";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    digests: state.server.digests
+  }
+};
 
 //
 // A page showing status of caches and service workers
@@ -14,21 +21,28 @@ class CacheStatus extends React.Component {
   state = { cache: [], registrations: [] };
 
   render() {
-    return <>
+    return <div className="container">
       <h2>Status</h2>
       {typeof navigator !== 'undefined' && "serviceWorker" in navigator ? <p>Service workers ARE supported by this browser</p> : <p>Service workers are NOT supported by this browser</p>}
-      <h2>Cache</h2>
+
+      <h2>Client Cache</h2>
 
       {this.state.cache.length === 0 ? <p>empty</p> : <ul>
         {this.state.cache.map(item => {
-          let basename = item.split("/").pop();
+          let basename = item.split("/api/").pop();
           if (basename === "") basename = "index.html";
           if (basename === "bootstrap.html") basename = item.split("/")[item.split("/").length - 2] + ".html";
 
-          return <li>
-            <Link to={`/cache/${basename}`}>{item}</Link>
-          </li>
+          return <li key={basename}><Link to={`/cache/client/${basename}`}>{item}</Link></li>
         })}
+      </ul>}
+
+      <h2>Server Cache</h2>
+
+      {Object.keys(this.props.digests).length === 0 ? <p>empty</p> : <ul>
+        {Object.keys(this.props.digests).map(item => (
+          <li key={item}><Link to={`/cache/server/${item}`}>{item}</Link></li>
+        ))}
       </ul>}
 
       <h2>Service Workers</h2>
@@ -54,7 +68,7 @@ class CacheStatus extends React.Component {
           )}
         </tbody>
       </table>}
-    </>
+    </div>
   };
 
   // update information
@@ -96,7 +110,7 @@ class CacheStatus extends React.Component {
 //
 class ClearCache extends React.Component {
   render() {
-    return <button className="btn-primary btn" onClick={this.click}>Clear Cache</button>
+    return <button className="btn-primary btn" onClick={this.click}>Clear Client Cache</button>
   };
 
   click = event => {
@@ -131,9 +145,9 @@ class UnregisterWorker extends React.Component {
 };
 
 //
-// Individual Cache page
+// Individual Cache page - client
 //
-export class CachePage extends React.Component {
+export class CacheClientPage extends React.Component {
   state = { response: {}, text: "" };
 
   render() {
@@ -141,7 +155,7 @@ export class CachePage extends React.Component {
     let contentType = 'text/plain';
 
     if (this.state.response.headers) {
-      for (let [key, ] of this.state.response.headers) {
+      for (let [key,] of this.state.response.headers) {
         if (key !== "status") keys.push(key);
       };
 
@@ -159,36 +173,37 @@ export class CachePage extends React.Component {
     } catch {
     }
 
-    return <>
-      <h2>{this.state.response.url}</h2>
+    return <div className="container">
+      <h4>{this.state.response.url}</h4>
+      
       <p>{`${this.state.response.status} ${this.state.response.statusText}`}</p>
 
       {
         this.state.response.headers ?
           <ul>{keys.map(key => (
-            <li><tt>{`${key}: ${this.state.response.headers.get(key)}`}</tt></li>
+            <li key={key}><tt>{`${key}: ${this.state.response.headers.get(key)}`}</tt></li>
           ))}</ul>
           : null
       }
 
       {typeof content === "object"
-        ? <JsonTree data={JSON.parse(this.state.text)} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false}/>
+        ? <JsonTree data={JSON.parse(this.state.text)} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false} />
         : <pre>{this.state.text}</pre>
-    }
-    </>
+      }
+    </div>
   };
 
   // update on first update
   componentDidMount() {
     if (typeof caches !== 'undefined') {
-      let basename = window.location.href.split("/").pop();
+      let basename = this.props.page;
       if (basename === "index.html") basename = "";
       if (/^\d+-\d+-\d+\.html$/m.test(basename)) basename = "bootstrap.html";
 
       caches.open("board/agenda").then(cache => (
         cache.matchAll().then((responses) => {
           for (let response of responses) {
-            if (response.url.split("/").pop() === basename) {
+            if (response.url.split("/api/").pop() === basename) {
               this.setState({ response: response });
               response.text().then(text => this.setState({ text: text }))
             }
@@ -199,4 +214,42 @@ export class CachePage extends React.Component {
   }
 };
 
-export default CacheStatus
+//
+// Individual Cache page - server
+//
+class _CacheServerPage extends React.Component {
+  static mapStateToProps(state, props) {
+    return {
+      digest: state.server.digests[props.page]
+    };
+  };
+
+  state = {contents: {status: "loading..."}};
+
+  render() {
+    return <div className="container">
+      <h2>{this.props.page}</h2>
+
+      <p>Digest: <code>{this.props.digest}</code></p>
+
+      <JsonTree data={this.state.contents} sortObjectKeys={true} hideRoot={true} theme={theme} invertTheme={false} />
+    </div>
+  };
+
+  componentDidMount() {
+    this.download();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.digest !== prevProps.digest) this.download();
+  }
+
+  download = async () => {
+    let response = await fetch(`/api/cache/${this.props.page}`);
+    this.setState({ contents: await response.json() });
+  }
+};
+
+export const CacheServerPage = connect(_CacheServerPage.mapStateToProps)(_CacheServerPage);
+
+export default connect(mapStateToProps)(CacheStatus)

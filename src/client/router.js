@@ -5,7 +5,7 @@ import Attend from "./buttons/attend.js";
 import Adjournment from "./pages/adjournment.js";
 import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
-import CacheStatus, { CachePage } from "./pages/cache.js";
+import CacheStatus, { CacheClientPage, CacheServerPage } from "./pages/cache.js";
 import Comments from "./pages/comments.js";
 import Developer from "./pages/developer.js";
 import Demo from "./demo/router.js";
@@ -406,8 +406,16 @@ class Router extends React.Component {
         })}
       </Route>
 
-      <Route path="/cache/:page">
-        {main({ view: CachePage, color: "devpage" })}
+      <Route path="/cache/client/:page(.*)">
+      {({ match: { params: { page } } }) => (
+        main({ view: CacheClientPage, title: "Client Cache", color: "devpage", page })
+      )}
+      </Route>
+
+      <Route path="/cache/server/:page(.*)">
+      {({ match: { params: { page } } }) => (
+        main({ view: CacheServerPage, title: "Server Cache", color: "devpage", page })
+      )}
       </Route>
 
       <Route exact path="/server/">

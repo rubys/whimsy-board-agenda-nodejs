@@ -4,6 +4,8 @@ import secretaryMinutes from "./sources/minutes.js";
 import { Board, Minutes } from './svn.js';
 import { read } from './sources/agenda.js';
 import { promises as fs } from "fs";
+import * as cache from "./cache.js";
+import yaml from 'yaml';
 
 export default async function router(app) {
 
@@ -57,6 +59,21 @@ export default async function router(app) {
       { name, id, member: members.includes(id) }
     ));
     response.json(committers);
+  });
+
+  app.get('/api/cache/:file', async (request, response, next) => {
+    let json = await cache.read(`${request.params.file}.json`);
+    if (json) {
+      response.setHeader('content-type', 'application/json');
+      response.send(json);
+    } else {
+      let data = await cache.read(`${request.params.file}.yaml`);
+      if (data) {
+        response.json(yaml.parse(data));
+      } else {
+        next(); // 404
+      }
+    }
   });
 
   // define a route for HTTP GET requests for each file in the sources
