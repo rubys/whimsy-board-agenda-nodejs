@@ -4,7 +4,7 @@ import store from '../store';
 import { Provider } from 'react-redux';
 import Report from '../pages/report.js';
 
-it('converts mentions of JIRA to hotlinks', () => {
+it('converts mentions of CVEs to hotlinks', () => {
   let item = {
     title: 'PMC',
     text: 'we fixed CVE-2020-0001 this month',

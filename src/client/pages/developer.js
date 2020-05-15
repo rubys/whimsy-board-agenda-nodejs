@@ -14,7 +14,8 @@ class Developer extends React.Component {
         <dd className="col-sm-10">Request live data from the server.</dd>
 
         <dt className="col-sm-2"><Link to="/cache/">Cache</Link></dt>
-        <dd className="col-sm-10">Show the cache of responses to HTTP GET requests.</dd>
+        <dd className="col-sm-10">Show the cache of responses to HTTP GET requests, and the contents of the
+        server cache files on in the <code>work/cache</code> directory.</dd>
       </dl>
 
       <p>See also: <Link to="/docs/">Documentation/Guides</Link>.</p>
