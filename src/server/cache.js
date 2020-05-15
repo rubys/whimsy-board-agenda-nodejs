@@ -30,11 +30,12 @@ export async function write(file, data) {
 // return a digest of all cache files
 export async function digest() {
   try {
+    let files = (await fsp.readdir(cachePath)).filter(name => !name.startsWith('.'));
     return Object.fromEntries(
       await Promise.all([
-        ...(await fsp.readdir(cachePath)).map(async (name) => (
+        ...(await files.map(async (name) => (
           [name.split('.')[0], md5(await fsp.readFile(`${cachePath}/${name}`, 'utf8'))]
-        ))
+        )))
       ])
     );
   } catch (error) {
