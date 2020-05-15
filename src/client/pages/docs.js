@@ -42,14 +42,6 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
-          <a href={`${walkthrough}/redux-store.md#redux-store`}>Redux Store</a>
-        </dt>
-        <dd className="col-sm-10">
-          <p>A catalog of the information stored in the {' '}
-            <Link to="/store">Redux store</Link>.</p>
-        </dd>
-
-        <dt className="col-sm-2">
           <a href={`${walkthrough}/websocket.md#websockets`}>WebSocket</a>
         </dt>
         <dd className="col-sm-10">
@@ -61,6 +53,22 @@ class Docs extends React.Component {
             <li>Client Routing</li>
             <li>Development WebSocket</li>
           </ul>
+        </dd>
+
+        <dt className="col-sm-2">
+          <a href={`${walkthrough}/redux-store.md#redux-store`}>Redux Store</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A description of the information stored in the {' '}
+            <Link to="/store">Redux store</Link>.</p>
+        </dd>
+
+        <dt className="col-sm-2">
+          <a href={`${walkthrough}/source.md#Source-Tree`}>Redux Store</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A description of the information stored in the {' '}
+            <Link to="/store">Redux store</Link>.</p>
         </dd>
       </dl>
 

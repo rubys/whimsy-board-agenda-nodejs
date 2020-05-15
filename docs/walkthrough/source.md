@@ -1,4 +1,4 @@
-# [Source tree](../../Source tree)
+# Source Tree
 
 A brief description of what files are place where.
 
@@ -43,7 +43,7 @@ the same file.
 
 This contains the React/Redux/JSX demo.
 
-### [src/client/eleeents](../../src/client/eleeents)
+### [src/client/elements](../../src/client/elements)
 
 Grab bag location for all React components that are not
 buttons, layout, pages, or part of the demo.
