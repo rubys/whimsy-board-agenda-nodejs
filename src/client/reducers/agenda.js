@@ -187,7 +187,7 @@ function status(item, updates) {
     let approvedByMe = status.approved_by?.includes(user.initials);
     status.approved = status.approved_by?.length
       + (!approvedByMe && status.pending?.approve ? +1 : 0)
-      + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 1
+      + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 5
 
     // items are skippable if they are preapproved and not flagged  
     status.skippable = status.approved && !status.flagged;
