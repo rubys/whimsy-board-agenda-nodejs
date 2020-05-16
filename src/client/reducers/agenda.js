@@ -183,11 +183,11 @@ function status(item, updates) {
       status.flagged_by?.length > 1 ||
       (status.flagged_by?.length === 1 && (status.flagged_by[0] !== user.initials || !status.pending?.unflagged));
 
-    // items are approved if number of approvals is > 5 after accounting for pending approvals and unapprovals
+    // items are approved if number of approvals is >= 5 after accounting for pending approvals and unapprovals
     let approvedByMe = status.approved_by?.includes(user.initials);
     status.approved = status.approved_by?.length
       + (!approvedByMe && status.pending?.approve ? +1 : 0)
-      + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 5
+      + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 1
 
     // items are skippable if they are preapproved and not flagged  
     status.skippable = status.approved && !status.flagged;
