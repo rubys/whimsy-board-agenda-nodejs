@@ -9,8 +9,6 @@ let mtime = fs.statSync('yarn.lock').mtimeMs;
 child_process.execSync('git pull', { stdio: 'inherit' });
 
 if (mtime !== fs.statSync('yarn.lock').mtimeMs) {
-console.log(mtime, fs.statSync('yarn.lock').mtimeMs);
-console.log(mtime === fs.statSync('yarn.lock').mtimeMs);
   child_process.execSync('yarn install', { stdio: 'inherit' });
 }
 
