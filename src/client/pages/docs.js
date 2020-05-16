@@ -8,17 +8,21 @@ class Docs extends React.Component {
     return <div className="container">
       <h1>Documentation/Guides</h1>
 
-      <h3>Available now</h3>
+      <h3>Demo</h3>
 
       <dl className="row">
-        <dt className="col-sm-2"><Link to="/demo/">React/Redux Demo</Link></dt>
+        <dt className="col-sm-2"><Link to="/demo/">React/Redux</Link></dt>
         <dd className="col-sm-10">
           <p>A live demo of the <a href="https://react-redux.js.org/">React Redux</a> store.</p>
 
           <p>Shows how to define a <a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a> template,
           and to render a live view using a template, state data, and data from a React Redux store.</p>
         </dd>
+      </dl>
 
+      <h3>Walk-throughs</h3>
+
+      <dl className="row">
         <dt className="col-sm-2">
           <a href={`${walkthrough}/development.md#development`}>Development Workflow</a>
         </dt>
@@ -34,7 +38,7 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
-          <a href={`${walkthrough}/refresh.md#refreshing-the-agenda`}>Refresh Walkthrough</a>
+          <a href={`${walkthrough}/refresh.md#refreshing-the-agenda`}>Refresh</a>
         </dt>
         <dd className="col-sm-10">
           <p>A full-stack walkthrough of refreshing the agenda from the latest svn, initiated by
@@ -46,7 +50,7 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
-          <a href={`${walkthrough}/add-comment.md#adding-a-comment-to-a-pmc-report`}>Add Comment Walkthrough</a>
+          <a href={`${walkthrough}/add-comment.md#adding-a-comment-to-a-pmc-report`}>Add Comment</a>
         </dt>
         <dd className="col-sm-10">
           <p>A walkthrough on adding a comment to report.</p>
@@ -78,22 +82,20 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
+          <a href={`${walkthrough}/reducers.md#agenda-reducer`}>Agenda Reducer</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A walkthrough of the Agenda <a href="https://redux.js.org/basics/reducers">Reducer</a>.</p>
+
+          <p>This shows how multiple streams of <a href="https://redux.js.org/basics/actions">actions</a>
+          {' '} are processed to provide a coherent and up to date view of Agenda items for rendering.</p>
+        </dd>
+
+        <dt className="col-sm-2">
           <a href={`${walkthrough}/source.md#Source-Tree`}>Source</a>
         </dt>
         <dd className="col-sm-10">
           <p>A description of various source directories and key source files.</p>
-        </dd>
-      </dl>
-
-      <h3>Planned/Coming Soon</h3>
-
-      <dl className="row">
-        <dt className="col-sm-2">Agenda Reducer</dt>
-        <dd className="col-sm-10">
-          <p>A walkthrough of the Agenda <a href="https://redux.js.org/basics/reducers">Reducer</a>.</p>
-
-          <p>This will show how multiple streams of <a href="https://redux.js.org/basics/actions">actions</a>
-          {' '} are processed to provide a coherent and up to date view of Agenda items for rendering.</p>
         </dd>
       </dl>
 

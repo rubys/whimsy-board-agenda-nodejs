@@ -17,7 +17,7 @@ format.
 
 This is where `yarn` installs modules
 
-## package.json
+## [package.json](../../package.json)
 
 Yarn contains a description for
 [package.json](https://classic.yarnpkg.com/en/docs/package-json/),
