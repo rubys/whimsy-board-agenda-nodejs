@@ -17,9 +17,27 @@ format.
 
 This is where `yarn` installs modules
 
+## package.json
+
+Yarn contains a description for
+[package.json](https://classic.yarnpkg.com/en/docs/package-json/),
+but in reality many tools look to this file for configuration.
+Examples include [eslint](https://eslint.org/docs/user-guide/configuring),
+[babel](https://github.com/browserslist/browserslist),
+[create react app](https://create-react-app.dev/docs/proxying-api-requests-in-development/), and even
+[node.js](https://nodejs.org/api/esm.html#esm_package_json_type_field) itself.
+
 ## [public](../../public)
 
 This is where static files are found for development.
+
+## [scripts](../../scripts)
+
+Scripts listed in `package.json` need to be portable across operating
+systems.  The current `dev` script sets an environment variable and does
+so in a way that won't work on Windows.  Implementing such scripts in
+a portable way, using node.js, makes then available to all operating
+systems.
 
 ## [src](../../src)
 
