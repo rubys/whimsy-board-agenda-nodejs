@@ -20,6 +20,20 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
+          <a href={`${walkthrough}/development.md#development`}>Development Workflow</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>Overview of the various development tasks.  Covers:</p>
+
+          <ul>
+            <li>Isolating problems</li>
+            <li>Edit, compile, debug</li>
+            <li>Testing</li>
+            <li>Package management</li>
+          </ul>
+        </dd>
+
+        <dt className="col-sm-2">
           <a href={`${walkthrough}/refresh.md#refreshing-the-agenda`}>Refresh Walkthrough</a>
         </dt>
         <dd className="col-sm-10">
@@ -64,11 +78,10 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
-          <a href={`${walkthrough}/source.md#Source-Tree`}>Redux Store</a>
+          <a href={`${walkthrough}/source.md#Source-Tree`}>Source</a>
         </dt>
         <dd className="col-sm-10">
-          <p>A description of the information stored in the {' '}
-            <Link to="/store">Redux store</Link>.</p>
+          <p>A description of various source directories and key source files.</p>
         </dd>
       </dl>
 
@@ -120,6 +133,7 @@ class Docs extends React.Component {
         <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax">spread syntax</a></li>
         <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions">arrow function expressions</a></li>
         <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#New_notations_in_ECMAScript_2015">shorthand and computed property names</a></li>
+        <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals">Template literals (Template strings)</a></li>
       </ul>
     </div>
   }
