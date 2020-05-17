@@ -19,7 +19,7 @@ export class InitialReminder extends React.Component {
     }
   };
 
-  state = {disabled: true, subject: "", message: ""};
+  state = { disabled: true, subject: "", message: "" };
 
   // fetch email template
   loadText = (event) => {
@@ -41,31 +41,29 @@ export class InitialReminder extends React.Component {
       });
 
       if (reminder === "non-responsive") {
-        this.setState({selection: "inactive"})
+        this.setState({ selection: "inactive" })
       } else {
-        this.setState({selection: "active"})
+        this.setState({ selection: "active" })
       }
     })
   };
 
   // wire up event handlers
-  mounted() {
-    React.nextTick(() => {
-      for (let button of Array.from(document.querySelectorAll("button"))) {
-        if (button.getAttribute("data-target") === "#reminder-form") {
-          button.disabled = false;
-          button.addEventListener("click", this.loadText)
-        }
+  componentDidMount() {
+    for (let button of document.querySelectorAll("button")) {
+      if (button.getAttribute("data-target") === "#reminder-form") {
+        button.disabled = false;
+        button.addEventListener("click", this.loadText)
       }
-    })
+    }
   };
 
   // commit form: allow the user to confirm or edit the commit message
   render() {
     return <ModalDialog id="reminder-form" className="wide-form" color="blank">
       <h4>Email message</h4>
-      <input id="email-subject" value={this.state.subject} disabled={this.state.disabled} label="subject" placeholder="loading..."/>
-      <textarea id="email-text" value={this.state.message} rows={12} disabled={this.state.disabled} label="body" placeholder="loading..."/>
+      <input id="email-subject" value={this.state.subject} disabled={this.state.disabled} label="subject" placeholder="loading..." />
+      <textarea id="email-text" value={this.state.message} rows={12} disabled={this.state.disabled} label="body" placeholder="loading..." />
       <button className="btn-default" data-dismiss="modal">Close</button>
       <button className="btn-info" onClick={this.click} disabled={this.state.disabled}>Dry Run</button>
       <button className="btn-primary" onClick={this.click} disabled={this.state.disabled}>Submit</button>
@@ -75,7 +73,7 @@ export class InitialReminder extends React.Component {
   // on click, disable the input fields and buttons and submit
   click = (event) => {
     event.target.disabled = true;
-    this.setState({disabled: true});
+    this.setState({ disabled: true });
     let dryrun = event.target.textContent === "Dry Run";
 
     // data to be sent to the server
@@ -110,7 +108,7 @@ export class InitialReminder extends React.Component {
       };
 
       event.target.disabled = true;
-      this.setState({disabled: false});
+      this.setState({ disabled: false });
       jQuery("#reminder-form").modal("hide");
       document.body.classList.remove("modal-open")
     })
@@ -122,7 +120,7 @@ export class InitialReminder extends React.Component {
 //
 export class FinalReminder extends React.Component {
   render() {
-    return <button className="btn-primary btn" disabled={true} data_toggle="modal" data_target="#reminder-form">send final reminders</button>
+    return <button className="btn-primary btn" disabled={true} data_toggle="modal" data-target="#reminder-form">send final reminders</button>
   }
 };
 
@@ -131,6 +129,6 @@ export class FinalReminder extends React.Component {
 //
 export class ProdReminder extends React.Component {
   render() {
-    return <button className="btn-danger btn" disabled={true} data_toggle="modal" data_target="#reminder-form">prod non-responsive PMCs</button>
+    return <button className="btn-danger btn" disabled={true} data_toggle="modal" data-target="#reminder-form">prod non-responsive PMCs</button>
   }
 };
