@@ -12,7 +12,9 @@ export default async function reminderText(request) {
   let timeZoneInfo = agenda.match(/Other Time Zones: (.*)/)?.[1];
 
   let view = {
-    meetingDate: meeting.format('ddd, DD MMM YYYY [at] hh:mm:ss a z'),
+    project: '{{{project}}}',
+    link: '{{{link}}}',
+    meetingDate: meeting.format('ddd, DD MMM YYYY [at] hh:mm a z'),
     month: meeting.format('MMMM'),
     year: meeting.format('YYYY'),
     timeZoneInfo,
@@ -21,7 +23,7 @@ export default async function reminderText(request) {
   };
 
   let { reminder } = request.params;
-  let template = await Templates.read(`${reminder}.txt`, request);
+  let template = await Templates.read(`${reminder}.mustache`, request);
   let body = Mustache.render(template, view);
 
   let subject = '';
@@ -30,5 +32,5 @@ export default async function reminderText(request) {
     return '';
   });
 
-  return { subject, body, view }
+  return { subject, body, template, view }
 }
