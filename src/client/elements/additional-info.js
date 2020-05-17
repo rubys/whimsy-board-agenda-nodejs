@@ -1,5 +1,4 @@
 // import ActionItems from "../pages/action-items.js"; TODO
-import Agenda from "../models/agenda.js";
 import { Link } from "react-router-dom";
 import { navigate } from "../router.js";
 import Posted from "../models/posted.js";
@@ -17,10 +16,11 @@ function mapStateToProps(state, props) {
   let responses = lookup('responses');
 
   return {
+    agendaFile: state.client.agendaFile,
     historicalComments: lookup('historicalComments')[title] || {},
     responses: responses[title] || {},
     loading: !responses,
-    draft: lookup('reporter')[title] || {},
+    draft: lookup('reporter')[title] || null,
     initials: state.server.user?.initials
   }
 };
@@ -120,13 +120,13 @@ class AdditionalInfo extends React.Component {
           <h5 id={`${this.state.prefix}pending`}>Pending Comment</h5>
 
           <pre className="commented">{Flow.comment(
-            item.status.pending?.comments,
+            item.status.pending.comments,
             this.props.initials
           )}</pre>
         </div> : null}
 
         {Object.entries(historicalComments).map(([date, comments]) => <React.Fragment key={date}>
-          {Agenda.file === `board_agenda_${date}.txt` ? null : <>
+          {agendaFile === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>
 
