@@ -126,7 +126,7 @@ class AdditionalInfo extends React.Component {
         </div> : null}
 
         {Object.entries(historicalComments).map(([date, comments]) => <React.Fragment key={date}>
-          {agendaFile === `board_agenda_${date}.txt` ? null : <>
+          {this.props.agendaFile === `board_agenda_${date}.txt` ? null : <>
             <h5 className="history">
               <span>• </span>
 
