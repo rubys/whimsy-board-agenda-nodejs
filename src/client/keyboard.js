@@ -112,8 +112,8 @@ class Keyboard {
       } else if (event.keyCode === 82) { // R
         Store.dispatch(Actions.clockIncrement());
 
-        post("refresh", {agenda: Agenda.file}, (response) => {
-          Store.dispatch(Actions.postAgenda(response.agenda));
+        post("refresh", {agenda: Agenda.file}, response => {
+          if (response) Store.dispatch(Actions.postAgenda(response.agenda));
           Store.dispatch(Actions.clockDecrement());
         });
 
