@@ -1,6 +1,7 @@
 import * as websocket from "./websocket.js";
 import * as ldap from "./ldap.js";
 import secretaryMinutes from "./sources/minutes.js";
+import reminderText from './sources/reminder-text.js';
 import { Board, Minutes } from './svn.js';
 import { read } from './sources/agenda.js';
 import { promises as fs } from "fs";
@@ -73,6 +74,14 @@ export default async function router(app) {
       } else {
         next(); // 404
       }
+    }
+  });
+
+  app.get('/api/:reminder(reminder[12]|non-responsive)', async (request, response) => {
+    try {
+      response.json(await reminderText(request));
+    } catch (error) {
+      next(error)
     }
   });
 

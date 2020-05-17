@@ -123,7 +123,7 @@ export function retrieve(target, type, block) {
             data = xhr.responseText
           }
         } else if (xhr.status === 404) {
-          alert(`Not Found: ${type}/${target}`)
+          alert(`Not Found: /api/${target}`)
         } else if (xhr.status >= 400) {
           if (!xhr.response) {
             message = `Exception - ${xhr.statusText}`

@@ -16,6 +16,9 @@ const svnPath = `${workPath}/svn`;
 const boardDir = `${svnPath}/foundation_board`;
 const boardUrl = 'https://svn.apache.org/repos/private/foundation/board';
 
+const templatesDir = `${svnPath}/templates`;
+const templatesUrl = `${boardUrl}/templates`;
+
 const minutesDir = `${svnPath}/minutes`;
 const minutesUrl = 'https://svn.apache.org/repos/asf/infrastructure/site/trunk/content/foundation/records/minutes';
 
@@ -148,7 +151,9 @@ class Repository {
   }
 
   // read a file from the working copy
-  async read(file) {
+  async read(file, request) {
+    if (request) await this.update(request);
+
     return fsp.readFile(this.map(file), 'utf8');
   }
 
@@ -235,6 +240,8 @@ Board.draftMinutes = async function (request) {
 
   return (await fsp.readdir(this.dir)).filter(name => /^board_minutes_/.test(name)).sort();
 }
+
+export let Templates = new Repository({ dir: templatesDir, url: templatesUrl, depth: 'files' });
 
 export const Minutes = new Repository({ dir: minutesDir, url: minutesUrl });
 
