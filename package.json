@@ -37,7 +37,7 @@
     "yaml": "^1.9.2"
   },
   "scripts": {
-    "dev": "NODE_ENV=development concurrently --kill-others-on-fail yarn:server yarn:client",
+    "dev": "node scripts/dev.js",
     "pull": "node scripts/pull.js",
     "test": "react-scripts test --detectOpenHandles",
     "demo": "NODE_ENV=test concurrently --kill-others-on-fail yarn:server yarn:client",

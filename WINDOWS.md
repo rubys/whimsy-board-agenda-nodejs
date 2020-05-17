@@ -46,28 +46,30 @@ itself, then to install the board agenda tool dependencies:
    yarn install
 
 **IMPORTANT** While the `npm install` command will work using the
-Windows PowerShell, the yarn install will fail due to a security error.
-If you Google that error, correcting it is relatively straightforward,
-but you can avoid the error entirely by selecting a bash shell instead.
-As you will currently need to do that in order to run the application,
-you might as well do so now.
+Windows PowerShell, the yarn install will fail due to a 
+[security error](https:/go.microsoft.com/fwlink/?LinkID=135170).
+You can avoid this error by enabling the execution of scripts, for
+example by running the following:
+
+    Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+
+Alternately, you can select a bash shell instead.
 
 # Running the application
 
-At the moment, the startup scripts assume a Unix like shell.  You can
-tell yarn to use bash by entering the following:
-
-    yarn config set script-shell /bin/bash
-
-You only need to do this once.  Once yarn is configured, you can start
-the application with the following command:
+You can run the application either by using run the "dev" script listed
+in the EXPLORER pane in the bottom left corner, or by running the following
+command from a terminal:
 
     yarn dev
 
-**NOTE** the convenience "npm scripts" list in the EXPLORER window in VSCode
-will not currently work as they won't use the right shell.
+If desired, you can tell yarn to use the bash shell:
 
+    yarn config set script-shell /bin/bash
 
-**NOTE** at the moment, the Windows Edge browser does not work (it produces
-a parse error for the JavaScript that is generated).  Firefox works fine.
+You only need to do this once.
 
+**NOTE** If you wish to use the Windows Edge browser, you will need to
+update it to the January 15, 2020 ("Chromium based") version.  Microsoft
+Edge Legacy will produce a parse error for the JavaScript that is generated.
+Firefox and Chrome work fine.
