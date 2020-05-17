@@ -1,20 +1,27 @@
 import AdditionalInfo from "../elements/additional-info.js";
-import Agenda from "../models/agenda.js";
 import { Link } from "react-router-dom";
 import React from "react";
 import { Server } from "../utils.js";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    agenda: state.agenda
+  }
+};
 
 //
 // A page showing all flagged reports
 //
 class Missing extends React.Component {
-  state = { checked: {} };
 
   // update check marks based on current Index
-  beforeMount() {
-    for (let item of Agenda.index) {
+  constructor(props) {
+    super(props);
+    this.state = { checked: {} };
+    for (let item of Object.values(this.props.agenda)) {
       if (typeof this.state.checked[item.title] === 'undefined') {
-        this.setState('checked', {...this.state.checked, [item.title]: true})
+        this.state.checked[item.title] = true;
       }
     }
   };
@@ -22,13 +29,15 @@ class Missing extends React.Component {
   render() {
     let first = true;
     let flagged_by;
+    let agenda = Object.values(this.props.agenda)
+      .sort((item1, item2) => item1.sortOrder - item2.sortOrder);
 
     return <>
-      {Agenda.index.map((item) => (
-        item.missing && item.owner && item.nonresponsive ? <>
+      {agenda.map(item => (
+        item.status.missing && item.owner && item.status.nonresponsive ? <>
           {first ? <h2>Non responsive PMCs</h2> : null}
 
-          <h3 className={item.color}>
+          <h3 className={item.status.color}>
             {/^[A-Z]+/m.test(item.attach) ? <input className="inactive" type="checkbox" name="selected" value={item.title} checked={this.state.checked[item.title]} /> : null}
             <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
@@ -46,9 +55,9 @@ class Missing extends React.Component {
 
       {!first ? <h2>Other missing reports</h2> : null}
 
-      {Agenda.index.map((item) => (
-        item.missing && item.owner && !item.nonresponsive ? <>
-          <h3 className={item.color}>
+      {agenda.map(item => (
+        item.status.missing && item.owner && !item.status.nonresponsive ? <>
+          <h3 className={item.status.color}>
             {/^[A-Z]+/m.test(item.attach) ? <input className="active" type="checkbox" name="selected" value={item.title} checked={this.state.checked[item.title]} /> : null}
             <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
@@ -69,4 +78,4 @@ class Missing extends React.Component {
   }
 };
 
-export default Missing
+export default connect(mapStateToProps)(Missing)
