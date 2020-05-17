@@ -38,7 +38,7 @@ class Main extends React.Component {
       <Footer {...this.props} />
 
       {this.props.buttons ? this.props.buttons.map(button => {
-        if (button.form) {
+        if (button.form && !button.type) {
           return React.createElement(
             button.form,
             { item: this.props.item, key: button.text, button }

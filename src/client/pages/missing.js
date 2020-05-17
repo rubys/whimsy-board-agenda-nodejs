@@ -1,6 +1,6 @@
 import AdditionalInfo from "../elements/additional-info.js";
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { Fragment } from "react";
 import { Server } from "../utils.js";
 import { connect } from 'react-redux';
 
@@ -34,11 +34,11 @@ class Missing extends React.Component {
 
     return <>
       {agenda.map(item => (
-        item.status.missing && item.owner && item.status.nonresponsive ? <>
+        item.status.missing && item.owner && item.status.nonresponsive ? <Fragment key={item.href}>
           {first ? <h2>Non responsive PMCs</h2> : null}
 
           <h3 className={item.status.color}>
-            {/^[A-Z]+/m.test(item.attach) ? <input className="inactive" type="checkbox" name="selected" value={item.title} checked={this.state.checked[item.title]} /> : null}
+            {/^[A-Z]+/m.test(item.attach) ? <input className="inactive" type="checkbox" name="selected" value={item.title} defaultChecked={this.state.checked[item.title]} /> : null}
             <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
@@ -50,15 +50,15 @@ class Missing extends React.Component {
           </h3>
 
           <AdditionalInfo item={item} prefix={true} />
-        </> : null
+        </Fragment> : null
       ))}
 
       {!first ? <h2>Other missing reports</h2> : null}
 
       {agenda.map(item => (
-        item.status.missing && item.owner && !item.status.nonresponsive ? <>
+        item.status.missing && item.owner && !item.status.nonresponsive ? <Fragment key={item.href}>
           <h3 className={item.status.color}>
-            {/^[A-Z]+/m.test(item.attach) ? <input className="active" type="checkbox" name="selected" value={item.title} checked={this.state.checked[item.title]} /> : null}
+            {/^[A-Z]+/m.test(item.attach) ? <input className="active" type="checkbox" name="selected" value={item.title} defaultChecked={this.state.checked[item.title]} /> : null}
             <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
@@ -70,7 +70,7 @@ class Missing extends React.Component {
           </h3>;
 
           <AdditionalInfo item={item} prefix={true} />
-        </> : null
+        </Fragment> : null
       ))}
 
       {first ? <em className="comment">None</em> : null}
