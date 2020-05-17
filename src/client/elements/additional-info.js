@@ -17,7 +17,7 @@ function mapStateToProps(state, props) {
 
   return {
     agendaFile: state.client.agendaFile,
-    historicalComments: lookup('historicalComments')[title] || {},
+    historicalComments: lookup('historicalComments')[title] || null,
     responses: responses[title] || {},
     loading: !responses,
     draft: lookup('reporter')[title] || null,
@@ -104,7 +104,7 @@ class AdditionalInfo extends React.Component {
         ))}</ul>
       </> : null}
 
-      {item.comments?.length || (Object.keys(historicalComments).length > 0 && !this.state.prefix) ? <>
+      {item.comments?.length || (historicalComments && !this.state.prefix) ? <>
         <h4 id={`${this.state.prefix}comments`}>Comments</h4>
 
         {item.comments?.map(comment => (
@@ -125,55 +125,56 @@ class AdditionalInfo extends React.Component {
           )}</pre>
         </div> : null}
 
-        {Object.entries(historicalComments).map(([date, comments]) => <React.Fragment key={date}>
-          {this.props.agendaFile === `board_agenda_${date}.txt` ? null : <>
-            <h5 className="history">
-              <span>• </span>
+        {historicalComments && !this.state.prefix ?
+          Object.entries(historicalComments).map(([date, comments]) => <React.Fragment key={date}>
+            {this.props.agendaFile === `board_agenda_${date}.txt` ? null : <>
+              <h5 className="history">
+                <span>• </span>
 
-              <a href={this.historicalLink(date)}>{date.replace(/_/g, "-")}</a>
+                <a href={this.historicalLink(date)}>{date.replace(/_/g, "-")}</a>
 
-              {(() => {
-                // link to mail archive for feedback thread
-                if (date > "2016_04") { // when feedback emails were first started
-                  let dfr = date.replace(/_/g, "-");
-                  let dto = new Date(Date.now()).toISOString().slice(0, 10);
-                  let count = responses[dfr];
-                  let link;
+                {(() => {
+                  // link to mail archive for feedback thread
+                  if (date > "2016_04") { // when feedback emails were first started
+                    let dfr = date.replace(/_/g, "-");
+                    let dto = new Date(Date.now()).toISOString().slice(0, 10);
+                    let count = responses[dfr];
+                    let link;
 
-                  if (count) {
-                    // when board was copied on the initial email
-                    if (date < "2017_11") --count;
+                    if (count) {
+                      // when board was copied on the initial email
+                      if (date < "2017_11") --count;
 
-                    if (count === 0) {
-                      link = "(no responses)"
-                    } else if (count === 1) {
-                      link = "(1 response)"
+                      if (count === 0) {
+                        link = "(no responses)"
+                      } else if (count === 1) {
+                        link = "(1 response)"
+                      } else {
+                        link = `(${count} responses)`
+                      }
+                    } else if (loading) {
+                      link = "(loading)"
                     } else {
-                      link = `(${count} responses)`
-                    }
-                  } else if (loading) {
-                    link = "(loading)"
+                      link = "(no responses)"
+                    };
+
+                    return <>
+                      <span>: </span>
+                      <a href={`https://lists.apache.org/list.html?board@apache.org&d=dfr=${dfr}|dto=${dto}&header_subject='Board%20feedback%20on%20${dfr}%20${item.title}%20report'`}>{link}</a>
+                    </>
                   } else {
-                    link = "(no responses)"
-                  };
+                    return null
+                  }
+                })()}
+              </h5>
 
-                  return <>
-                    <span>: </span>
-                    <a href={`https://lists.apache.org/list.html?board@apache.org&d=dfr=${dfr}|dto=${dto}&header_subject='Board%20feedback%20on%20${dfr}%20${item.title}%20report'`}>{link}</a>
-                  </>
-                } else {
-                  return null
-                }
-              })()}
-            </h5>
-
-            {splitComments(comments).map(comment => (
-              <pre className="comment" key={comment}>
-                <Text raw={comment} filters={[hotlink]} />
-              </pre>
-            ))}
-          </>}
-        </React.Fragment>)}
+              {splitComments(comments).map(comment => (
+                <pre className="comment" key={comment}>
+                  <Text raw={comment} filters={[hotlink]} />
+                </pre>
+              ))}
+            </>}
+          </React.Fragment>) : null}
       </> : item.pending ? <div className="clickable commented comment" onClick={() => (
         navigate("/queue")
       )}>
