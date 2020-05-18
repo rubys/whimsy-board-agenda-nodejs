@@ -37,8 +37,8 @@ class Missing extends React.Component {
         item.status.missing && item.owner && item.status.nonresponsive ? <Fragment key={item.href}>
           {first ? <h2>Non responsive PMCs</h2> : null}
 
-          <h3 className={item.status.color}>
-            {/^[A-Z]+/m.test(item.attach) ? <input className="inactive" type="checkbox" name="selected" value={item.title} defaultChecked={this.state.checked[item.title]} /> : null}
+          <h3 className={`${item.status.color} form-check`}>
+            {/^[A-Z]+/m.test(item.attach) ? <input className="form-check-input inactive" type="checkbox" name="selected" value={item.title} defaultChecked={this.state.checked[item.title]} /> : null}
             <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
@@ -57,8 +57,8 @@ class Missing extends React.Component {
 
       {agenda.map(item => (
         item.status.missing && item.owner && !item.status.nonresponsive ? <Fragment key={item.href}>
-          <h3 className={item.status.color}>
-            {/^[A-Z]+/m.test(item.attach) ? <input className="active" type="checkbox" name="selected" value={item.title} defaultChecked={this.state.checked[item.title]} /> : null}
+          <h3 className={`${item.status.color} form-check`}>
+            {/^[A-Z]+/m.test(item.attach) ? <input className="active form-check form-check-input" type="checkbox" name="selected" value={item.title} defaultChecked={this.state.checked[item.title]} /> : null}
             <Link to={`flagged/${item.href}`} className={first ? "default" : null}>{item.title}</Link>
             {first = false}
             <span className="owner">{` [${item.owner} / ${item.shepherd}]`}</span>
@@ -67,7 +67,7 @@ class Missing extends React.Component {
               {flagged_by = Server.directors[item.flagged_by] || item.flagged_by}
               <span className="owner">{` flagged by: ${flagged_by}`}</span>
             </> : null}
-          </h3>;
+          </h3>
 
           <AdditionalInfo item={item} prefix={true} />
         </Fragment> : null
