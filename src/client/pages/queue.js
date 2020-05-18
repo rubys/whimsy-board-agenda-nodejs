@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 function mapStateToProps(state) {
   return {
     user: state.server.user,
+    pending: state.server.pending,
     agenda: state.agenda
   }
 };
@@ -35,7 +36,7 @@ class Queue extends React.Component {
         <h4>Approvals</h4>
 
         <p className="col-xs-12">
-          {pending.approvals.forEach((item, index) => <>
+          {pending.approvals.map((item, index) => <>
             {index > 0 ? <span>, </span> : null}
             <Link to={`queue/${item.href}`}>{item.title}</Link>
           </>)}
@@ -50,9 +51,9 @@ class Queue extends React.Component {
             return null;
           } else {
             return <>
-              <h4>{section}</h4>;
+              <h4>{section}</h4>
 
-            <p className="col-xs-12">{list.forEach((item, index) => <>
+            <p className="col-xs-12">{list.map((item, index) => <>
                 {index > 0 ? <span>, </span> : null}
                 <Link to={item.href}>{item.title}</Link>
               </>)}</p>
@@ -66,6 +67,7 @@ class Queue extends React.Component {
       {pending.comments.length === 0
         ? <p className="col-xs-12">
           <em>None.</em>
+          <pre>comments: {JSON.stringify(pending)}</pre>
         </p>
         : <dl className="dl-horizontal">
           {pending.comments.map(item => <>
@@ -74,7 +76,7 @@ class Queue extends React.Component {
               <Link to={item.href}>{item.title}</Link>
             </dt>
 
-            <dd>{item.pending.split("\n\n").map(paragraph => <p>{paragraph}</p>)}</dd>
+            <dd>{item.status.pending.comments.split("\n\n").map(paragraph => <p>{paragraph}</p>)}</dd>
           </>)}
         </dl>}
 
@@ -122,31 +124,32 @@ class Queue extends React.Component {
       ready: []
     };
 
-    let initials = this.props.user?.initials;
+    let initials = this.props.pending?.initials || this.props.user?.initials;
     let agenda=Object.values(this.props.agenda).sort((item1, item2) => item1.sortOrder - item2.sortOrder);
 
     for (let item of agenda) {
       let pending = item.status.pending;
-
-      if (pending?.comments[item.attach]) result.comments.push(item);
       let action = false;
+      console.log(pending)
 
-      if (pending?.approved?.includes(item.attach)) {
+      if (pending?.comments) result.comments.push(item);
+
+      if (pending?.approved) {
         result.approvals.push(item);
         action = true
       };
 
-      if (pending?.unapproved?.includes(item.attach)) {
+      if (pending?.unapproved) {
         result.unapprovals.push(item);
         action = true
       };
 
-      if (pending?.flagged?.includes(item.attach)) {
+      if (pending?.flagged) {
         result.flagged.push(item);
         action = true
       };
 
-      if (pending?.unflagged?.includes(item.attach)) {
+      if (pending?.unflagged) {
         result.unflagged.push(item);
         action = true
       };

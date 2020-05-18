@@ -32,7 +32,7 @@ class Approve extends React.Component {
       return "unapprove"
     } else if (pending.unapproved.includes(item.attach)) {
       return "approve"
-    } else if (item.approved && item.approved.includes(initials)) {
+    } else if (item.status.approved_by?.includes(initials)) {
       return "unapprove"
     } else {
       return "approve"

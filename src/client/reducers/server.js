@@ -23,11 +23,11 @@ export default function reduce(state = {}, action) {
 
       pending.count =
         Object.keys(pending.comments || {}).length +
-        pending.approved?.length || 0 +
-        pending.unapproved?.length || 0 +
-        pending.flagged?.length || 0 +
-        pending.unflagged?.length || 0 +
-        pending.status?.length || 0;
+        (pending.approved?.length || 0) +
+        (pending.unapproved?.length || 0) +
+        (pending.flagged?.length || 0) +
+        (pending.unflagged?.length || 0) +
+        (pending.status?.length || 0);
 
       if (!deepEqual(action.pending, state.pending)) {
         return { ...state, pending }
