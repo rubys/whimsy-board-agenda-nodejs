@@ -1,4 +1,3 @@
-import Agenda from "../models/agenda.js";
 import Commit from "../buttons/commit.js";
 import { Link } from "react-router-dom";
 import Offline from "../buttons/offline.js";
@@ -9,9 +8,10 @@ import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
-    user: state.user
-  };
-}
+    user: state.server.user,
+    agenda: state.agenda
+  }
+};
 
 //
 // A page showing all queued approvals and comments, as well as items
@@ -28,21 +28,23 @@ class Queue extends React.Component {
   render() {
     let { user } = this.props;
 
+    let pending = this.pending;
+
     return <div className="col-xs-12">
       {user?.role === "director" ? <>
         <h4>Approvals</h4>
 
         <p className="col-xs-12">
-          {this.pending.approvals.forEach((item, index) => <>
+          {pending.approvals.forEach((item, index) => <>
             {index > 0 ? <span>, </span> : null}
             <Link to={`queue/${item.href}`}>{item.title}</Link>
           </>)}
 
-          {this.pending.approvals.length === 0 ? <em>None.</em> : null}
+          {pending.approvals.length === 0 ? <em>None.</em> : null}
         </p>
 
         {["Unapprovals", "Flagged", "Unflagged"].map(section => {
-          let list = this.pending[section.toLowerCase()];
+          let list = pending[section.toLowerCase()];
 
           if (list.length === 0) {
             return null;
@@ -61,10 +63,12 @@ class Queue extends React.Component {
 
       <h4>Comments</h4>
 
-      {this.pending.comments.length === 0 ? <p className="col-xs-12">
-        <em>None.</em>
-      </p> : <dl className="dl-horizontal">
-          {this.pending.comments.map(item => <>
+      {pending.comments.length === 0
+        ? <p className="col-xs-12">
+          <em>None.</em>
+        </p>
+        : <dl className="dl-horizontal">
+          {pending.comments.map(item => <>
 
             <dt>
               <Link to={item.href}>{item.title}</Link>
@@ -94,17 +98,15 @@ class Queue extends React.Component {
         </ul>
       </> : null}
 
-      {user?.role === "director" && this.pending.ready.length !== 0 ? <>
-        <div className="col-xs-12 row">
-          <hr />
-        </div>
+      {user?.role === "director" && pending.ready.length !== 0 ? <>
+        <hr />
 
         <h4>Ready for review</h4>
 
-        <p className="col-xs-12">{this.pending.ready.forEach((item, index) => <>
+        <p className="col-xs-12">{pending.ready.map((item, index) => <React.Fragment key={item.href}>
           {index > 0 ? <span>, </span> : null}
-          <Link to={`queue/${item.href}`} className={index === 0 ? "default" : null}>{item.title}</Link>
-        </>)}</p>
+          <Link to={`queue/${item.href}`} className={item.status.color + (index === 0 ? " default" : '')}>{item.title}</Link>
+        </React.Fragment>)}</p>
       </> : null}
     </div>
   };
@@ -120,31 +122,39 @@ class Queue extends React.Component {
       ready: []
     };
 
-    for (let item of Agenda.index) {
-      if (Pending.comments[item.attach]) result.comments.push(item);
+    let initials = this.props.user?.initials;
+    let agenda=Object.values(this.props.agenda).sort((item1, item2) => item1.sortOrder - item2.sortOrder);
+
+    for (let item of agenda) {
+      let pending = item.status.pending;
+
+      if (pending?.comments[item.attach]) result.comments.push(item);
       let action = false;
 
-      if (Pending.approved.includes(item.attach)) {
+      if (pending?.approved?.includes(item.attach)) {
         result.approvals.push(item);
         action = true
       };
 
-      if (Pending.unapproved.includes(item.attach)) {
+      if (pending?.unapproved?.includes(item.attach)) {
         result.unapprovals.push(item);
         action = true
       };
 
-      if (Pending.flagged.includes(item.attach)) {
+      if (pending?.flagged?.includes(item.attach)) {
         result.flagged.push(item);
         action = true
       };
 
-      if (Pending.unflagged.includes(item.attach)) {
+      if (pending?.unflagged?.includes(item.attach)) {
         result.unflagged.push(item);
         action = true
       };
 
-      if (!action && item.ready_for_review(this.props.user?.initials)) result.ready.push(item)
+      if (!action && ('approved_by' in item.status) && !item.status.missing &&
+        !item.status.approved_by.includes(initials) && !item.flagged_by?.includes(initials)) {
+        result.ready.push(item)
+      }
     };
 
     return result
