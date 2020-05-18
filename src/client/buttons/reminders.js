@@ -33,7 +33,9 @@ export class InitialReminder extends React.Component {
       reminder = "reminder2"
     };
 
-    retrieve(reminder, "json", (response) => {
+    retrieve(reminder, "json", response => {
+      if (!response) return;
+      
       this.setState({
         subject: response.subject,
         message: response.body,
