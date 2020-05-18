@@ -65,7 +65,7 @@ class Report extends React.Component {
 
         {(item.missing || item.comments) && item.mail_list ? <section className="reminder">
           {item.missing && Posted.get(item.title).length !== 0
-            ? <button className="btn-primary btn" data_toggle="modal" data_target="#post-report-form">post report</button>
+            ? <button className="btn-primary btn" data-toggle="modal" data-target="#post-report-form">post report</button>
             : /^[A-Z]/m.test(item.attach) && User.firstname && item.shepherd && User.firstname.startsWith(item.shepherd.toLowerCase())
               ? <p className="comment">
                 No report was found on

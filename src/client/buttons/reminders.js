@@ -120,7 +120,7 @@ export class InitialReminder extends React.Component {
 //
 export class FinalReminder extends React.Component {
   render() {
-    return <button className="btn-primary btn" disabled={true} data_toggle="modal" data-target="#reminder-form">send final reminders</button>
+    return <button className="btn-primary btn" disabled={true} data-toggle="modal" data-target="#reminder-form">send final reminders</button>
   }
 };
 
@@ -129,6 +129,6 @@ export class FinalReminder extends React.Component {
 //
 export class ProdReminder extends React.Component {
   render() {
-    return <button className="btn-danger btn" disabled={true} data_toggle="modal" data-target="#reminder-form">prod non-responsive PMCs</button>
+    return <button className="btn-danger btn" disabled={true} data-toggle="modal" data-target="#reminder-form">prod non-responsive PMCs</button>
   }
 };
