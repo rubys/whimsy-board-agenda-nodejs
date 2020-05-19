@@ -136,6 +136,7 @@ class Commit extends React.Component {
         this.setState({ disabled: false });
         jQuery("#commit-form").modal("hide");
         document.body.classList.remove("modal-open");
+        jQuery('.modal-backdrop').remove()
       }
     )
   }

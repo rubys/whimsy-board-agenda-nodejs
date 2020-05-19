@@ -49,4 +49,9 @@ export async function update(request, agenda, callback) {
   return await write(request, callback(pending));
 }
 
+export async function backup(request) {
+  let { username } = credentials(request);
+  await fs.rename(`${agendaPath}/${username}.yml`, `${agendaPath}/${username}.bak`);
+}
+
 export default read;

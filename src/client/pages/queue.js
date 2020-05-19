@@ -57,7 +57,6 @@ class Queue extends React.Component {
       {pending.comments.length === 0
         ? <p className="col-xs-12">
           <em>None.</em>
-          <pre>comments: {JSON.stringify(pending)}</pre>
         </p>
         : <dl className="dl-horizontal">
           {pending.comments.map(item => <Fragment key={item.href}>
