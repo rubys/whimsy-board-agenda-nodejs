@@ -1,7 +1,6 @@
-import Commit from "../buttons/commit.js";
 import { Link } from "react-router-dom";
 import Pending from "../models/pending.js";
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
@@ -27,10 +26,10 @@ class Queue extends React.Component {
         <h4>Approvals</h4>
 
         <p className="col-xs-12">
-          {pending.approvals.map((item, index) => <>
+          {pending.approvals.map((item, index) => <Fragment key={item.href}>
             {index > 0 ? <span>, </span> : null}
             <Link to={`queue/${item.href}`}>{item.title}</Link>
-          </>)}
+          </Fragment>)}
 
           {pending.approvals.length === 0 ? <em>None.</em> : null}
         </p>
@@ -41,14 +40,14 @@ class Queue extends React.Component {
           if (list.length === 0) {
             return null;
           } else {
-            return <>
+            return <Fragment key={section}>
               <h4>{section}</h4>
 
-            <p className="col-xs-12">{list.map((item, index) => <>
+            <p className="col-xs-12">{list.map((item, index) => <Fragment key={item.href}>
                 {index > 0 ? <span>, </span> : null}
                 <Link to={item.href}>{item.title}</Link>
-              </>)}</p>
-            </>
+              </Fragment>)}</p>
+            </Fragment>
           }
         })}
       </> : null}
@@ -61,14 +60,14 @@ class Queue extends React.Component {
           <pre>comments: {JSON.stringify(pending)}</pre>
         </p>
         : <dl className="dl-horizontal">
-          {pending.comments.map(item => <>
+          {pending.comments.map(item => <Fragment key={item.href}>
 
             <dt>
               <Link to={item.href}>{item.title}</Link>
             </dt>
 
-            <dd>{item.status.pending.comments.split("\n\n").map(paragraph => <p>{paragraph}</p>)}</dd>
-          </>)}
+            <dd>{item.status.pending.comments.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)}</dd>
+          </Fragment>)}
         </dl>}
 
       {Pending.status.length !== 0 ? <>
@@ -86,7 +85,7 @@ class Queue extends React.Component {
               text += " ]";
             };
 
-            return <li>{text}</li>
+            return <li key={item.href}>{text}</li>
           })}
         </ul>
       </> : null}
@@ -96,10 +95,10 @@ class Queue extends React.Component {
 
         <h4>Ready for review</h4>
 
-        <p className="col-xs-12">{pending.ready.map((item, index) => <React.Fragment key={item.href}>
+        <p className="col-xs-12">{pending.ready.map((item, index) => <Fragment key={item.href}>
           {index > 0 ? <span>, </span> : null}
           <Link to={`queue/${item.href}`} className={item.status.color + (index === 0 ? " default" : '')}>{item.title}</Link>
-        </React.Fragment>)}</p>
+        </Fragment>)}</p>
       </> : null}
     </div>
   };
