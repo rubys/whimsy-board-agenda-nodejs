@@ -1,5 +1,4 @@
 import React from "react";
-import User from "../models/user.js";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 
@@ -67,7 +66,7 @@ class PrevLink extends React.Component {
     if (traversal === "queue") {
       prefix = "/queue/";
 
-      while (link && !link.ready_for_review(User.initials)) {
+      while (link && !link.status.ready_for_review) {
         link = agenda[link.prev]
       };
 
@@ -132,7 +131,7 @@ class NextLink extends React.Component {
     let prefix = '/';
 
     if (traversal === "queue") {
-      while (link && !link.ready_for_review(User.initials)) {
+      while (link && !link.status.ready_for_review) {
         link = agenda[link.next]
       };
 

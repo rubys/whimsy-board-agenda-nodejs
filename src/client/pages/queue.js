@@ -124,13 +124,11 @@ class Queue extends React.Component {
       ready: []
     };
 
-    let initials = this.props.pending?.initials || this.props.user?.initials;
     let agenda=Object.values(this.props.agenda).sort((item1, item2) => item1.sortOrder - item2.sortOrder);
 
     for (let item of agenda) {
       let pending = item.status.pending;
       let action = false;
-      console.log(pending)
 
       if (pending?.comments) result.comments.push(item);
 
@@ -141,7 +139,6 @@ class Queue extends React.Component {
 
       if (pending?.unapproved) {
         result.unapprovals.push(item);
-        action = true
       };
 
       if (pending?.flagged) {
@@ -151,11 +148,9 @@ class Queue extends React.Component {
 
       if (pending?.unflagged) {
         result.unflagged.push(item);
-        action = true
       };
 
-      if (!action && ('approved_by' in item.status) && !item.status.missing &&
-        !item.status.approved_by.includes(initials) && !item.flagged_by?.includes(initials)) {
+      if (!action && item.status?.ready_for_review) {
         result.ready.push(item)
       }
     };

@@ -178,16 +178,24 @@ function status(item, updates) {
 
   if (status !== item.status) {
     // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
+    let flaggedByMe = status.flagged_by?.includes(user.initials);
     status.flagged =
       status.pending?.flagged ||
       status.flagged_by?.length > 1 ||
-      (status.flagged_by?.length === 1 && (status.flagged_by[0] !== user.initials || !status.pending?.unflagged));
+      (status.flagged_by?.length === 1 && (!flaggedByMe || !status.pending?.unflagged));
 
     // items are approved if number of approvals is >= 5 after accounting for pending approvals and unapprovals
     let approvedByMe = status.approved_by?.includes(user.initials);
     status.approved = status.approved_by?.length
       + (!approvedByMe && status.pending?.approve ? +1 : 0)
-      + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 5
+      + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 5;
+
+    // ready for review reports are present and not yet approved or flagged  
+    if ('approved_by' in status) {
+      status.ready_for_review = !status.missing && !status.pending?.approved && !status.pending?.flagged
+        && (!approvedByMe || status.pending?.unapproved)
+        && (!flaggedByMe || status.pending.unflagged);
+    }
 
     // items are skippable if they are preapproved and not flagged  
     status.skippable = status.approved && !status.flagged;
