@@ -84,7 +84,7 @@ class Events {
     });
 
     // dead man's switch: remove master when timestamp isn't updated
-    if (Events.#$master && Events.#$timestamp - localStorage.getItem(`${Events.#$prefix}-timestamp`) > 30000) {
+    if (Events.#$master && Events.#$timestamp - localStorage.getItem(`${Events.#$prefix}-timestamp`) > 30_000) {
       this.log("Events: Removing previous master");
       Events.#$master = localStorage.removeItem(`${Events.#$prefix}-master`)
     };
@@ -137,13 +137,15 @@ class Events {
   static master(server) {
     this.connectToServer(server);
 
+    let ts = 0;
+
     // proof of life; maintain connection to the server
     setInterval(
       () => {
-        localStorage.setItem(
-          `${Events.#$prefix}-timestamp`,
-          new Date().getTime()
-        );
+        if (new Date().getTime() - ts > 25_000) {
+          ts = new Date().getTime();
+          localStorage.setItem(`${Events.#$prefix}-timestamp`, ts);
+        }
 
         let { server } = Store.getState();
 
@@ -154,7 +156,7 @@ class Events {
         }
       },
 
-      (server.env === 'development' ? 500 : 25000)
+      (server.env === 'development' ? 500 : 25_000)
     );
 
     window.addEventListener("offlineStatus", (event) => {
@@ -184,8 +186,7 @@ class Events {
       };
 
       Events.#$socket.onmessage = (event) => {
-        localStorage.setItem(`${Events.#$prefix}-event`, event.data);
-        this.dispatch(event.data)
+        Events.broadcast(event.data);
       };
 
       Events.#$socket.onerror = (event) => {
@@ -205,7 +206,7 @@ class Events {
   // set message to all processes
   static broadcast = (event) => {
     try {
-      event = JSON.stringify(event);
+      if (typeof event !== 'string') event = JSON.stringify(event);
       localStorage.setItem(`${Events.#$prefix}-event`, event);
       this.dispatch(event)
     } catch (e) {
