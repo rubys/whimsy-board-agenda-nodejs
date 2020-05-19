@@ -237,7 +237,7 @@ class Events {
         })
       ))
     } else if (message.type === "digest") {
-      let { server: {digests = {}}, client: { agendaFile, meetingDate } } = Store.getState();
+      let { server: { digests = {} }, client: { agendaFile, meetingDate } } = Store.getState();
 
       for (let file in message.files) {
         if (digests[file] && digests[file] !== message.files[file]) {
@@ -255,6 +255,20 @@ class Events {
       }
 
       Store.dispatch(Actions.postDigest(message.files))
+
+    } else if (message.type === "work-update" && message.eventType === "update") {
+
+      let { server: { user: { userid } } } = Store.getState();
+
+      if (message.fileName === `agenda/${userid}.yml`) {
+        // fetch and store server information (which contains pending)
+        JSONStorage.fetch(`server`, (error, server) => {
+          if (!error && server) {
+            Store.dispatch(Actions.postServer(server));
+          }
+        })
+      }
+
     } else if (Actions[message.type]) {
       Store.dispatch(message);
     } else if (Events.#$subscriptions[message.type]) {
