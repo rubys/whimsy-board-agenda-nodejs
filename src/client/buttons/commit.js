@@ -37,7 +37,8 @@ class Commit extends React.Component {
   render() {
     return <ModalDialog id="commit-form" color="blank">
       <h4>Commit message</h4>
-      <textarea id="commit-text" value={this.state.message} rows={5} disabled={this.state.disabled} label="Commit message" />
+      <textarea id="commit-text" rows={5} disabled={this.state.disabled} label="Commit message"
+        value={this.state.message} onChange={event => this.setState({message: event.target.value})}/>
       <button className="btn-default" data-dismiss="modal">Close</button>
       <button className="btn-primary" onClick={this.click} disabled={this.state.disabled}>Submit</button>
     </ModalDialog>
