@@ -133,16 +133,13 @@ export default async function (agenda, { request } = {}) {
       if (/chair|project|committee/i.test(fulltitle)) need_chair = true;
 
       // extract the committee charter
-      let charters = [];
-
-      Array.from(
-        text.matchAll(/\srelated to\s+(.+?)(?:;|\.?\n\n)/gm),
-        s => s.slice(1),
-        rto => charters << rto[0].replace(/\s+/g, " ")
+      let charters = Array.from(
+        text.matchAll(/\srelated to\s+(.+?)(?:;|\.?\n\n)/gsm),
+        match => match[1].replace(/\s+/g, " ")
       );
 
-      if (charters.size !== 2) {
-        attrs.warnings.push(`Expected 2 'related to' phrases; found ${charters.size}`)
+      if (charters.length !== 2) {
+        attrs.warnings.push(`Expected 2 'related to' phrases; found ${charters.length}`)
       } else if (charters[0] !== charters[1]) {
         attrs.warnings.push(`'related to' phrases disagree: '${charters[0]}' != '${charters[1]}'`)
       };
