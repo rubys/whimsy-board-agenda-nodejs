@@ -189,14 +189,19 @@ class Repository {
       if (error) console.error(error)
     });
 
-    await svncmd(request, `add ${this.dir}/*`);
+    for (let file of await fsp.readdir(this.dir)) {
+      if (file !== '.svn') {
+        await svncmd(request, `add ${this.dir}/${file}`);
+      }
+    };
+
     await svncmd(request, `commit ${this.dir} --file ${this.dir}.log`);
     await fsp.unlink(`${this.dir}.log`);
     await svncmd(request, `update ${this.dir}`);
 
     this.#lastUpdate = Date.now();
 
-    return (await svncmd(request, `log ${this.dir} `)).stdout;
+    return (await svncmd(request, `log ${this.dir}`)).stdout;
   }
 
   // stub for now, but what this will eventually do is to create
