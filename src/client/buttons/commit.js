@@ -1,6 +1,5 @@
 import Minutes from "../models/minutes.js";
 import ModalDialog from "../elements/modal-dialog.js";
-import Pending from "../models/pending.js";
 import React from "react";
 import { Server, post } from "../utils.js";
 import jQuery from "jquery";
@@ -38,7 +37,7 @@ class Commit extends React.Component {
     return <ModalDialog id="commit-form" color="blank">
       <h4>Commit message</h4>
       <textarea id="commit-text" rows={5} disabled={this.state.disabled} label="Commit message"
-        value={this.state.message} onChange={event => this.setState({message: event.target.value})}/>
+        value={this.state.message} onChange={event => this.setState({ message: event.target.value })} />
       <button className="btn-default" data-dismiss="modal">Close</button>
       <button className="btn-primary" onClick={this.click} disabled={this.state.disabled}>Submit</button>
     </ModalDialog>
@@ -128,21 +127,15 @@ class Commit extends React.Component {
       "commit",
       { message: this.state.message, initials: this.props.user.initials },
 
-      (response) => {
+      response => {
+        if (!response) return;
+
         Store.dispatch(Actions.postAgenda(response.agenda));
-        Pending.load(response.pending);
+        Store.dispatch(Actions.postPending(response.pending));
+        
         this.setState({ disabled: false });
-
-        // delay jQuery updates to give Vue a chance to make updates first
-        setTimeout(
-          () => {
-            jQuery("#commit-form").modal("hide");
-            document.body.classList.remove("modal-open");
-            jQuery(".modal-backdrop").remove()
-          },
-
-          300
-        )
+        jQuery("#commit-form").modal("hide");
+        document.body.classList.remove("modal-open");
       }
     )
   }
