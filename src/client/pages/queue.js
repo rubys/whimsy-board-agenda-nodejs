@@ -1,9 +1,7 @@
 import Commit from "../buttons/commit.js";
 import { Link } from "react-router-dom";
-import Offline from "../buttons/offline.js";
 import Pending from "../models/pending.js";
 import React from "react";
-import Refresh from "../buttons/refresh.js";
 import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
@@ -19,13 +17,6 @@ function mapStateToProps(state) {
 // that are ready for review.
 //
 class Queue extends React.Component {
-  static get buttons() {
-    let buttons = [{ button: Refresh }];
-    if (Pending.count > 0) buttons.push({ form: Commit });
-    if (Pending.offline_enabled) buttons.push({ button: Offline });
-    return buttons
-  };
-
   render() {
     let { user } = this.props;
 

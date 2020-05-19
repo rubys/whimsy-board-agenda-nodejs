@@ -6,6 +6,7 @@ import Adjournment from "./pages/adjournment.js";
 import Backchannel from "./pages/backchannel.js";
 import BootStrapPage from "./pages/bootstrap.js";
 import CacheStatus, { CacheClientPage, CacheServerPage } from "./pages/cache.js";
+import Commit from "./buttons/commit.js";
 import Comments from "./pages/comments.js";
 import Developer from "./pages/developer.js";
 import Demo from "./demo/router.js";
@@ -22,6 +23,7 @@ import Keyboard from "./keyboard.js";
 import Main from "./layout/main.js";
 import Minutes from "./models/minutes.js";
 import Missing from "./pages/missing.js";
+import Offline from "./buttons/offline.js";
 import PageCache from "./models/pagecache.js";
 import Queue from "./pages/queue.js";
 import Post from "./buttons/post.js";
@@ -62,6 +64,7 @@ function mapStateToProps(state) {
     agenda: state.agenda,
     agendas: state.server.agendas || {},
     meetingDate: state.client.meetingDate,
+    pending: state.server.pending,
     role: state.server?.user?.role
   }
 };
@@ -298,9 +301,14 @@ class Router extends React.Component {
 
       <Route exact path="/queue">
         {() => {
-          let item = { view: Queue, title: "Queued approvals and comments" };
-          if (this.props.role !== "director") item.title = "Queued comments";
-          return main(item)
+          let page = { view: Queue, title: "Queued approvals and comments" };
+          if (this.props.role !== "director") page.title = "Queued comments";
+
+          page.buttons = [{ button: Refresh }];
+          if (this.props.pending.count > 0) page.buttons.push({ form: Commit });
+          if (PageCache.enabled) page.buttons.push({ button: Offline });
+
+          return main(page);
         }}
       </Route>
 
