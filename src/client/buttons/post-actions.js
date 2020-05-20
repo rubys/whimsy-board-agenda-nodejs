@@ -1,5 +1,4 @@
 import Agenda from "../models/agenda.js";
-import EventBus from "../event-bus.js";
 import React from "react";
 import { post } from "../utils.js";
 import Store from '../store.js';
@@ -13,18 +12,6 @@ class PostActions extends React.Component {
 
   render() {
     return <button className="btn-primary btn" onClick={this.click} disabled={this.state.disabled || this.state.list.length === 0}>post actions</button>
-  };
-
-  mounted() {
-    EventBus.on("potential_actions", this.potential_actions)
-  };
-
-  beforeDestroy() {
-    EventBus.off("potential_actions", this.potential_actions)
-  };
-
-  potential_actions(list) {
-    this.setState({list: list})
   };
 
   click = event => {

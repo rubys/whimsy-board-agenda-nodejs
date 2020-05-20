@@ -1,5 +1,4 @@
 import { navigate } from "../router.js";
-import EventBus from "../event-bus.js";
 import React from "react";
 
 //
@@ -29,28 +28,16 @@ class Feedback extends React.Component {
         )}</>
   };
 
-  mounted() {
-    EventBus.on("potential_feedback", this.potential_feedback);
-
+  componentDidMount() {
     fetch("feedback.json", { credentials: "include" }).then(response => (
       response.json().then((json) => {
         // initially check each item which has not yet been sent
         for (let item of json) {
           item.checked = !item.sent
         };
-
-        EventBus.emit("potential_feedback", json)
       })
     ))
   };
-
-  beforeDestroy() {
-    EventBus.off("potential_feedback", this.potential_feedback)
-  };
-
-  potential_feedback(list) {
-    this.setState({ list: list })
-  }
 };
 
 //
@@ -60,21 +47,10 @@ class SendFeedback extends React.Component {
   state = { disabled: false, list: [] };
 
   render() {
-    return <button className="btn-primary btn" onClick={this.click} disabled={this.state.disabled || this.state.list.length === 0 || this.state.list.every(item => (
-      !item.checked
-    ))}>send email</button>
-  };
+    let disabled = this.state.disabled || this.state.list.length === 0
+      || this.state.list.every(item => !item.checked);
 
-  mounted() {
-    EventBus.on("potential_feedback", this.potential_feedback)
-  };
-
-  beforeDestroy() {
-    EventBus.off("potential_feedback", this.potential_feedback)
-  };
-
-  potential_feedback(list) {
-    this.setState({ list: list })
+    return <button className="btn-primary btn" onClick={this.click} disabled={disabled}>send email</button>
   };
 
   click = (event) => {
@@ -106,7 +82,6 @@ class SendFeedback extends React.Component {
         };
 
         this.setState({ list: $list = json });
-        EventBus.emit("potential_feedback", $list);
         this.setState({ disabled: false });
 
         // return to the Adjournment page

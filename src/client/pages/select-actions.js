@@ -1,4 +1,3 @@
-import EventBus from "../event-bus.js";
 import PostActions from "../buttons/post-actions.js";
 import React from "react";
 import Text from "../elements/text.js";
@@ -35,8 +34,6 @@ class SelectActions extends React.Component {
           list: $list,
           names: response.names
         });
-
-        EventBus.emit("potential_actions", $list)
       }
     });
   }
