@@ -285,7 +285,7 @@ class Post extends React.Component {
           ? <input id="post-report-title" label="title" disabled={this.state.disabled} placeholder="title" value={this.state.title} onFocus={this.default_title} />
           : null}
 
-        <textarea id="post-report-text" label={this.state.label} value={this.state.report} placeholder={this.state.label} rows={17} disabled={this.state.disabled} onInput={this.change_text} />
+        <textarea id="post-report-text" label={this.state.label} value={this.state.report} placeholder={this.state.label} rows={17} disabled={this.state.disabled} onChange={this.change_text} />
 
         {this.props.item?.title === "Treasurer" ? <form>
           <div className="form-group">
