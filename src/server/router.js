@@ -37,7 +37,7 @@ export default async function router(app) {
         minutes = await Minutes.read(fileName);
       }
 
-      response.setHeader('content-type', 'text/plain');
+      response.setHeader('Content-Type', 'text/plain');
       response.send(minutes);
     } catch (error) {
       if (error.code === 'ENOENT') next();
@@ -65,7 +65,7 @@ export default async function router(app) {
   app.get('/api/cache/:file', async (request, response, next) => {
     let json = await cache.read(`${request.params.file}.json`);
     if (json) {
-      response.setHeader('content-type', 'application/json');
+      response.setHeader('Content-Type', 'application/json');
       response.send(json);
     } else {
       let data = await cache.read(`${request.params.file}.yaml`);
@@ -99,7 +99,7 @@ export default async function router(app) {
         if (typeof content === 'object') {
           response.json(content);
         } else {
-          response.setHeader('content-type', 'application/json');
+          response.setHeader('Content-Type', 'application/json');
           response.send(content.toString());
         }
       } catch (error) {
@@ -122,7 +122,7 @@ export default async function router(app) {
         if (typeof content === 'object') {
           response.json(content);
         } else {
-          response.setHeader('content-type', 'application/json');
+          response.setHeader('Content-Type', 'application/json');
           response.send(content.toString());
         }
       } catch (error) {

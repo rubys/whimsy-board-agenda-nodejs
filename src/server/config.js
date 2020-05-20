@@ -2,6 +2,7 @@ import path from 'path';
 
 export const port = 3001;
 
+export const srcPath = path.resolve(__dirname, '../../src');
 export const buildPath = path.resolve(__dirname, '../../build');
 export const workPath = path.resolve(__dirname, '../../work');
 export const templatePath = path.resolve(__dirname, './templates');

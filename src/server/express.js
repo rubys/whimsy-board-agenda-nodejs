@@ -1,19 +1,32 @@
 import express from 'express';
 import compression from 'compression';
 import * as websocket from "./websocket.js";
-import { port, buildPath } from './config.js';
+import { port, srcPath, buildPath } from './config.js';
 import ldap from 'ldapjs';
 import basicAuth from 'express-basic-auth';
 import * as watcher from './watcher.js';
 import router from './router.js';
 import bodyParser from 'body-parser';
+import { promises as fs } from "fs";
 
 const app = express();
 app.use(compression());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', express.static(buildPath, { index: false }));
+
+app.get(/\/src\/([-\w/]+\.\w+)/, async (request, response, next) => {
+  try {
+    let path = request.params[0];
+    let script = await fs.readFile(`${srcPath}/${path}`, 'utf8');
+    let types = {js: 'text/javascript'};
+    response.setHeader('Content-Type', types[path.split('.').pop()] || 'text/plain');
+    response.send(script.toString());
+  } catch (error) {
+    next(error.code === 'ENOENT' ? undefined : error)
+  }
+});
 
 websocket.start(app);
 

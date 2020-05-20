@@ -415,15 +415,15 @@ class Router extends React.Component {
       </Route>
 
       <Route path="/cache/client/:page(.*)">
-      {({ match: { params: { page } } }) => (
-        main({ view: CacheClientPage, title: "Client Cache", color: "devpage", page })
-      )}
+        {({ match: { params: { page } } }) => (
+          main({ view: CacheClientPage, title: "Client Cache", color: "devpage", page })
+        )}
       </Route>
 
       <Route path="/cache/server/:page(.*)">
-      {({ match: { params: { page } } }) => (
-        main({ view: CacheServerPage, title: "Server Cache", color: "devpage", page })
-      )}
+        {({ match: { params: { page } } }) => (
+          main({ view: CacheServerPage, title: "Server Cache", color: "devpage", page })
+        )}
       </Route>
 
       <Route exact path="/server/">
@@ -466,7 +466,7 @@ class Router extends React.Component {
       </Route>
 
       <Route path="/developer">
-      {main({
+        {main({
           view: Developer,
           color: "devpage",
           next: { href: 'store/', title: 'Store' },
@@ -475,7 +475,7 @@ class Router extends React.Component {
       </Route>
 
       <Route path="/docs">
-      {main({
+        {main({
           view: Docs,
           color: "docpage",
           next: { href: 'demo', title: 'Demo' }
