@@ -26,67 +26,76 @@ import Store from "../store.js";
 // * master:    identifier of the current master
 // * ondeck:    identifier of the next in line to assume the role of master
 //
+
+let $master;
+let $ondeck;
+let $prefix;
+let $timestamp;
+let $subscriptions = {};
+let $socket = null;
+
 class Events {
-  static #$master;
-  static #$ondeck;
-  static #$prefix;
-  static #$timestamp;
-  static #$subscriptions = {};
-  static #$socket = null;
 
   static subscribe(event, block) {
-    Events.#$subscriptions[event] = Events.#$subscriptions[event] || [];
-    Events.#$subscriptions[event].push(block)
+    $subscriptions[event] = $subscriptions[event] || [];
+    $subscriptions[event].push(block)
   };
 
   static monitor() {
-    Events.#$prefix = JSONStorage.prefix;
+    $prefix = JSONStorage.prefix;
 
     // pick something unique to identify this tab/window
-    Events.#$timestamp = new Date().getTime() + Math.random();
-    this.log(`Events id: ${Events.#$timestamp}`);
+    $timestamp = new Date().getTime() + Math.random();
+    console.log(`Events id: ${$timestamp}`);
 
     // determine the current master (if any)
-    Events.#$master = localStorage.getItem(`${Events.#$prefix}-master`);
-    this.log(`Events.master: ${Events.#$master}`);
+    $master = localStorage.getItem(`${$prefix}-master`);
+    console.log(`Events.master: ${$master}`);
 
     // register as a potential candidate for master
     localStorage.setItem(
-      `${Events.#$prefix}-ondeck`,
-      Events.#$ondeck = Events.#$timestamp
+      `${$prefix}-ondeck`,
+      $ondeck = $timestamp
     );
 
     // relinquish roles on exit
     window.addEventListener("unload", (event) => {
-      if (Events.#$master === Events.#$timestamp) {
-        localStorage.removeItem(`${Events.#$prefix}-master`)
+      if ($master === $timestamp) {
+        localStorage.removeItem(`${$prefix}-master`)
       };
 
-      if (Events.#$ondeck === Events.#$timestamp) {
-        localStorage.removeItem(`${Events.#$prefix}-ondeck`)
+      if ($ondeck === $timestamp) {
+        localStorage.removeItem(`${$prefix}-ondeck`)
       }
     });
 
     // watch for changes
     window.addEventListener("storage", (event) => {
       // update tracking variables
-      if (event.key === `${Events.#$prefix}-master`) {
-        Events.#$master = event.newValue;
-        this.log(`Events.master: ${Events.#$master}`);
+      if (event.key === `${$prefix}-master`) {
+        $master = event.newValue;
+        console.log(`Events.master: ${$master}`);
         this.negotiate()
-      } else if (event.key === `${Events.#$prefix}-ondeck`) {
-        Events.#$ondeck = event.newValue;
-        this.log(`Events.ondeck: ${Events.#$ondeck}`);
+      } else if (event.key === `${$prefix}-ondeck`) {
+        $ondeck = event.newValue;
+        console.log(`Events.ondeck: ${$ondeck}`);
         this.negotiate()
-      } else if (event.key === `${Events.#$prefix}-event`) {
+      } else if (event.key === `${$prefix}-event`) {
         this.dispatch(event.newValue)
+      } else if (event.key === `${$prefix}-probe`) {
+        if ($master) {
+          localStorage.setItem(
+            `${$prefix}-timestamp`,
+            new Date().getTime()
+          );
+        }
       }
     });
 
     // dead man's switch: remove master when timestamp isn't updated
-    if (Events.#$master && Events.#$timestamp - localStorage.getItem(`${Events.#$prefix}-timestamp`) > 30_000) {
-      this.log("Events: Removing previous master");
-      Events.#$master = localStorage.removeItem(`${Events.#$prefix}-master`)
+    if ($master && $timestamp - localStorage.getItem(`${$prefix}-timestamp`) > 30_000) {
+      console.log("Events: Removing previous master");
+      $master = localStorage.removeItem(`${$prefix}-master`)
     };
 
     // negotiate for the role of master
@@ -95,20 +104,20 @@ class Events {
 
   // negotiate changes in masters
   static negotiate() {
-    if (Events.#$master === null && Events.#$ondeck === Events.#$timestamp) {
-      this.log("Events: Assuming the role of master");
+    if ($master === null && $ondeck === $timestamp) {
+      console.log("Events: Assuming the role of master");
 
       localStorage.setItem(
-        `${Events.#$prefix}-timestamp`,
+        `${$prefix}-timestamp`,
         new Date().getTime()
       );
 
       localStorage.setItem(
-        `${Events.#$prefix}-master`,
-        Events.#$master = Events.#$timestamp
+        `${$prefix}-master`,
+        $master = $timestamp
       );
 
-      Events.#$ondeck = localStorage.removeItem(`${Events.#$prefix}-ondeck`);
+      $ondeck = localStorage.removeItem(`${$prefix}-ondeck`);
 
       let { server } = Store.getState();
 
@@ -125,10 +134,15 @@ class Events {
           })
         ))
       }
-    } else if (Events.#$ondeck === null && Events.#$master !== Events.#$timestamp && !localStorage.getItem(`${Events.#$prefix}-ondeck`)) {
+    } else if ($ondeck === null && $master !== $timestamp && !localStorage.getItem(`${$prefix}-ondeck`)) {
       localStorage.setItem(
-        `${Events.#$prefix}-ondeck`,
-        Events.#$ondeck = Events.#$timestamp
+        `${$prefix}-ondeck`,
+        $ondeck = $timestamp
+      )
+    } else {
+      localStorage.setItem(
+        `${$prefix}-probe`,
+        $timestamp
       )
     }
   };
@@ -144,15 +158,15 @@ class Events {
       () => {
         if (new Date().getTime() - ts > 25_000) {
           ts = new Date().getTime();
-          localStorage.setItem(`${Events.#$prefix}-timestamp`, ts);
+          localStorage.setItem(`${$prefix}-timestamp`, ts);
         }
 
         let { server } = Store.getState();
 
         if (!server.offline) {
           this.connectToServer(server);
-        } else if (Events.#$socket) {
-          Events.#$socket.close()
+        } else if ($socket) {
+          $socket.close()
         }
       },
 
@@ -161,7 +175,7 @@ class Events {
 
     window.addEventListener("offlineStatus", (event) => {
       if (event.detail === true) {
-        if (Events.#$socket) Events.#$socket.close()
+        if ($socket) $socket.close()
       } else {
         let { server } = Store.getState();
         this.connectToServer(server)
@@ -170,36 +184,36 @@ class Events {
 
     // close connection on exit
     window.addEventListener("unload", (event) => {
-      if (Events.#$socket) Events.#$socket.close()
+      if ($socket) $socket.close()
     })
   };
 
   // establish a connection to the server
   static connectToServer({ websocket, session }) {
     try {
-      if (Events.#$socket) return;
-      Events.#$socket = new WebSocket(websocket);
+      if ($socket) return;
+      $socket = new WebSocket(websocket);
 
-      Events.#$socket.onopen = (event) => {
-        Events.#$socket.send(`session: ${session}\n\n`);
-        this.log("WebSocket connection established");
+      $socket.onopen = (event) => {
+        $socket.send(`session: ${session}\n\n`);
+        console.log("WebSocket connection established");
       };
 
-      Events.#$socket.onmessage = (event) => {
-        Events.broadcast(event.data);
+      $socket.onmessage = (event) => {
+        this.broadcast(event.data);
       };
 
-      Events.#$socket.onerror = (event) => {
-        if (Events.#$socket) this.log("WebSocket connection terminated");
-        Events.#$socket = null
+      $socket.onerror = (event) => {
+        if ($socket) console.log("WebSocket connection terminated");
+        $socket = null
       };
 
-      Events.#$socket.onclose = (event) => {
-        if (Events.#$socket) this.log("WebSocket connection terminated");
-        Events.#$socket = null
+      $socket.onclose = (event) => {
+        if ($socket) console.log("WebSocket connection terminated");
+        $socket = null
       }
     } catch (e) {
-      this.log(e)
+      console.log(e)
     }
   };
 
@@ -207,7 +221,7 @@ class Events {
   static broadcast = (event) => {
     try {
       if (typeof event !== 'string') event = JSON.stringify(event);
-      localStorage.setItem(`${Events.#$prefix}-event`, event);
+      localStorage.setItem(`${$prefix}-event`, event);
       this.dispatch(event)
     } catch (e) {
       console.log(e);
@@ -218,7 +232,7 @@ class Events {
   // dispatch logic (common to all tabs)
   static dispatch(data) {
     let message = JSON.parse(data);
-    this.log(message);
+    console.log(message);
 
     if (message.type === 'reload') {
       // ignore requests if any input or textarea element is visible
@@ -233,7 +247,7 @@ class Events {
 
       fetch(request).then(response => (
         response.json().then((server) => {
-          this.log(server);
+          console.log(server);
           Store.dispatch(Actions.postServer(server));
         })
       ))
@@ -272,22 +286,16 @@ class Events {
 
     } else if (Actions[message.type]) {
       Store.dispatch(message);
-    } else if (Events.#$subscriptions[message.type]) {
-      for (let sub of Events.#$subscriptions[message.type]) {
+    } else if ($subscriptions[message.type]) {
+      for (let sub of $subscriptions[message.type]) {
         sub(message)
       }
     };
   };
 
-  // log messages (unless running tests)
-  static log(message) {
-    if (!navigator.userAgent || navigator.userAgent.includes("PhantomJS")) return;
-    console.log(message)
-  };
-
   // make the computed prefix available
-  static get prefix() {
-    if (Events.#$prefix) return Events.#$prefix;
+  static prefix() {
+    if ($prefix) return $prefix;
 
     // determine localStorage variable prefix based on url up to the date
     let base = document.getElementsByTagName("base")[0].href;
@@ -297,12 +305,12 @@ class Events {
       origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "")
     };
 
-    Events.#$prefix = base.slice(origin.length).replace(
+    $prefix = base.slice(origin.length).replace(
       /\/\d{4}-\d\d-\d\d\/.*/,
       ""
     ).replace(/^\W+|\W+$/gm, "").replace(/\W+/g, "_") || window.location.port;
 
-    return Events.#$prefix
+    return $prefix
   }
 };
 
