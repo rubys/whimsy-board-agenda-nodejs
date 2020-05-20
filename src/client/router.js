@@ -13,7 +13,7 @@ import Demo from "./demo/router.js";
 import Docs from "./pages/docs.js";
 import DraftMinutes from "./buttons/draft-minutes.js";
 import Feedback from "./pages/feedback.js";
-import Events from "./models/events.js";
+import * as Events from "./models/events.js";
 import Flagged from "./pages/flagged.js";
 import Help from "./pages/help.js";
 import Index from "./pages/index.js";

@@ -1,5 +1,5 @@
 import Agenda from "./agenda.js";
-import Events from "./events.js";
+import * as Events from "./events.js";
 import React from "react";
 import { Server } from "../utils.js";
 

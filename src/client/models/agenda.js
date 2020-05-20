@@ -6,7 +6,7 @@ import Approve from "../buttons/approve.js";
 import Attend from "../buttons/attend.js";
 import Chat from "./chat.js";
 import DraftMinutes from "../buttons/draft-minutes.js";
-import Events from "./events.js";
+import * as Events from "./events.js";
 import Index from "../pages/index.js";
 import Minutes from "./minutes.js";
 import PageCache from "./pagecache.js";

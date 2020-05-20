@@ -1,4 +1,4 @@
-import Events from "./events.js";
+import * as Events from "./events.js";
 import JSONStorage from "./jsonstorage.js";
 import PageCache from "./pagecache.js";
 import { Server, post } from "../utils.js";
