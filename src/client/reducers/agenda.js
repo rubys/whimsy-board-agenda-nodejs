@@ -138,10 +138,11 @@ export default function reduce(state = null, action) {
       return state;
 
     case Actions.POST_SECRETARY_MINUTES:
+      console.log(action)
       let { items, rejected } = action.minutes;
 
       for (let item of Object.values(state)) {
-        let newStatus = status(item, { minutes: items[item.title], rejected: rejected.includes(item.title) });
+        let newStatus = status(item, { minutes: items[item.title], rejected: rejected?.includes(item.title) });
         if (item.status !== newStatus) state = { ...state, [item.href]: { ...item, status: newStatus } }
       }
 
