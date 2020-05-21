@@ -15,6 +15,7 @@ const nodemon = require('nodemon');
 nodemon({
   script: 'src/server.js',
   watch: [
+    'src/client/events/shared-worker.js',
     'src/server',
     'src/server.js'
   ]

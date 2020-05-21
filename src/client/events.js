@@ -11,10 +11,15 @@ import Store from "./store.js";
 // all browsers implement the necessary functions.  Hence, an adapter approch
 // is taken, using only the support that is available.
 
-import * as LSAdapter from "./events/local-storage.js";
+import * as LocalStorageAdapter from "./events/local-storage-adapter.js";
+import * as SharedWorkerAdapter from "./events/shared-worker-adapter.js";
 
 let subscriptions = {};
-let adapter = LSAdapter;
+let adapter = LocalStorageAdapter;
+
+if (SharedWorkerAdapter.available) {
+  adapter = SharedWorkerAdapter;
+}
 
 export function monitor(server) {
   adapter.monitor(server);

@@ -76,8 +76,8 @@ ReactDOM.render(
     // start Service Worker
     // if (PageCache.enabled) PageCache.register(); TODO!
 
-    // start backchannel
-    Events.monitor();
+    // start monitoring the WebSocket
+    Events.monitor(server);
   }
 })();
 

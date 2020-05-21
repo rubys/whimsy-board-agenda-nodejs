@@ -19,6 +19,7 @@ app.use('/', express.static(buildPath, { index: false }));
 app.get(/\/src\/([-\w/]+\.\w+)/, async (request, response, next) => {
   try {
     let path = request.params[0];
+console.log(path);
     let script = await fs.readFile(`${srcPath}/${path}`, 'utf8');
     let types = {js: 'text/javascript'};
     response.setHeader('Content-Type', types[path.split('.').pop()] || 'text/plain');
