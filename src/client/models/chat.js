@@ -1,5 +1,5 @@
 import Agenda from "./agenda.js";
-import * as Events from "./events.js";
+import * as Events from "../events.js";
 import Minutes from "./minutes.js";
 import { Server, retrieve, post } from "../utils.js";
 

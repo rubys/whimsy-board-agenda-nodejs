@@ -64,6 +64,13 @@ This contains the React/Redux/JSX demo.
 Grab bag location for all React components that are not
 buttons, layout, pages, or part of the demo.
 
+### [src/client/events.js](../../src/client/events.js)
+
+Maintains a connectio to the server's websocket and dispatches events as they
+are received.  The [src/client/events](../../src/client/events) subdirectory
+contains adapters to route messages to other tabs depending on the browser's
+capability.
+
 ### [src/client/layout](../../src/client/layout)
 
 Contains the `Main`, `Header`, and `Footer` components.

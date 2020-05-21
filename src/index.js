@@ -1,5 +1,5 @@
 import Agenda from './client/models/agenda.js';
-import * as Events from "./client/models/events.js";
+import * as Events from "./client/events.js";
 import * as Actions from "./actions.js";
 import JSONStorage from "./client/models/jsonstorage.js";
 import React from 'react';

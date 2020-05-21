@@ -1,6 +1,6 @@
 import Agenda from "./agenda.js";
 import Chat from "./chat.js";
-import * as Events from "./events.js";
+import * as Events from "../events.js";
 import JSONStorage from "./jsonstorage.js";
 
 //

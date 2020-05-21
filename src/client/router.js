@@ -13,7 +13,6 @@ import Demo from "./demo/router.js";
 import Docs from "./pages/docs.js";
 import DraftMinutes from "./buttons/draft-minutes.js";
 import Feedback from "./pages/feedback.js";
-import * as Events from "./models/events.js";
 import Flagged from "./pages/flagged.js";
 import Help from "./pages/help.js";
 import Index from "./pages/index.js";
@@ -510,12 +509,6 @@ class Router extends React.Component {
       // start watching keystrokes and fingers
       Keyboard.initEventHandlers();
       Touch.initEventHandlers();
-
-      // start Service Worker
-      // if (PageCache.enabled) PageCache.register(); TODO!
-
-      // start backchannel
-      Events.monitor();
     }
   };
 

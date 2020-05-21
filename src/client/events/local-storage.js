@@ -1,45 +1,37 @@
-import JSONStorage from "./jsonstorage.js";
+import JSONStorage from "../models/jsonstorage.js";
 import * as Actions from "../../actions.js";
 import Store from "../store.js";
+import * as Events from "../events.js";
 
 //
-// Motivation: browsers limit the number of open web socket connections to any
-// one host to somewhere between 6 and 250, making it impractical to have one
-// Web Socket per tab.
+// This adapter uses local storage to send events across browser windows.
+// This approach is widely supported by browsers:
 //
-// The solution below uses localStorage to communicate between tabs, with
-// the majority of logic involved with the "election" of a master.  This
-// enables a single open connection to service all tabs open by a browser.
+//   https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 //
-// Alternatives include: 
-//
-// * Replacing localStorage with Service Workers.  This would be much cleaner,
-//   unfortunately Service Workers aren't widely deployed yet.  Sadly, the
-//   state isn't much better for Shared Web Workers.
+// Down sides include the need to negotiate which window hosts the
+// WebSocket connection, dealing with that window closing, aggregate
+// limits on how much data can be stored in LocalStorage (and therefore,
+// the maximum size of a message), polling, and race conditions.
 //
 //##
 //
-// Class variables:
+// Module variables:
 // * prefix:    application prefix for localStorage variables (which are
 //              shared across the domain).
 // * timestamp: unique identifier for each window/tab 
 // * master:    identifier of the current master
 // * ondeck:    identifier of the next in line to assume the role of master
+// * socket:    web socket handle
 //
 
 let $master;
 let $ondeck;
 let $prefix;
 let $timestamp;
-let $subscriptions = {};
 let $socket = null;
 
-export function subscribe(event, block) {
-  $subscriptions[event] = $subscriptions[event] || [];
-  $subscriptions[event].push(block)
-};
-
-export function monitor() {
+export function monitor(server) {
   $prefix = JSONStorage.prefix;
 
   // pick something unique to identify this tab/window
@@ -73,13 +65,13 @@ export function monitor() {
     if (event.key === `${$prefix}-master`) {
       $master = event.newValue;
       console.log(`Events.master: ${$master}`);
-      negotiate()
+      negotiate(server)
     } else if (event.key === `${$prefix}-ondeck`) {
       $ondeck = event.newValue;
       console.log(`Events.ondeck: ${$ondeck}`);
-      negotiate()
+      negotiate(server)
     } else if (event.key === `${$prefix}-event`) {
-      dispatch(event.newValue)
+      Events.dispatch(event.newValue)
     } else if (event.key === `${$prefix}-probe`) {
       if ($master) {
         localStorage.setItem(
@@ -97,11 +89,11 @@ export function monitor() {
   };
 
   // negotiate for the role of master
-  negotiate()
+  negotiate(server)
 };
 
 // negotiate changes in masters
-export function negotiate() {
+export function negotiate(server) {
   if ($master === null && $ondeck === $timestamp) {
     console.log("Events: Assuming the role of master");
 
@@ -116,8 +108,6 @@ export function negotiate() {
     );
 
     $ondeck = localStorage.removeItem(`${$prefix}-ondeck`);
-
-    let { server } = Store.getState();
 
     if (server && server.session) {
       master(server)
@@ -220,93 +210,9 @@ export function broadcast(event) {
   try {
     if (typeof event !== 'string') event = JSON.stringify(event);
     localStorage.setItem(`${$prefix}-event`, event);
-    dispatch(event)
+    Events.dispatch(event)
   } catch (e) {
     console.log(e);
     console.log(event)
   }
-};
-
-// dispatch logic (common to all tabs)
-export function dispatch(data) {
-  let message = JSON.parse(data);
-  console.log(message);
-
-  if (message.type === 'reload') {
-    // ignore requests if any input or textarea element is visible
-    let inputs = document.querySelectorAll("input, textarea");
-
-    if (Math.max(...Array.from(inputs).map(element => element.offsetWidth)) <= 0) {
-      window.location.reload()
-    }
-  } else if (message.type === "unauthorized") {
-    let options = { credentials: "include" };
-    let request = new Request("../session.json", options);
-
-    fetch(request).then(response => (
-      response.json().then((server) => {
-        console.log(server);
-        Store.dispatch(Actions.postServer(server));
-      })
-    ))
-  } else if (message.type === "digest") {
-    let { server: { digests = {} }, client: { agendaFile, meetingDate } } = Store.getState();
-
-    for (let file in message.files) {
-      if (digests[file] && digests[file] !== message.files[file]) {
-        console.log("changed: ", file, digests[file], message.files[file]);
-
-        if (`${file}.txt` === agendaFile) {
-          // fetch and store agenda information
-          JSONStorage.fetch(`${meetingDate}.json`, (error, agenda) => {
-            if (!error && agenda) {
-              Store.dispatch(Actions.postAgenda(agenda));
-            }
-          })
-        }
-      }
-    }
-
-    Store.dispatch(Actions.postDigest(message.files))
-
-  } else if (message.type === "work-update" && message.eventType === "update") {
-
-    let { server: { user: { userid } } } = Store.getState();
-
-    if (message.fileName === `agenda/${userid}.yml`) {
-      // fetch and store server information (which contains pending)
-      JSONStorage.fetch(`server`, (error, server) => {
-        if (!error && server) {
-          Store.dispatch(Actions.postServer(server));
-        }
-      })
-    }
-
-  } else if (Actions[message.type]) {
-    Store.dispatch(message);
-  } else if ($subscriptions[message.type]) {
-    for (let sub of $subscriptions[message.type]) {
-      sub(message)
-    }
-  };
-};
-
-// make the computed prefix available
-export function prefix() {
-  if ($prefix) return $prefix;
-
-  // determine localStorage variable prefix based on url up to the date
-  let base = document.getElementsByTagName("base")[0].href;
-  let origin = window.location.origin;
-
-  if (!origin) {
-    origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "")
-  };
-
-  $prefix = base.slice(origin.length).replace(
-    /\/\d{4}-\d\d-\d\d\/.*/,
-    ""
-  ).replace(/^\W+|\W+$/gm, "").replace(/\W+/g, "_") || window.location.port;
-
-  return $prefix
 };
