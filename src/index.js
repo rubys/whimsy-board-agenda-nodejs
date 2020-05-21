@@ -1,4 +1,5 @@
 import Agenda from './client/models/agenda.js';
+import * as Events from "./client/models/events.js";
 import * as Actions from "./actions.js";
 import JSONStorage from "./client/models/jsonstorage.js";
 import React from 'react';
@@ -64,17 +65,19 @@ ReactDOM.render(
     });
 
     // fetch and store minutes information
-    await new Promise((resolve, reject) => {
-      JSONStorage.fetch(`minutes/${base.slice(1, -1)}.json`, (error, minutes) => {
-        if (error) {
-          reject(error);
-        } else if (minutes) {
-          store.dispatch(Actions.postSecretaryMinutes(minutes));
-        }
+    JSONStorage.fetch(`minutes/${base.slice(1, -1)}.json`, (error, minutes) => {
+      if (error) {
+        throw error;
+      } else if (minutes) {
+        store.dispatch(Actions.postSecretaryMinutes(minutes));
+      }
+    })
 
-        resolve(minutes);
-      })
-    });
+    // start Service Worker
+    // if (PageCache.enabled) PageCache.register(); TODO!
+
+    // start backchannel
+    Events.monitor();
   }
 })();
 
