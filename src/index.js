@@ -1,3 +1,4 @@
+import Agenda from './client/models/agenda.js';
 import * as Actions from "./actions.js";
 import JSONStorage from "./client/models/jsonstorage.js";
 import React from 'react';
@@ -55,6 +56,7 @@ ReactDOM.render(
           reject(error);
         } else if (agenda) {
           store.dispatch(Actions.postAgenda(agenda));
+          Agenda.load(agenda);
         }
 
         resolve(agenda);

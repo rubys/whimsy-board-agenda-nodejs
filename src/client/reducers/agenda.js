@@ -1,4 +1,3 @@
-import Agenda from '../models/agenda.js';
 import * as Actions from '../../actions.js';
 import { splitComments } from "../utils.js";
 import deepEqual from 'deep-equal';
@@ -15,7 +14,6 @@ export default function reduce(state = null, action) {
   switch (action.type) {
     case Actions.POST_AGENDA:
       // scaffolding: load legacy model until it can be safely removed
-      Agenda.load(action.index);
 
       // copy the agenda
       let agenda = action.index.map(item => ({ ...item }));
