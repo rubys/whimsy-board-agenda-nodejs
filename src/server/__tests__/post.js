@@ -1,8 +1,10 @@
 import post from '../operations/post.js';
 import * as ldap from '../ldap.js';
+import { Board } from '../svn.js';
 
 jest.mock('../svn.js');
 afterAll(ldap.close);
+afterEach(Board.reset);
 
 describe('Posting an item to the agenda', () => {
   it('should post a new special order', async () => {
@@ -16,7 +18,7 @@ describe('Posting an item to the agenda', () => {
     let agenda = (await post(request)).agenda;
 
     let resolution = agenda.find(item => item.attach === '7G');
-    expect(resolution['title']).toBe('Establish Test');
-    expect(resolution['text']).toBe('WHEREAS, RESOLVED, and other official words');
+    expect(resolution.title).toBe('Establish Test');
+    expect(resolution.text).toBe('WHEREAS, RESOLVED, and other official words');
   })
 })

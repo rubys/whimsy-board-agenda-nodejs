@@ -1,8 +1,10 @@
 import attend from '../operations/attend.js';
 import * as ldap from '../ldap.js';
+import { Board } from '../svn.js';
 
 jest.mock('../svn.js')
 afterAll(ldap.close);
+afterEach(Board.reset);
 
 describe('roll call', () => {
   it('should support adding a guest', async () => {
@@ -18,5 +20,50 @@ describe('roll call', () => {
 
     let rollcall = agenda.find(item => item.title == 'Roll Call');
     expect(rollcall.text).toMatch(/Guests.*N\. E\. Member/s);
-  })
+  });
+
+  it("should support a director's regrets", async () => {
+    let request = {
+      body: {
+        agenda: 'board_agenda_2015_01_21.txt',
+        action: 'regrets',
+        name: 'Sam Ruby'
+      }
+    };
+
+    let agenda = (await attend(request)).agenda;
+
+    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    expect(rollcall.text).toMatch(/Directors .* Absent:\s+Sam Ruby/);
+  });
+
+  it("should support moving a director back to attending", async () => {
+    let request = {
+      body: {
+        agenda: 'board_agenda_2015_02_18.txt',
+        action: 'attend',
+        name: 'Greg Stein'
+      }
+    };
+
+    let agenda = (await attend(request)).agenda;
+
+    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    expect(rollcall.text).toMatch(/Greg Stein\s+Directors .* Absent:/);
+  });
+
+  it("should support a officer's regrets", async () => {
+    let request = {
+      body: {
+        agenda: 'board_agenda_2015_01_21.txt',
+        action: 'regrets',
+        name: 'Craig L Russell'
+      }
+    };
+
+    let agenda = (await attend(request)).agenda;
+
+    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    expect(rollcall.text).toMatch(/Officers .* Absent:\s+Craig L Russell/);
+  });
 })
