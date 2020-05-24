@@ -67,8 +67,8 @@ export function dispatch(data) {
 
         if (`${file}.txt` === agendaFile) {
           // fetch and store agenda information
-          JSONStorage.fetch(`${meetingDate}.json`, (error, agenda) => {
-            if (!error && agenda) {
+          JSONStorage.fetch(`${meetingDate}.json`, (error, agenda, final) => {
+            if (!error && agenda && final) {
               Store.dispatch(Actions.postAgenda(agenda));
             }
           })
@@ -84,8 +84,8 @@ export function dispatch(data) {
 
     if (message.fileName === `agenda/${userid}.yml`) {
       // fetch and store server information (which contains pending)
-      JSONStorage.fetch(`server`, (error, server) => {
-        if (!error && server) {
+      JSONStorage.fetch(`server`, (error, server, final) => {
+        if (!error && server && final) {
           Store.dispatch(Actions.postServer(server));
         }
       })

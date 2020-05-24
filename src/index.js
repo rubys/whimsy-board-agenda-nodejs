@@ -31,13 +31,14 @@ ReactDOM.render(
 
 (async () => {
   let server = await new Promise((resolve, reject) => {
-    JSONStorage.fetch('../api/server', (error, response) => {
+    JSONStorage.fetch('../api/server', (error, response, final) => {
       if (error) {
         alert('unable to contact server');
         if (reject) reject(error);
       } else {
         if (response) store.dispatch(Actions.postServer(response));
         if (resolve) resolve(response);
+        if (response && final) Events.monitor(response);
       };
 
       resolve = reject = null;
@@ -75,9 +76,6 @@ ReactDOM.render(
 
     // start Service Worker
     // if (PageCache.enabled) PageCache.register(); TODO!
-
-    // start monitoring the WebSocket
-    Events.monitor(server);
   }
 })();
 

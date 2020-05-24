@@ -76,7 +76,7 @@ class JSONStorage {
             if (fetched === undefined || JSON.stringify(fetched) !== JSON.stringify(json)) {
               if (fetched === undefined) Store.dispatch(Actions.clockDecrement());
               fetched = json;
-              callback(null, json)
+              callback(null, json, true)
             }
           })
             .catch(error => {
@@ -94,7 +94,7 @@ class JSONStorage {
               response.json().then(json => {
                 Store.dispatch(Actions.clockDecrement());
                 fetched = json;
-                if (json) callback(null, json)
+                if (json) callback(null, json, false)
               })
             } catch (error) {
               if (error.name !== 'SyntaxError') throw error;
@@ -104,7 +104,7 @@ class JSONStorage {
       })
     } else if (typeof XMLHttpRequest !== 'undefined') {
       // retrieve from the network only
-      retrieve(name, "json", data => callback(null, data))
+      retrieve(name, "json", data => callback(null, data, true))
     }
   }
 };
