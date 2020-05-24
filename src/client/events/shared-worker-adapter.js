@@ -12,9 +12,11 @@ import * as Events from "../events.js";
 // meaningful lifecycle events or even a manner of determining the number
 // of active "clients" a given SharedWorker is servicing.
 //
-// At the moment, ESModule support is unverified, so SharedWorkers must
-// effectively be self-contained; this means that there will be some
+// At the moment, ESModule support is not widely supported, so SharedWorkers
+// must effectively be self-contained; this means that there will be some
 // duplication with other adapters.
+//
+// See: https://stackoverflow.com/a/45578811
 
 export const available = window.SharedWorker && window.BroadcastChannel && true;
 
