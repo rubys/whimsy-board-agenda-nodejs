@@ -15,7 +15,7 @@ function mapStateToProps(state) {
 // Indicate intention to attend / regrets for meeting
 //
 class Attend extends React.Component {
-  state = {disabled: false};
+  state = { disabled: false };
 
   render() {
     return <button className="btn-primary btn" onClick={this.click} disabled={this.state.disabled}>{this.attending ? "regrets" : "attend"}</button>
@@ -42,13 +42,13 @@ class Attend extends React.Component {
       agenda: this.props.agendaFile,
       action: this.attending ? "regrets" : "attend",
       name: this.props.user.username,
-      userid: this.props.user.id
+      userid: this.props.user.userid
     };
 
-    this.setState({disabled: true});
+    this.setState({ disabled: true });
 
     post("attend", data, (response) => {
-      this.setState({disabled: false});
+      this.setState({ disabled: false });
       if (response) Store.dispatch(Actions.postAgenda(response.agenda));
     })
   }
