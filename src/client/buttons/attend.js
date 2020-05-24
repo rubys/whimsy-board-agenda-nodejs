@@ -1,9 +1,15 @@
-import Agenda from "../models/agenda.js";
 import React from "react";
-import User from "../models/user.js";
 import { post } from "../utils.js";
 import Store from '../store.js';
 import * as Actions from "../../actions.js";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    user: state.server.user,
+    agendaFile: state.client.agendaFile
+  }
+};
 
 //
 // Indicate intention to attend / regrets for meeting
@@ -18,13 +24,13 @@ class Attend extends React.Component {
   // match person by either userid or name
   get attending() {
     if (!this.props.item.people) return false;
-    let person = this.props.item.people[User.id];
+    let person = this.props.item.people[this.props.user.id];
 
     if (person) {
       return person.attending
     } else {
       for (person of Object.values(this.props.item.people)) {
-        if (person.name === User.username) return person.attending
+        if (person.name === this.props.user.username) return person.attending
       };
 
       return false
@@ -33,10 +39,10 @@ class Attend extends React.Component {
 
   click = (event) => {
     let data = {
-      agenda: Agenda.file,
+      agenda: this.props.agendaFile,
       action: this.attending ? "regrets" : "attend",
-      name: User.username,
-      userid: User.id
+      name: this.props.user.username,
+      userid: this.props.user.id
     };
 
     this.setState({disabled: true});
@@ -48,4 +54,4 @@ class Attend extends React.Component {
   }
 };
 
-export default Attend
+export default connect(mapStateToProps)(Attend)
