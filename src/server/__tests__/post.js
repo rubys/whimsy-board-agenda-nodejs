@@ -2,10 +2,7 @@ import post from '../operations/post.js';
 import * as ldap from '../ldap.js';
 
 jest.mock('../svn.js');
-
-afterAll(async () => {
-  await ldap.close();
-});
+afterAll(ldap.close);
 
 describe('Posting an item to the agenda', () => {
   it('should post a new special order', async () => {
