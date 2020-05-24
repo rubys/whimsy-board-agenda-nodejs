@@ -225,8 +225,10 @@ class Repository {
         wstream.on('finish', resolve);
         wstream.write(newContents);
         wstream.end();
-      })
+      });
     }
+
+    return newContents;
   }
 }
 

@@ -43,7 +43,7 @@ class Attend extends React.Component {
 
     post("attend", data, (response) => {
       this.setState({disabled: false});
-      Store.dispatch(Actions.postAgenda(response.agenda));
+      if (response) Store.dispatch(Actions.postAgenda(response.agenda));
     })
   }
 };
