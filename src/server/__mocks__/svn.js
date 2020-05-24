@@ -45,10 +45,15 @@ class Repository {
   async revise(file, message, request, callback) {
     let oldContents = await this.read(file);
     let newContents = await callback(oldContents);
-    this.updates[file] = { mtime: new Date(), contents: newContents };
+    this.updates[file] = { mtime: new Date().getTime(), contents: newContents };
     return newContents;
+  }
+
+  reset() {
+    this.updates = {}
   }
 }
 
 export const Board = new Repository('foundation_board');
+export const Minutes = new Repository('minutes');
 export const Committers  = new Repository('board');

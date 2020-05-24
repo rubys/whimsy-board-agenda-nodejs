@@ -86,9 +86,10 @@ export default async function (request) {
 
     } else if (!guests.includes(name)) {
 
-      let updated = guests.replace(/\n\Z/, `\n        ${name}\n`);
+      let updated = guests.replace(/\n$/, `        ${name}\n\n`);
       updated = updated.replace(/:\n\n +none\n/, ":\n\n");
       rollcall = rollcall.replace(guests, updated)
+
     };
 
     return agenda.replace(/^ \d\. Roll Call.*?\n \d\./ms, rollcall);
