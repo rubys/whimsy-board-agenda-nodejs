@@ -23,7 +23,7 @@ export default async function (request) {
 
       if (action == "regrets") {
         updated = updated
-          .replace(/Absent:\n\n.*?\n/m, line => `${line.trim()}\n        ${name}\n\n`)
+          .replace(/Absent:\n\n.*?\n/m, line => `${line.trim()}\n        ${name}\n`)
           .replace(/:\n\n +none\n/, ":\n\n")
           .replace(/Present:\n\n\n/, "Present:\n\n        none\n\n");
       } else {
@@ -56,7 +56,6 @@ export default async function (request) {
         updated = updated
           .replace(/Present:\n\n.*?\n\n/m, line => `${line.trim()}\n        ${name}\n`)
           .replace(/Absent:\n\n\n/, "Absent:\n\n        none\n\n");
-
       };
 
       rollcall = rollcall.replace(officers, updated)
