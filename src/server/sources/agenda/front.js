@@ -17,17 +17,17 @@ export default async function (agenda) {
   for (let attrs of sections) {
     if (attrs.title === "Roll Call") {
       attrs.people = {};
-      let absent = attrs.text.match(/Absent:\n\n.*?\n\n/gm).join();
+      let absent = attrs.text.match(/Absent:\n\n.*?\n\n/gsm).join();
       let directors = attrs.text.match(/^ +Directors[ \S]*?:\n\n.*?\n\n/gsm).join();
       let officers = attrs.text.match(/^ +Executive[ \S]*?:\n\n.*?\n\n/gsm).join();
 
       // attempt to identify the people mentioned in the Roll Call
-      let people = (attrs.text.match(/^ {8}(\w.*)/gm).map(s => (
-        s.match(/^ {8}(\w.*)/m).slice(1)
-      ))).flat();
+      let people = Array.from(attrs.text.matchAll(/^ {8}(\w.*)/gm),
+        match => match[1]
+      );
 
-      people.forEach(name => {
-        if (name === "none") return;
+      for (let name of people) {
+        if (name === "none") continue;
 
         // Remove extraneous [comments in past board minutes
         name = name.replace(/(\s*[[(]|\s+-).*/g, "").trim();
@@ -70,7 +70,7 @@ export default async function (agenda) {
             }
           }
         }
-      });
+      }
 
       if (attrs.people) {
         const compareFn = (a, b) => (a[1].sortName > b[1].sortName) ? 1 : -1;
