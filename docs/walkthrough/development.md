@@ -106,7 +106,7 @@ This runs tests in parallel (using one process per core), and the tool
 will remain up once the tests complete.  As you make changes to
 the source, the affected tests will automatically rerun.
 
-Tests generally are place in `__test__` directories alongside
+Tests generally are place in `\_\_test\_\_` directories alongside
 of the code they test.
 
 The test framework is [jest](https://jestjs.io/) which has ample
@@ -127,7 +127,7 @@ and `exports`.
 Jest provides the ability to
 [mock](https://jestjs.io/docs/en/manual-mocks) imports.
 
-[src/server/__tests__/post.js](../../src/server/__tests__/post.js#L1)
+[src/server/\_\_tests\_\_/post.js](../../src/server/__tests__/post.js#L1)
 tests posting a new item to the agenda.  The attachment number
 that would be generated would depend on the agenda.  Actually
 doing this live would have the unfortunate side effect of
@@ -154,7 +154,7 @@ More interesting is the testing of React components.  You
 generally don't need a browser or even a full DOM implementation
 to test a component.
 
-[src/client/__tests__/cve.js](../../src/client/__tests__/cve.js)
+[src/client/\_\_tests\_\_/cve.js](../../src/client/__tests__/cve.js)
 tests the hotlinking of CVEs using
 [enzyme](https://enzymejs.github.io/enzyme/docs/guides/jest.html).
 

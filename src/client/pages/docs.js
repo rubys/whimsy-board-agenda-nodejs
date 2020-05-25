@@ -60,6 +60,17 @@ class Docs extends React.Component {
         </dd>
 
         <dt className="col-sm-2">
+          <a href={`${walkthrough}/test-attend.md#testing-the-attend-server-side-operation`}>Test Attend</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A walkthrough of the test suite for the <tt>attend</tt>
+          button that appears at the bottom of <em>Roll Call</em> pages..</p>
+
+          <p>This covers mocking of inputs from subversion and verifing
+          that the results of the operation are what is expected..</p>
+        </dd>
+
+        <dt className="col-sm-2">
           <a href={`${walkthrough}/websocket.md#websockets`}>WebSocket</a>
         </dt>
         <dd className="col-sm-10">
