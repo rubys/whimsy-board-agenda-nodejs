@@ -2,10 +2,11 @@ import path from 'path';
 
 export const port = 3001;
 
-export const srcPath = path.resolve(__dirname, '../../src');
-export const buildPath = path.resolve(__dirname, '../../build');
-export const workPath = path.resolve(__dirname, '../../work');
-export const templatePath = path.resolve(__dirname, './templates');
+export const rootPath = path.resolve(__dirname, '../..');
+export const buildPath = rootPath + '/build';
+export const srcPath = rootPath + '/src';
+export const templatePath = rootPath + '/templates';
+export const workPath = rootPath + '/work';
 export const cachePath = workPath + '/cache';
 export const agendaPath = workPath + '/agenda';
 
