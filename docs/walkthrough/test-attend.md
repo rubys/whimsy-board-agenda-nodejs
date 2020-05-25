@@ -44,11 +44,11 @@ are six major code paths.
 For testing purposes, we don't want to use live data from subversion
 repositories, as that would affect the results.  Instead we use test
 data from
-[src/server/__mocks__/svn/foundation_board](../../src/server/__mocks__/svn/foundation_board)
+[src/server/\_\_mocks\_\_/svn/foundation_board](../../src/server/__mocks__/svn/foundation_board)
 which has been santized to remove private data and adjusted as needed
 to enable each of the test scenarios to be implemented.
 
-[src/server/__mocks__/svn.js](../../src/server/__mocks__/svn.js) contains
+[src/server/\_\_mocks\_\_/svn.js](../../src/server/__mocks__/svn.js) contains
 a [manual mock](https://jestjs.io/docs/en/manual-mocks) which replaces
 the methods that would normally interact with subversion with code that
 reads from the test data directories, and captures and reguritates updates
@@ -59,7 +59,7 @@ A `reset` method is provided to enable clearing of updates between tests.
 ## Test Suite
 
 The test suite itself is contained in
-[src/server/operations/__tests__/attend.js](../../src/server/operations/__tests__/attend.js)
+[src/server/operations/\_\_tests\_\_/attend.js](../../src/server/operations/__tests__/attend.js)
 and contains six tests.
 
 Each test contains three parts:
