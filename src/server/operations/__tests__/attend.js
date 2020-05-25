@@ -2,7 +2,7 @@ import attend from '../attend.js';
 import * as ldap from '../../ldap.js';
 import { Board } from '../../svn.js';
 
-jest.mock('../../svn.js')
+jest.mock('../../svn.js');
 afterEach(Board.reset);
 afterAll(ldap.close);
 
