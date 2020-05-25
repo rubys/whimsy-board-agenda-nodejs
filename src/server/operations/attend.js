@@ -14,8 +14,8 @@ export default async function (request) {
   await Board.revise(agenda, message, request, agenda => {
     let rollcall = agenda.match(/^ \d\. Roll Call.*?\n \d\./ms)?.[0];
     rollcall = rollcall.replace(/ +\n/g, "");
-    let directors = rollcall.match(/^ +Directors.*?:\n\n.*?\n\n +Directors.*?:\n\n.*?\n\n/ms)?.[0];
-    let officers = rollcall.match(/^ +Executive.*?:\n\n.*?\n\n +Executive.*?:\n\n.*?\n\n/ms)?.[0];
+    let directors = rollcall.match(/^ +Directors.*?:\n\n.*?\n\n *Directors.*?:\n\n.*?\n\n/ms)?.[0];
+    let officers = rollcall.match(/^ +Executive.*?:\n\n.*?\n\n *Executive.*?:\n\n.*?\n\n/ms)?.[0];
     let guests = rollcall.match(/^ +Guests.*?:\n\n.*?\n\n/ms)?.[0];
 
     if (directors.includes(name)) {
@@ -23,12 +23,12 @@ export default async function (request) {
 
       if (action == "regrets") {
         updated = updated
-          .replace(/Absent:\n\n.*?\n/m, line => `${line.trim()}\n        ${name}\n`)
+          .replace(/Absent:\n\n.*?\n/, line => `${line.trim()}\n        ${name}\n`)
           .replace(/:\n\n +none\n/, ":\n\n")
           .replace(/Present:\n\n\n/, "Present:\n\n        none\n\n");
       } else {
         updated = updated
-          .replace(/Present:\n\n.*?\n/m, line => `${line.trim()}\n        ${name}\n`)
+          .replace(/Present:\n\n.*?\n/, line => `${line.trim()}\n        ${name}\n`)
           .replace(/Absent:\n\n\n/, "Absent:\n\n        none\n\n");
 
         // sort Directors
@@ -49,12 +49,12 @@ export default async function (request) {
 
       if (action == "regrets") {
         updated = updated
-          .replace(/Absent:\n\n.*?\n\n/m, line => `${line.trim()}\n        ${name}\n`)
+          .replace(/Absent:\n\n.*?\n/, line => `${line.trim()}\n        ${name}\n`)
           .replace(/:\n\n +none\n/, ":\n\n")
           .replace(/Present:\n\n\n/, "Present:\n\n        none\n\n");
       } else {
         updated = updated
-          .replace(/Present:\n\n.*?\n\n/m, line => `${line.trim()}\n        ${name}\n`)
+          .replace(/Present:\n.*?\n\n/s, line => `${line.trim()}\n        ${name}\n\n`)
           .replace(/Absent:\n\n\n/, "Absent:\n\n        none\n\n");
       };
 

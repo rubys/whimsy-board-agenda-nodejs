@@ -20,6 +20,22 @@ describe('roll call', () => {
 
     let rollcall = agenda.find(item => item.title == 'Roll Call');
     expect(rollcall.text).toMatch(/Guests.*N\. E\. Member/s);
+    expect(rollcall.text).toContain('Shane Curcuru');
+  });
+
+  it('should support removing a guest', async () => {
+    let request = {
+      body: {
+        agenda: 'board_agenda_2015_01_21.txt',
+        action: 'regrets',
+        name: 'Shane Curcuru'
+      }
+    };
+
+    let agenda = (await attend(request)).agenda;
+
+    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    expect(rollcall.text).not.toContain('Shane Curcuru');
   });
 
   it("should support a director's regrets", async () => {
@@ -52,10 +68,26 @@ describe('roll call', () => {
     expect(rollcall.text).toMatch(/Greg Stein\s+Directors .* Absent:/);
   });
 
-  it("should support a officer's regrets", async () => {
+  it("should support adding an officer", async () => {
     let request = {
       body: {
         agenda: 'board_agenda_2015_01_21.txt',
+        action: 'attend',
+        name: 'Craig L Russell'
+      }
+    };
+
+    let agenda = (await attend(request)).agenda;
+
+    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    expect(rollcall.text).toMatch(/Officers .* Present:\s+Craig L Russell/);
+    expect(rollcall.text).toMatch(/Officers .* Absent:\s+none/);
+  });
+
+  it("should support a officer's regrets", async () => {
+    let request = {
+      body: {
+        agenda: 'board_agenda_2015_02_18.txt',
         action: 'regrets',
         name: 'Craig L Russell'
       }
@@ -64,6 +96,7 @@ describe('roll call', () => {
     let agenda = (await attend(request)).agenda;
 
     let rollcall = agenda.find(item => item.title == 'Roll Call');
+    expect(rollcall.text).toMatch(/Officers .* Present:\s+none/);
     expect(rollcall.text).toMatch(/Officers .* Absent:\s+Craig L Russell/);
   });
 })
