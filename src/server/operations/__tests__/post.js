@@ -1,10 +1,10 @@
-import post from '../operations/post.js';
-import * as ldap from '../ldap.js';
-import { Board } from '../svn.js';
+import post from '../post.js';
+import * as ldap from '../../ldap.js';
+import { Board } from '../../svn.js';
 
-jest.mock('../svn.js');
-afterAll(ldap.close);
+jest.mock('../../svn.js');
 afterEach(Board.reset);
+afterAll(ldap.close);
 
 describe('Posting an item to the agenda', () => {
   it('should post a new special order', async () => {
