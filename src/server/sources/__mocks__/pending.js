@@ -24,7 +24,7 @@ export async function update(request, agenda, callback) {
   return await write(request, callback(pending));
 }
 
-export async function reset() {
+export function reset() {
   cache = null;
 }
 

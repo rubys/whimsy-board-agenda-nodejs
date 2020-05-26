@@ -42,7 +42,7 @@ export default async function (request) {
         index = unflagged.indexOf(attach);
         if (index !== -1) unflagged.splice(index, 1);
 
-        if (!flagged.includes(attach) && !item?.flagged?.includes(initials)) {
+        if (!flagged.includes(attach) && !item?.flagged_by?.includes(initials)) {
           flagged.push(attach);
         }
 
@@ -52,7 +52,7 @@ export default async function (request) {
         index = flagged.indexOf(attach);
         if (index !== -1) flagged.splice(index, 1);
 
-        if (!unflagged.includes(attach) && item?.flagged?.includes(initials)) {
+        if (!unflagged.includes(attach) && item?.flagged_by?.includes(initials)) {
           unflagged.push(attach)
         }
 
