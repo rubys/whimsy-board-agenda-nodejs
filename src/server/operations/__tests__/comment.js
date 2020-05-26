@@ -37,26 +37,7 @@ describe('comments', () => {
 
     pending = await comment(request);
 
-    expect(pending.comments).not.toContain("I");
+    expect(pending.comments).not.toHaveProperty("I");
   });
-
-  it("should reset comments when the agenda changes", async () => {
-    let pending = await Pending.read();
-
-    expect(pending.comments.I).toBe("Nice report!");
-
-    let request = {
-      body: {
-        initials: "xx",
-        agenda: "board_agenda_2015_02_18.txt",
-        attach: "Z",
-        comment: null
-      }
-    };
-
-    pending = await comment(request);
-
-    expect(pending.comments).not.toContain("I");
-  })
 
 });
