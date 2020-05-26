@@ -141,7 +141,7 @@ ${report.trim()}
           pattern = new RegExp(`^(\\s8\\. ${title})\\n.*\\n( 9\\.)`, "m");
           report = report.replace(/^(.)/gm, "    $1")
         } else {
-          pattern = new RegExp(`(---\\nAttachment ${attach}:.*?\\[.*?\\])\\n.*?\\n(-{40})`, "m");
+          pattern = new RegExp(`(---\\nAttachment ${attach}:.*?\\[.*?\\])\\n.*?\\n(-{40})`, "ms");
           spacing = "\n\n\n"
         };
 
