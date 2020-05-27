@@ -3,6 +3,7 @@ import * as cache from './cache.js';
 
 let client = null;
 let TTL = 15 * 60 * 1000; // fifteen minutes as these values don't change often
+const TIMELIMIT = 30; // seconds
 
 // create a connection to the ldap server 
 export async function open() {
@@ -33,7 +34,8 @@ export async function names() {
   let options = {
     filter: 'uid=*',
     scope: 'sub',
-    attributes: ['cn', 'uid']
+    attributes: ['cn', 'uid'],
+    timeLimit: TIMELIMIT
   }
 
   names = {};
@@ -66,7 +68,8 @@ export async function members() {
   let base = 'cn=member,ou=groups,dc=apache,dc=org';
 
   let options = {
-    attributes: ['memberUid']
+    attributes: ['memberUid'],
+    timeLimit: TIMELIMIT
   }
 
   members = [];
@@ -99,7 +102,8 @@ export async function projectCommitters(project) {
 
   let options = {
     scope: 'sub',
-    attributes: ['member']
+    attributes: ['member'],
+    timeLimit: TIMELIMIT
   }
 
   let members = [];

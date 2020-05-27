@@ -10,7 +10,7 @@ export default async function (request) {
 
   let item = (await read(agenda, request)).find(item => item.attach === attach);
 
-  return update(request, agenda, pending => {
+  return await update(request, agenda, pending => {
     pending.initials = initials;
 
     let { approved, unapproved, flagged, unflagged } = pending;

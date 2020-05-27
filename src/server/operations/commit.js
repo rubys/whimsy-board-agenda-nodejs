@@ -16,7 +16,7 @@ export default async function (request) {
     message,
     request,
 
-    async (agenda) => {
+    async agenda => {
       // refetch to make sure the data is fresh (handles retries, locks, etc...)
       let updates = await Pending.read(request);
       let approved = updates.approved;
@@ -39,7 +39,7 @@ export default async function (request) {
 
       // iterate over patterns, matching attachments to approvals and comments
       for (let [prefix, pattern] of Object.entries(patterns)) {
-        let flagged_reports;
+        let flagged_reports = {};
 
         agenda = agenda.replace(pattern, (match, attachment, approvals) => {
           if (prefix) attachment = prefix + attachment;
@@ -60,7 +60,7 @@ export default async function (request) {
             let index = approvals.indexOf(initials);
 
             if (index) {
-              approvals = approvals.splice(index, 1);
+              approvals.splice(index, 1);
               match = match.replace(/approved: (.*?)\n/, `approved: ${approvals.join(", ")}\n`)
             }
           };
@@ -82,9 +82,9 @@ export default async function (request) {
           parsed = await Agenda.parse(agenda, request);
 
           flagged_reports = Object.fromEntries(Array.from(
-            agenda.match(/ \d\. Committee Reports.*?\n\s+A\./m)?.[0].matchAll(/# (.*?) \[(.*)\]/g),
-            match => match.map((line, pmc, flags) => [pmc, flags.split(/,\s+/)]))
-          );
+            agenda.match(/ \d\. Committee Reports.*?\n\s+A\./ms)?.[0].matchAll(/# (.*?) \[(.*)\]/g),
+            ([line, pmc, flagged_by]) => [pmc, flagged_by.split(/,\s+/)]
+          ));
 
           for (let item of parsed) {
             if (flagged.includes(item.attach)) {
@@ -104,17 +104,18 @@ export default async function (request) {
             }
           };
 
-          // update agenda
+          // update flagged reports
           agenda = agenda.replace(
-            / \d\. Committee Reports.*?\n\s+A\./m,
-
-            (flags) => {
+            / \d\. Committee Reports.*?\n\s+A\./ms,
+            flags => {
               if (/discussion:\n\n()/.test(flags)) {
                 flags = flags.replace(/\n +# .*? \[.*\]/g, "");
 
-                flags[/discussion:\n\n()/, 1] = flagged_reports.sort.map((pmc, who) => (
-                  `        # ${pmc} [${who.join(", ")}]\n`
-                )).join;
+                flags.replace(/discussion:\n\n()/, match => (
+                  match + Object.entries(flagged_reports).sort().map(([pmc, who]) => (
+                    `        # ${pmc} [${who.join(", ")}]\n`
+                  )).join()
+                ));
 
                 flags = flags.replace(/\n+(\s+)A\.$/, () => `\n\n${RegExp.$1}A.`)
               };
@@ -135,8 +136,8 @@ export default async function (request) {
             for (let update of updates.status) {
               let match = true;
 
-              for (let [name, value] of action) {
-                if (name !== "status" && update[name] !== action[name]) match = false
+              for (let [name, value] of Object.entries(action)) {
+                if (value && name !== "status" && update[name] !== value) match = false
               };
 
               if (match) action = update
@@ -192,7 +193,6 @@ export default async function (request) {
   // backup and clear out the pending changes
   await Pending.backup(request);
   await Pending.write(request, { agenda, initials });
-  console.log(await Pending.read(request));
 
   return {
     agenda: await Agenda.read(agenda, request),

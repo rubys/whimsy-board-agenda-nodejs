@@ -5,12 +5,22 @@ import yaml from 'yaml';
 
 let cache = null;
 
+let empty = {
+  approved: [],
+  comments: {},
+  flagged: [],
+  seen: {},
+  status: [],
+  unapproved: [],
+  unflagged: []
+}
+
 export async function read(request) {
   if (!cache) {
     cache = yaml.parse(await fs.readFile(`${__dirname}/pending.yml`, 'utf8'));
-  } 
+  }
 
-  return cache;
+  return { ...empty, ...cache };
 }
 
 export async function write(request, pending) {
@@ -26,6 +36,9 @@ export async function update(request, agenda, callback) {
 
 export function reset() {
   cache = null;
+}
+
+export function backup() {
 }
 
 export default read;
