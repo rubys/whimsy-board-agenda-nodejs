@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 class Docs extends React.Component {
   render() {
+    let overview = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/overview"
     let walkthrough = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/walkthrough"
 
     return <div className="container">
@@ -20,11 +21,18 @@ class Docs extends React.Component {
         </dd>
       </dl>
 
-      <h3>Walk-throughs</h3>
+      <h3>Overview</h3>
 
       <dl className="row">
         <dt className="col-sm-2">
-          <a href={`${walkthrough}/development.md#development`}>Development Workflow</a>
+          <a href={`${overview}/concepts.md#concepts`}>Concepts</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A high level description of the major architectural components</p>
+        </dd>
+
+        <dt className="col-sm-2">
+          <a href={`${overview}/development.md#development`}>Development Workflow</a>
         </dt>
         <dd className="col-sm-10">
           <p>Overview of the various development tasks.  Covers:</p>
@@ -37,6 +45,18 @@ class Docs extends React.Component {
           </ul>
         </dd>
 
+        <dt className="col-sm-2">
+          <a href={`${overview}/environments.md#runtime-environments`}>Environments</a>
+        </dt>
+        <dd className="col-sm-10">
+          <p>A description of the differences between the development,
+          test, and production environments.</p>
+        </dd>
+      </dl>
+
+      <h3>Walk-throughs</h3>
+
+      <dl className="row">
         <dt className="col-sm-2">
           <a href={`${walkthrough}/refresh.md#refreshing-the-agenda`}>Refresh</a>
         </dt>
@@ -63,7 +83,7 @@ class Docs extends React.Component {
           <a href={`${walkthrough}/test-attend.md#testing-the-attend-server-side-operation`}>Test Attend</a>
         </dt>
         <dd className="col-sm-10">
-          <p>A walkthrough of the test suite for the <tt>attend</tt>
+          <p>A walkthrough of the test suite for the <tt>attend</tt>{' '}
           button that appears at the bottom of <em>Roll Call</em> pages..</p>
 
           <p>This covers mocking of inputs from subversion and verifing
