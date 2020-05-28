@@ -3,6 +3,7 @@
 // reads from a svn directory in this location, writes are done to memory only.
 
 import { promises as fsp } from 'fs';
+import { decache } from '../cache.js';
 
 class Repository {
   dir = null;
@@ -50,6 +51,14 @@ class Repository {
   }
 
   reset() {
+    // decache agenda json files in order to prevent a situation where the
+    // cache files are newer than the baseline test data.
+    for (let file in this.updates) {
+      if (file.endsWith('.txt')) {
+        decache(file.replace('.txt', '.json'));
+      }
+    }
+
     this.updates = {}
   }
 }

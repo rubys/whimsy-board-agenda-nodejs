@@ -27,6 +27,11 @@ export async function write(file, data) {
   });
 };
 
+export async function decache(file) {
+  return fsp.unlink(`${cachePath}/${file}`).catch(() => {});
+}
+
+
 // return a digest of all cache files
 export async function digest() {
   try {
