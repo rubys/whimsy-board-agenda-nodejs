@@ -106,7 +106,7 @@ This runs tests in parallel (using one process per core), and the tool
 will remain up once the tests complete.  As you make changes to
 the source, the affected tests will automatically rerun.
 
-Tests generally are place in `\_\_test\_\_` directories alongside
+Tests generally are place in `__test__` directories alongside
 of the code they test.
 
 The test framework is [jest](https://jestjs.io/) which has ample
