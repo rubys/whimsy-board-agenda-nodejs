@@ -142,7 +142,7 @@ Code that handles HTTP POST requests
 
 ### [src/server/sources](../../src/server/sources)
 
-Code that handles HTTP GET requesst.
+Code that handles HTTP GET requests.
 
 Notable:
 
