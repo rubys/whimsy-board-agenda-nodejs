@@ -39,7 +39,10 @@ export async function read(filename, request) {
 
   let items = await parse(agenda, request);
 
-  cache.write(cacheFile, JSON.stringify(items));
+  if (process.env.NODE_ENV !== 'test') {
+    cache.write(cacheFile, JSON.stringify(items));
+  }
+
   return items;
 }
 
