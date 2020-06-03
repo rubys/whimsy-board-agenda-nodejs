@@ -46,8 +46,10 @@ export default async function router(app) {
   });
 
   app.get('/api/minutes/:date([0-9]+-[0-9]+-[0-9]+).json', async (request, response, next) => {
+    let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
+
     try {
-      let minutes = await secretaryMinutes(request, request.params.date);
+      let minutes = await secretaryMinutes(agenda, request);
       response.json(minutes);
     } catch (error) {
       next(error);
