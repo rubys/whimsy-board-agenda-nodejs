@@ -1,89 +1,90 @@
 ---
 started: 1424284440.0
-Call to order: '10:34'
-Roll Call: |
-  Directors Present:
+items:
+  Call to order: '10:34'
+  Roll Call: |
+    Directors Present:
 
-    Rich Bowen
-    Doug Cutting
-    Bertrand Delacretaz
-    Ross Gardler
-    Jim Jagielski
-    Brett Porter
-    Sam Ruby
+      Rich Bowen
+      Doug Cutting
+      Bertrand Delacretaz
+      Ross Gardler
+      Jim Jagielski
+      Brett Porter
+      Sam Ruby
 
-  Directors Absent:
+    Directors Absent:
 
-    Chris Mattmann
-    Greg Stein
+      Chris Mattmann
+      Greg Stein
 
-  Executive Officers Present:
+    Executive Officers Present:
 
-    Craig L Russell
+      Craig L Russell
 
-  Executive Officers Absent:
+    Executive Officers Absent:
 
-    none
+      none
 
-  Guests:
+    Guests:
 
-    Andrea Pescetti
-    Chip Childers
-    Daniel Gruno
-    David Nalley
-    Hadrian Zbarcea
-    Henri Yandell
-    Jake Farrell
-    Kevin A. McGrail
-    Mark Radcliffe - joined at 10:55
-    Marvin Humphrey
-    Sean Kelly
-    Shane Curcuru
-    Tom Pappas
-January 21, 2015: tabled
-Treasurer: |-
-  Jim: Will the audit be able to start soon?
-  Tom: Can't start the audit until books are closed; looks like mid summer for the audit.
-Executive Vice President: Rich needs help with ApacheCon planning; Sam volunteered
-  to help.
-Vice Chairman: The goal for resolution of the contractor issue is to have a recommendation
-  for the incoming board.
-Discussion Items: "Mark: Trademarks are a valuable asset for ASF. Trademark rules
-  vary \nby country. Virtually all countries protect rights only through registration.
-  \nMany unsavory people register other peoples' trademarks as a\nbusiness. Risks
-  are most often on ASF users, not ASF per se. \nAs a practical matter, projects need
-  to select brands that are available. \nOpen source has \"won the war\" and is now
-  ubiquitous. Now there are \nlawsuits based on GPL interpretation by people who are
-  just trying to \nmake money from the legal process, not community policing as we
-  \nhave seen in the past. \n\nJim: Need to balance the cost versus benefit of registration.\n\nShane:
-  Looks like the \"sweet spot\" of registration is somewhat more \nthan we are doing
-  now. But consider that a third party has registered \nour Hadoop trademark in China.
-  This will not hurt Apache but may \nvery well hurt our downstream users. And eventually
-  this may hurt Apache \nif projects lose support from these users.\n\nJim: Once a
-  trademark is registered, are we then required to police it?\n\nMark: ASF is required
-  to police brands regardless of registration (or not).\nIf ASF doesn't have the money,
-  users may well contribute to registration costs. \n\nRoss: Users are represented
-  by PMCs. We need to make sure that \nPMCs step up, with foundation support."
-Axis: '@Sam: follow up with Axis PMC.'
-BookKeeper: ''
-Creadur: "@Jim: Clarify report"
-DeltaSpike: "@Bertrand: Ask if the git CMS work could be documented for others to
-  use"
-Drill: "@Brett: Are hangouts documents so non-attendees can participate later?"
-HttpComponents: "@Chris: pursue a report for HttpComponents"
-jUDDI: "@Brett: pursue a report for jUDDI"
-Logging: "@Brett: Any action on log4j?"
-ManifoldCF: "@Doug: Is there still an issue with infra?"
-Perl: "@Sam: Is anyone on the PMC looking at the reminders?"
-SIS: "@Brett: What is the issue with infra?"
-Change Geronimo Chair: unanimous
-Change ServiceMix Chair: unanimous
-Change Directory Chair: unanimous
-Change OODT Chair: unanimous
-Change OpenOffice Chair: unanimous
-Change MINA Chair: unanimous
-Announcements: "Jim: The corporate sponsor of Groovy have dropped support, so \nthe
-  Groovy project might be interested in moving to Apache."
+      Andrea Pescetti
+      Chip Childers
+      Daniel Gruno
+      David Nalley
+      Hadrian Zbarcea
+      Henri Yandell
+      Jake Farrell
+      Kevin A. McGrail
+      Mark Radcliffe - joined at 10:55
+      Marvin Humphrey
+      Sean Kelly
+      Shane Curcuru
+      Tom Pappas
+  January 21, 2015: tabled
+  Treasurer: |-
+    Jim: Will the audit be able to start soon?
+    Tom: Can't start the audit until books are closed; looks like mid summer for the audit.
+  Executive Vice President: Rich needs help with ApacheCon planning; Sam volunteered
+    to help.
+  Vice Chairman: The goal for resolution of the contractor issue is to have a recommendation
+    for the incoming board.
+  Discussion Items: "Mark: Trademarks are a valuable asset for ASF. Trademark rules
+    vary \nby country. Virtually all countries protect rights only through registration.
+    \nMany unsavory people register other peoples' trademarks as a\nbusiness. Risks
+    are most often on ASF users, not ASF per se. \nAs a practical matter, projects need
+    to select brands that are available. \nOpen source has \"won the war\" and is now
+    ubiquitous. Now there are \nlawsuits based on GPL interpretation by people who are
+    just trying to \nmake money from the legal process, not community policing as we
+    \nhave seen in the past. \n\nJim: Need to balance the cost versus benefit of registration.\n\nShane:
+    Looks like the \"sweet spot\" of registration is somewhat more \nthan we are doing
+    now. But consider that a third party has registered \nour Hadoop trademark in China.
+    This will not hurt Apache but may \nvery well hurt our downstream users. And eventually
+    this may hurt Apache \nif projects lose support from these users.\n\nJim: Once a
+    trademark is registered, are we then required to police it?\n\nMark: ASF is required
+    to police brands regardless of registration (or not).\nIf ASF doesn't have the money,
+    users may well contribute to registration costs. \n\nRoss: Users are represented
+    by PMCs. We need to make sure that \nPMCs step up, with foundation support."
+  Axis: '@Sam: follow up with Axis PMC.'
+  BookKeeper: ''
+  Creadur: "@Jim: Clarify report"
+  DeltaSpike: "@Bertrand: Ask if the git CMS work could be documented for others to
+    use"
+  Drill: "@Brett: Are hangouts documents so non-attendees can participate later?"
+  HttpComponents: "@Chris: pursue a report for HttpComponents"
+  jUDDI: "@Brett: pursue a report for jUDDI"
+  Logging: "@Brett: Any action on log4j?"
+  ManifoldCF: "@Doug: Is there still an issue with infra?"
+  Perl: "@Sam: Is anyone on the PMC looking at the reminders?"
+  SIS: "@Brett: What is the issue with infra?"
+  Change Geronimo Chair: unanimous
+  Change ServiceMix Chair: unanimous
+  Change Directory Chair: unanimous
+  Change OODT Chair: unanimous
+  Change OpenOffice Chair: unanimous
+  Change MINA Chair: unanimous
+  Announcements: "Jim: The corporate sponsor of Groovy have dropped support, so \nthe
+    Groovy project might be interested in moving to Apache."
 attendance:
   Rich Bowen:
     id: _Rich_Bowen

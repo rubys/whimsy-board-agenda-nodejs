@@ -112,9 +112,9 @@ export default async function (request) {
   };
 
   if (text?.length != 0) {
-    minutes[title] = text
+    minutes.items[title] = text
   } else {
-    delete minutes[title];
+    delete minutes.items[title];
     if (title == "Call to order") delete minutes.started;
     if (title == "Adjournment") delete minutes.complete
   };

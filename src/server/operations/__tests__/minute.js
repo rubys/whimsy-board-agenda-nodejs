@@ -20,11 +20,11 @@ describe("minutes", () => {
       }
     };
 
-    let minutes = await read("board_agenda_2015_02_18.txt");
-    expect(minutes["Roll Call"]).toMatch(/Directors Absent:.*Greg Stein/ms);
+    let items = (await read("board_agenda_2015_02_18.txt")).items;
+    expect(items["Roll Call"]).toMatch(/Directors Absent:.*Greg Stein/ms);
 
-    minutes = await minute(request);
-    expect(minutes["Roll Call"]).toMatch(/Greg Stein\s+Directors Absent/);
+    items = (await minute(request)).items;
+    expect(items["Roll Call"]).toMatch(/Greg Stein\s+Directors Absent/);
   });
 
   it("should post minutes", async () => {
@@ -38,7 +38,7 @@ describe("minutes", () => {
 
     let minutes = await minute(request);
 
-    expect(minutes.Incubator).toBe(request.body.text);
+    expect(minutes.items.Incubator).toBe(request.body.text);
   });
 
   it("should post timestamp", async () => {
@@ -52,6 +52,6 @@ describe("minutes", () => {
 
     let minutes = await minute(request);
 
-    expect(minutes.Adjournment).toMatch(/^\d\d?:\d\d$/m);
+    expect(minutes.items.Adjournment).toMatch(/^\d\d?:\d\d$/m);
   })
 })

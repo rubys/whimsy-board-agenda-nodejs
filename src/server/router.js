@@ -1,6 +1,6 @@
 import * as websocket from "./websocket.js";
 import * as ldap from "./ldap.js";
-import secretaryMinutes from "./sources/minutes.js";
+import * as secretaryMinutes from "./sources/minutes.js";
 import reminderText from './sources/reminder-text.js';
 import { Board, Minutes } from './svn.js';
 import { read } from './sources/agenda.js';
@@ -49,7 +49,7 @@ export default async function router(app) {
     let agenda = `board_agenda_${request.params.date.replace(/-/g, '_')}.txt`;
 
     try {
-      let minutes = await secretaryMinutes(agenda, request);
+      let minutes = await secretaryMinutes.read(agenda, request);
       response.json(minutes);
     } catch (error) {
       next(error);

@@ -3,7 +3,7 @@ import devproxy from './devproxy.js';
 import { promises as fs } from 'fs';
 import yaml from 'yaml';
 
-export default async function read(agenda, request) {
+export async function read(agenda, request) {
   let minutes = agenda.replace("_agenda_", "_minutes_").replace(".txt", ".yml");
 
   return await fs.readFile(`${agendaPath}/${minutes}`, 'utf8')

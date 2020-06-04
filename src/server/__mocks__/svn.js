@@ -58,3 +58,8 @@ class Repository {
 export const Board = new Repository('foundation_board');
 export const Minutes = new Repository('minutes');
 export const Committers  = new Repository('board');
+
+// return a list of agendas
+Board.agendas = async function (request) {
+  return (await fsp.readdir(this.dir)).filter(name => /^board_agenda_\d/.test(name)).sort();
+}
