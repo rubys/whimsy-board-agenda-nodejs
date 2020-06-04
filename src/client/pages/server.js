@@ -19,6 +19,7 @@ function Server({ agendas, drafts, env }) {
     '/api/jira',
     ...agendas.map(agenda => `/api/minutes/${agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-")}.json`),
     '/api/posted-reports',
+    '/api/potential-actions',
     '/api/reporter',
     '/api/responses',
     '/api/server',
