@@ -42,8 +42,8 @@ can do from within VSCode by pressing command-backtick.  In there,
 you will need to run the following two commands to first install yarn
 itself, then to install the board agenda tool dependencies:
 
-   npm install -g yarn
-   yarn install
+    npm install -g yarn
+    yarn install
 
 **IMPORTANT** While the `npm install` command will work using the
 Windows PowerShell, the yarn install will fail due to a 
