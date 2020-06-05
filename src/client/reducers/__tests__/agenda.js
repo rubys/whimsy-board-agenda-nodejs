@@ -1,8 +1,10 @@
 import * as Agenda from '../../../server/sources/agenda.js';
 import * as Actions from '../../../actions.js';
 import reducer from '../agenda.js';
+import * as ldap from '../../../server/ldap.js';
 
 jest.mock('../../../server/svn.js');
+afterAll(ldap.close)
 
 describe("agenda reducer", () => {
   it("should link pages in agenda traversal order", async () => {
