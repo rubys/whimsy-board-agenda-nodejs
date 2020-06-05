@@ -18,7 +18,7 @@ describe('Posting an item to the agenda', () => {
       }
     };
 
-    let agenda = (await post(request)).agenda;
+    let { agenda } = await post(request);
 
     let resolution = agenda.find(item => item.attach === '7G');
     expect(resolution.title).toBe('Establish Test');

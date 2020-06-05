@@ -5,7 +5,7 @@ jest.mock('../minutes.js');
 
 describe("potential action items", () => {
   it("should combine existing and captured actions", async () => {
-    let actions = (await potentialActions()).actions;
+    let { actions } = await potentialActions();
 
     let bval = actions.find(action => action.pmc == "BVal");
     expect(bval.owner).toBe("Chris");

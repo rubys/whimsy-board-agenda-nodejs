@@ -20,7 +20,7 @@ describe("minutes", () => {
       }
     };
 
-    let items = (await read("board_agenda_2015_02_18.txt")).items;
+    let { items } = await read("board_agenda_2015_02_18.txt");
     expect(items["Roll Call"]).toMatch(/Directors Absent:.*Greg Stein/ms);
 
     items = (await minute(request)).items;
