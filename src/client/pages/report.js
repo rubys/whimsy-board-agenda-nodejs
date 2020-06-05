@@ -225,6 +225,11 @@ class Report extends React.Component {
             new RegExp(pattern, "g"),
             match => `<a href='${roster}${id}'>${match}</a>`
           )
+        } else if (this.props.item.title === "Roll Call") {
+          text = text.replace(
+            new RegExp(pattern, "g"),
+            match => `<a href='${roster}?q=${person.name}'><span class='commented'>${match}</span></a>`
+          )
         } else {
           text = text.replace(
             new RegExp(pattern, "g"),
