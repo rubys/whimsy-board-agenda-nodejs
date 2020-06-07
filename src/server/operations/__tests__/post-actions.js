@@ -1,13 +1,11 @@
 import potentialActions from '../../sources/potential-actions.js';
 import postActions from "../post-actions.js";
-import * as ldap from '../../ldap.js';
 import { Board } from '../../svn.js';
 
 jest.mock('../../svn.js');
 jest.mock('../../sources/minutes.js');
 
 afterEach(Board.reset);
-afterAll(ldap.close);
 
 describe("action items", () => {
   it("should post action items", async () => {

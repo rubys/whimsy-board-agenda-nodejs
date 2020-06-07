@@ -6,12 +6,10 @@ import { Provider } from 'react-redux';
 import Report from '../report.js';
 import * as Agenda from '../../../server/sources/agenda.js';
 import * as Actions from '../../../actions.js';
-import * as ldap from '../../../server/ldap.js';
 import * as utils from '../../utils.js';
 
 jest.mock('../../../server/svn.js');
 utils.retrieve = jest.fn();
-afterAll(ldap.close)
 
 describe('filters', () => {
   it('converts mentions of CVEs to hotlinks', () => {

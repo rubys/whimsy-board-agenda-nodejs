@@ -95,7 +95,7 @@ export async function members() {
 export async function projectCommitters(project) {
   if (!client) await open();
 
-  if (!/^[a-z]*$/.test(project)) 
+  if (!/^[a-z]*$/.test(project))
     throw new TypeError(`invalid project name: ${JSON.stringify(project)}`);
 
   let base = `cn=${project},ou=project,ou=groups,dc=apache,dc=org`;
@@ -130,6 +130,8 @@ export async function close() {
 }
 
 // shutdown cleanly on exit
-process.on('exit', async () => {
-  await close();
-});
+if (process.env.NODE_ENV === 'test') {
+  afterAll(close);
+} else {
+  process.on('exit', close);
+}

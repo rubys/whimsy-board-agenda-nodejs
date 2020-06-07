@@ -2,7 +2,6 @@
 // but it is useful for now...
 
 import * as ldap from '../ldap.js';
-afterAll(ldap.close);
 
 test('find committer id by name', async () => {
   let names = await ldap.names();

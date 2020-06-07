@@ -1,11 +1,9 @@
 import post from '../post.js';
-import * as ldap from '../../ldap.js';
 import * as Agenda from '../../sources/agenda.js';
 import { Board } from '../../svn.js';
 
 jest.mock('../../svn.js');
 afterEach(Board.reset);
-afterAll(ldap.close);
 
 describe('Posting an item to the agenda', () => {
   it('should post a new special order', async () => {

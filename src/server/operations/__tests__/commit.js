@@ -2,7 +2,6 @@ import commit from '../commit.js';
 import * as Agenda from '../../sources/agenda.js';
 import { Board } from '../../svn.js';
 import * as Pending from '../../sources/pending.js';
-import * as ldap from '../../ldap.js';
 
 jest.mock('../../svn.js');
 jest.mock('../../sources/pending.js');
@@ -10,7 +9,6 @@ afterEach(() => {
   Pending.reset();
   Board.reset();
 });
-afterAll(ldap.close);
 
 describe('commit changes', () => {
 
