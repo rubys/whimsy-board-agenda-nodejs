@@ -14,7 +14,7 @@ describe('comment form', () => {
 
     render(<>
       <Provider store={store}>
-        <AddComment />
+        <AddComment item={{attach: 'A'}}/>
       </Provider>
     </>);
 
