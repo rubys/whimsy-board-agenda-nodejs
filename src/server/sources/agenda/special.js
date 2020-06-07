@@ -106,9 +106,10 @@ export default async function (agenda, { request } = {}) {
         }
       };
 
-      for (let [id, person] of Object.entries(committee.roster)) {
-        if (text.includes(person.name) || title.includes("Term")) {
-          people.push([person.name, id])
+      for (let id of Object.keys(committee.roster)) {
+        let name = id2name[id];
+        if (text.includes(name) || title.includes("Term")) {
+          people.push([name, id])
         }
       };
 
