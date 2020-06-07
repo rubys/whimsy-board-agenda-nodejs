@@ -1,9 +1,8 @@
 import minute from '../minute.js';
-import { read, reset } from '../../sources/minutes.js';
+import { read } from '../../sources/minutes.js';
 
 jest.mock('../../sources/minutes.js');
 jest.mock('../../svn.js');
-afterEach(reset);
 
 //
 // Post minutes - secretary

@@ -1,8 +1,6 @@
 import attend from '../attend.js';
-import { Board } from '../../svn.js';
 
 jest.mock('../../svn.js');
-afterEach(Board.reset);
 
 describe('roll call', () => {
   it('should support adding a guest', async () => {

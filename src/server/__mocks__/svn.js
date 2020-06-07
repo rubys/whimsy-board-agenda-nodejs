@@ -3,7 +3,6 @@
 // reads from a svn directory in this location, writes are done to memory only.
 
 import { promises as fsp } from 'fs';
-import { decache } from '../cache.js';
 
 class Repository {
   dir = null;
@@ -62,4 +61,8 @@ export const Committers  = new Repository('board');
 // return a list of agendas
 Board.agendas = async function (request) {
   return (await fsp.readdir(this.dir)).filter(name => /^board_agenda_\d/.test(name)).sort();
+}
+
+if (process.env.NODE_ENV === 'test') {
+  afterEach(Board.reset);
 }

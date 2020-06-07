@@ -1,13 +1,8 @@
 import approve from '../approve.js';
-import { Board } from '../../svn.js';
 import * as Pending from '../../sources/pending.js';
 
 jest.mock('../../svn.js');
 jest.mock('../../sources/pending.js');
-afterEach(() => {
-  Pending.reset();
-  Board.reset();
-});
 
 describe('flags and approvals', () => {
 

@@ -71,14 +71,7 @@ Each test contains three parts:
   * One or more calls to the Jest [expect](https://jestjs.io/docs/en/expect)
     function that determines if the results match expectations.
 
-At the top of the file is
-  * A call to `jest.mock` that replaces the `import` with the mock replacement.
-  * A call to `afterEach` which ensures that the `Board` updates are discarded
-    between tests.
-  * A call to `afterAll` which ensures that LDAP is closed.  LDAP isn't
-    currently mocked in this test, and agenda parsing will issue LDAP requests,
-    and unless the connection is closed, the test will not immediately complete,
-    instead it will eventually time out with an error.
+At the top of the file is a call to `jest.mock` that replaces the `import` with the mock replacement.
 
 # Execution
 

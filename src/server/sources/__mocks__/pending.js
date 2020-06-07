@@ -42,3 +42,7 @@ export function backup() {
 }
 
 export default read;
+
+if (process.env.NODE_ENV === 'test') {
+  afterEach(reset);
+}

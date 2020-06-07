@@ -1,14 +1,9 @@
 import commit from '../commit.js';
 import * as Agenda from '../../sources/agenda.js';
-import { Board } from '../../svn.js';
 import * as Pending from '../../sources/pending.js';
 
 jest.mock('../../svn.js');
 jest.mock('../../sources/pending.js');
-afterEach(() => {
-  Pending.reset();
-  Board.reset();
-});
 
 describe('commit changes', () => {
 

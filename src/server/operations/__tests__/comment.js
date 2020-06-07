@@ -2,7 +2,6 @@ import comment from '../comment.js';
 import * as Pending from '../../sources/pending.js';
 
 jest.mock('../../sources/pending.js');
-afterEach(Pending.reset);
 
 describe('comments', () => {
   it("should post a comment", async () => {

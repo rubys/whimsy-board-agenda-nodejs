@@ -24,3 +24,7 @@ export async function write(agenda, minutes) {
 export function reset() {
   cache = {};
 }
+
+if (process.env.NODE_ENV === 'test') {
+  afterEach(reset);
+}
