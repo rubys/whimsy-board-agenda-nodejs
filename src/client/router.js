@@ -199,7 +199,7 @@ class Router extends React.Component {
             } else {
               list.push({ form: Post, text: "edit items" })
             }
-          } else if (this.missing) {
+          } else if (item.status.missing) {
             list.push({ form: Post, text: "post report" })
           } else if (/^7\w/m.test(item.attach)) {
             list.push({ form: Post, text: "edit resolution" })

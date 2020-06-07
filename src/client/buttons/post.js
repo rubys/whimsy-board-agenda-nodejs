@@ -42,7 +42,8 @@ class Post extends React.Component {
     parent: null,
     search: '',
     indent: 0,
-    report: ''
+    report: '',
+    message: ''
   }
 
   render() {
@@ -173,7 +174,7 @@ class Post extends React.Component {
 
         <div>
           <input className="form-control" value={this.state.search} placeholder="search"
-            onChange={(event) => { this.setState({ search: event.target.value }) }} />
+            onChange={event => { this.setState({ search: event.target.value }) }} />
         </div>
 
         {this.state.search.length >= 3 && Server.committers ? <>
@@ -296,7 +297,8 @@ class Post extends React.Component {
         </form> : null}
 
         {this.state.header !== "Add Resolution" && this.state.header !== "Add Discussion Item" ? <>
-          <input id="post-report-message" label="commit message" disabled={this.state.disabled} value={this.state.message} />
+          <input id="post-report-message" label="commit message" disabled={this.state.disabled} value={this.state.message}
+            onChange={event => { this.setState({ message: event.target.value }) }} />
         </> : <></>}
 
         <button className="btn-default" data-dismiss="modal">Cancel</button>
@@ -334,9 +336,8 @@ class Post extends React.Component {
     });
 
     jQuery("#post-report-form").on("shown.bs.modal", () => {
-        this.reposition()
-      }
-    )
+      this.reposition()
+    })
   };
 
   // reposition after update if header changed
@@ -446,7 +447,7 @@ class Post extends React.Component {
     };
 
     if (!$edited) {
-      let text = $report || this.props.item?.text || "";
+      let text = $report || this.props.item?.report || this.props.item?.text || "";
 
       if (this.props.item?.title === "President") {
         text = text.replace(
