@@ -9,7 +9,7 @@ describe('comment form', () => {
   it("should enable Save button after input", async () => {
     store.dispatch(Actions.postServer({
       pending: { initials: 'sr' },
-      user: { rold: 'director' }
+      user: { role: 'director' }
     }));
 
     render(<>
