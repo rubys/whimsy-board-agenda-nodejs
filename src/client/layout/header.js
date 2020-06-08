@@ -34,7 +34,7 @@ class Header extends React.Component {
     // update title to match the item title whenever page changes
     if (typeof document !== 'undefined' && props.title) {
       let title = document.getElementsByTagName("title")[0]
-      if (title.textContent !== props.title) {
+      if (title && title.textContent !== props.title) {
         title.textContent = props.title
       }
     }
@@ -237,16 +237,14 @@ class Header extends React.Component {
         add(item, tally.discussionItems)
       }
 
-      if ('approved' in item && item.approved.length < 5) {
-        add(item, tally.awaitingPreapprovals)
-      }
-
       if (item.status.flagged_by) {
         add(item, tally.flaggedReports)
       }
 
-      if (item.missing) {
+      if (item.status.missing) {
         add(item, tally.missingReports)
+      } else if ('approved_by' in item.status && item.status.approved === false) {
+        add(item, tally.awaitingPreapprovals)
       }
     };
 
