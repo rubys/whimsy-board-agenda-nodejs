@@ -41,7 +41,7 @@ class Index extends React.Component {
             <tr className={item.status.color} key={item.attach}>
               <td>{item.attach}</td>
 
-              {meetingDay && /^(\d+|[A-Z]+)$/m.test(item.attach) && !item.skippable
+              {meetingDay && /^(\d+|[A-Z]+)$/m.test(item.attach) && !item.status.skippable
                 ? <td>
                   <Link to={"flagged/" + item.href}>{item.title}</Link>
                 </td>

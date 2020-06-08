@@ -19,13 +19,13 @@ describe('filters', () => {
       status: {}
     }
 
-    const output = mount(
+    const report = mount(
       <Provider store={store}>
         <Report item={item} />
       </Provider>
     );
 
-    let text = output.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = report.find('Text span').props().dangerouslySetInnerHTML.__html;
 
     expect(text).toContain("<a href='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0001'>CVE-2020-0001</a>")
   });
@@ -35,7 +35,7 @@ describe('filters', () => {
     store.dispatch(Actions.postAgenda(agenda));
     let item = store.getState().agenda.Clerezza;
 
-    const output = mount(
+    const report = mount(
       <MemoryRouter>
         <Provider store={store}>
           <Report item={item} />
@@ -43,7 +43,7 @@ describe('filters', () => {
       </MemoryRouter>
     );
 
-    let text = output.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = report.find('Text span').props().dangerouslySetInnerHTML.__html;
 
     expect(text).toContain("<a href='http://s.apache.org/EjO'>");
   });
@@ -53,7 +53,7 @@ describe('filters', () => {
     store.dispatch(Actions.postAgenda(agenda));
     let item = store.getState().agenda['Call-to-order'];
 
-    const output = mount(
+    const report = mount(
       <MemoryRouter>
         <Provider store={store}>
           <Report item={item} />
@@ -61,7 +61,7 @@ describe('filters', () => {
       </MemoryRouter>
     );
 
-    let text = output.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = report.find('Text span').props().dangerouslySetInnerHTML.__html;
 
     expect(text).toContain("<span class='hilite'>Local Time: ");
   });
@@ -72,7 +72,7 @@ describe('filters', () => {
     store.dispatch(Actions.postAgenda(agenda));
     let item = store.getState().agenda['Roll-Call'];
 
-    const output = mount(
+    const rollCall = mount(
       <MemoryRouter>
         <Provider store={store}>
           <Report item={item} />
@@ -80,7 +80,7 @@ describe('filters', () => {
       </MemoryRouter>
     );
 
-    let text = output.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = rollCall.find('Text span').props().dangerouslySetInnerHTML.__html;
 
     expect(text).toContain("<a href='/roster/committer/rubys'>");
     expect(text).toContain("<b>Sam Ruby</b>");
