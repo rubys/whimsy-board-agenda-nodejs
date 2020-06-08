@@ -4,18 +4,16 @@ import store from '../../store';
 import * as Actions from '../../../actions.js';
 import { Provider } from 'react-redux';
 import React from 'react';
-import * as utils from '../../utils.js';
 import { render, screen, fireEvent } from '@testing-library/react';
 import jQuery from "jquery";
 
 jest.mock('../../../server/svn.js');
-utils.retrieve = jest.fn();
 
 describe('post form', () => {
   it('should perform a reflow', async () => {
     // load server state
     store.dispatch(Actions.postServer({
-      server: { pending: { comments: [] } },
+      pending: { comments: [], approved: [], unapproved: [], flagged: [], unflagged: [] },
       user: { userid: 'rubys' }
     }));
 
