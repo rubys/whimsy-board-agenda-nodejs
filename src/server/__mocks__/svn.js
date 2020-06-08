@@ -63,6 +63,6 @@ Board.agendas = async function (request) {
   return (await fsp.readdir(this.dir)).filter(name => /^board_agenda_\d/.test(name)).sort();
 }
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test' && typeof afterEach !== 'undefined') {
   afterEach(Board.reset);
 }

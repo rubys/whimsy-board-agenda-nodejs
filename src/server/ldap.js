@@ -130,7 +130,7 @@ export async function close() {
 }
 
 // shutdown cleanly on exit
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test' && typeof afterAll !== 'undefined') {
   afterAll(close);
 } else {
   process.on('exit', close);
