@@ -58,7 +58,6 @@ describe('header', () => {
     expect(header.find('span.badge-danger a').text()).toBe("5");
 
     // validate summary
-    console.log(header.html())
     expect(header.exists('.available a[children=84]')).toBe(true); // commitee
     expect(header.exists('.available a[children=6]')).toBe(true); // special
     expect(header.exists('.ready a[children=2]')).toBe(true);
