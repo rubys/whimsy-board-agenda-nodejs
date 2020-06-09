@@ -351,7 +351,7 @@ class Router extends React.Component {
 
       <Route path="/shepherd/:shepherd">
         {({ match: { params: { shepherd } } }) => {
-          let item = {
+          let page = {
             view: Shepherd,
             shepherd,
             next: null,
@@ -366,18 +366,18 @@ class Router extends React.Component {
               let href = `shepherd/${i.shepherd}`;
 
               if (i.shepherd > shepherd) {
-                if (!item.next || item.next.href > href) {
-                  item.next = { title: i.shepherd, href }
+                if (!page.next || page.next.href > href) {
+                  page.next = { title: i.shepherd, href }
                 }
               } else if (i.shepherd < shepherd) {
-                if (!item.prev || item.prev.href < href) {
-                  item.prev = { title: i.shepherd, href }
+                if (!page.prev || page.prev.href < href) {
+                  page.prev = { title: i.shepherd, href }
                 }
               }
             }
           };
 
-          return main(item)
+          return main(page)
         }}
       </Route>
 

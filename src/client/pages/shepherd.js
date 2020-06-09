@@ -1,12 +1,20 @@
 import ActionItems from "../pages/action-items.js";
 import AdditionalInfo from "../elements/additional-info.js";
-import Agenda from "../models/agenda.js";
 import Email from "../buttons/email.js";
 import { Link } from "react-router-dom";
-import Pending from "../models/pending.js";
 import React from "react";
-import User from "../models/user.js";
 import { Server, splitComments, retrieve, post } from "../utils.js";
+import store from '../store';
+import * as Actions from "../../actions.js";
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    user: state.server.user,
+    agenda: state.agenda,
+    agendaFile: state.client.agendaFile
+  }
+};
 
 // A page showing all queued approvals and comments, as well as items
 // that are ready for review.
@@ -15,33 +23,33 @@ class Shepherd extends React.Component {
   state = { disabled: false, followup: [] };
 
   render() {
-    let shepherd = this.props.item.shepherd.toLowerCase();
-    let actions = Agenda.find("Action-Items");
+    let shepherd = this.props.shepherd.toLowerCase();
+    let actions = this.props.agenda["Action-Items"];
 
     let followup = [];
 
     Object.entries(this.state.followup).forEach(([item, title]) => {
       if (item.count !== 1) return;
-      if (item.shepherd !== this.props.item.shepherd) return;
-      if (Agenda.index.some(item => item.title === title)) return;
+      if (item.shepherd !== this.props.shepherd) return;
+      if (Object.values(this.props.agenda).some(item => item.title === title)) return;
       item.title = title;
       followup.push(item)
     });
 
     return <>
-      {actions.actions.some(action => action.owner === this.props.item.shepherd) ? <>
+      {actions.actions.some(action => action.owner === this.props.shepherd) ? <>
         <h2>Action Items</h2>
-        <ActionItems item={actions} filter={{ owner: this.props.item.shepherd }} />
+        <ActionItems item={actions} filter={{ owner: this.props.shepherd }} />
       </> : null}
 
       <h2>Committee Reports</h2>
 
-      {Agenda.index.map((item) => {
-        let mine = shepherd === User.firstname ? "btn-primary" : "btn-link";
+      {Object.values(this.props.agenda).map((item) => {
+        let mine = shepherd === this.props.user.firstname ? "btn-primary" : "btn-link";
 
         if (item.shepherd && item.shepherd.toLowerCase().startsWith(shepherd)) return <>
-          <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.color}`}>{item.title}</Link>;
-          <AdditionalInfo item={item} prefix={true} />;
+          <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.color}`}>{item.title}</Link>
+          <AdditionalInfo item={item} prefix={true} />
 
           {item.missing || item.comments.length !== 0 ?
             /^[A-Z]+$/m.test(item.attach) ?
@@ -75,7 +83,7 @@ class Shepherd extends React.Component {
   };
 
   // Fetch followup items
-  mounted() {
+  componentDidMount() {
     // if cached, reuse
     if (Shepherd.followup) {
       this.setState({ followup: Shepherd.followup });
@@ -86,34 +94,31 @@ class Shepherd extends React.Component {
     let prior_agenda = Server.agendas[Server.agendas.length - 2];
     if (!prior_agenda) return;
 
-    let $prior_date = (prior_agenda.match(/\d+_\d+_\d+/) || [])[0].replace(
-      /_/g,
-      "-"
-    );
+    let prior_date = prior_agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-");
 
-    retrieve(`../${$prior_date}/followup.json`, "json", (followup) => {
+    retrieve(`../${prior_date}/followup.json`, "json", followup => {
       Shepherd.followup = followup;
-      this.setState({ followup: followup })
+      if (followup) this.setState({ followup })
     });
 
-    this.setState({ prior_date: $prior_date })
+    this.setState({ prior_date })
   };
 
   click = event => {
     let data = {
-      agenda: Agenda.file,
-      initials: User.initials,
+      agenda: Object.values(this.props.agendaFile),
+      initials: this.props.user.initials,
       attach: event.target.getAttribute("data-attach"),
       request: event.target.textContent
     };
 
     this.setState({ disabled: true });
 
-    post("approve", data, (pending) => {
+    post("approve", data, pending => {
+      store.dispatch(Actions.postServer({ pending }))
       this.setState({ disabled: false });
-      Pending.load(pending)
     })
   }
 };
 
-export default Shepherd
+export default connect(mapStateToProps)(Shepherd)
