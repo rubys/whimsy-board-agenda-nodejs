@@ -25,7 +25,7 @@ describe('filters', () => {
       </Provider>
     );
 
-    let text = report.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = report.find('Text span').prop('dangerouslySetInnerHTML').__html;
 
     expect(text).toContain("<a href='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0001'>CVE-2020-0001</a>")
   });
@@ -43,7 +43,7 @@ describe('filters', () => {
       </MemoryRouter>
     );
 
-    let text = report.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = report.find('Text span').prop('dangerouslySetInnerHTML').__html;
 
     expect(text).toContain("<a href='http://s.apache.org/EjO'>");
   });
@@ -61,7 +61,7 @@ describe('filters', () => {
       </MemoryRouter>
     );
 
-    let text = report.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = report.find('Text span').prop('dangerouslySetInnerHTML').__html;
 
     expect(text).toContain("<span class='hilite'>Local Time: ");
   });
@@ -80,7 +80,7 @@ describe('filters', () => {
       </MemoryRouter>
     );
 
-    let text = rollCall.find('Text span').props().dangerouslySetInnerHTML.__html;
+    let text = rollCall.find('Text span').prop('dangerouslySetInnerHTML').__html;
 
     expect(text).toContain("<a href='/roster/committer/rubys'>");
     expect(text).toContain("<b>Sam Ruby</b>");

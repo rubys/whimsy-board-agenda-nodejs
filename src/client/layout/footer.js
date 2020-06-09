@@ -86,7 +86,7 @@ class PrevLink extends React.Component {
       prefix = "/flagged/";
 
       while (link && link.status.skippable) {
-        if (/^\d[A-Z]/m.test(link.attach)) {
+        if (/^\d+[A-Z]*$/m.test(link.attach)) {
           prefix = "/";
           break
         } else {
