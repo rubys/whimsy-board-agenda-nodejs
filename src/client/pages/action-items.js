@@ -162,7 +162,7 @@ class ActionItems extends React.Component {
           };
 
           return $_
-        })())};
+        })())}
 
         {!first ? <ModalDialog id="updateStatusForm" color="commented">
           <h4>Update Action Item</h4>

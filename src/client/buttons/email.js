@@ -28,13 +28,13 @@ class Email extends React.Component {
   // render 'send email' as a primary button if the viewer is the shepherd for
   // the report, otherwise render the text as a simple link.
   mailto_class() {
-    if (this.props.user.firstname && this.props.item.shepherd && this.props.user.firstname.startsWith(this.props.item.shepherd.toLowerCase())) {
+    if (this.props.user?.firstname && this.props.item.shepherd && this.props.user?.firstname.startsWith(this.props.item.shepherd.toLowerCase())) {
       if (this.props.item.missing && Posted.get(this.props.item.title).length !== 0) {
         return "btn-link"
       } else {
         return "btn-primary"
       }
-    } else if (this.props.item.owner === this.props.user.username && !this.props.item.missing && this.props.item.comments.length === 0) {
+    } else if (this.props.item.owner === this.props.user?.username && !this.props.item.missing && this.props.item.comments.length === 0) {
       return "btn-primary"
     } else {
       return "btn-link"

@@ -36,7 +36,7 @@ class Shepherd extends React.Component {
       followup.push(item)
     });
 
-    return <>
+    return <div className="container">
       {actions.actions.some(action => action.owner === this.props.shepherd) ? <>
         <h2>Action Items</h2>
         <ActionItems item={actions} filter={{ owner: this.props.shepherd }} />
@@ -48,10 +48,10 @@ class Shepherd extends React.Component {
         let mine = shepherd === this.props.user.firstname ? "btn-primary" : "btn-link";
 
         if (item.shepherd && item.shepherd.toLowerCase().startsWith(shepherd)) return <>
-          <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.color}`}>{item.title}</Link>
+          <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.status.color}`}>{item.title}</Link>
           <AdditionalInfo item={item} prefix={true} />
 
-          {item.missing || item.comments.length !== 0 ?
+          {item.missing || item.comments?.length ?
             /^[A-Z]+$/m.test(item.attach) ?
               <div className="shepherd">
                 <button className={"btn " + mine} data_attach={item.attach} onClick={this.click} disabled={this.state.disabled}>{item.flagged ? "unflag" : "flag"}</button>
@@ -79,7 +79,7 @@ class Shepherd extends React.Component {
           </>;
         })}
       </> : null}
-    </>
+    </div>
   };
 
   // Fetch followup items
