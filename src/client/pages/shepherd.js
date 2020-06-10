@@ -47,7 +47,7 @@ class Shepherd extends React.Component {
       {Object.values(this.props.agenda).map((item) => {
         let mine = shepherd === this.props.user.firstname ? "btn-primary" : "btn-link";
 
-        if (item.shepherd && item.shepherd.toLowerCase().startsWith(shepherd)) return <>
+        if (item.shepherd && item.shepherd.toLowerCase().startsWith(shepherd)) return <React.Fragment key={item.href}>
           <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.status.color}`}>{item.title}</Link>
           <AdditionalInfo item={item} prefix={true} />
 
@@ -59,7 +59,7 @@ class Shepherd extends React.Component {
               </div>
               : null
             : null}
-        </>;
+        </React.Fragment>;
 
         return null
       })}

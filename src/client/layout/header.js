@@ -41,6 +41,16 @@ class Header extends React.Component {
 
     let color = this.props.color || this.props.item?.status.color || 'blank';
 
+    // find shortest shepherd (for example, "Rich")
+    let shepherd = null;
+    let firstname = user.firstname.toLowerCase();
+
+    for (let item of Object.values(this.props.agenda)) {
+      if (item.shepherd && firstname.startsWith(item.shepherd.toLowerCase()) && (!shepherd || item.shepherd.length < shepherd.lenth)) {
+        shepherd = item.shepherd
+      }
+    };
+
     return <header className={`navbar fixed-top ${color}`}>
       <div className="navbar-brand">{props.title}</div>
 
@@ -145,8 +155,8 @@ class Header extends React.Component {
               <Link to="/comments">Comments</Link>
             </li>
 
-            {user.role === 'director' ? <li>
-              <Link id="shepherd" to={`/shepherd/${user.firstname}`}>Shepherd</Link>
+            {shepherd ? <li>
+              <Link id="shepherd" to={`/shepherd/${shepherd}`}>Shepherd</Link>
             </li> : null}
 
             <li>
