@@ -15,7 +15,7 @@ describe('header', () => {
   it('should show an index page without pending actions', async () => {
     store.dispatch(Actions.postServer({
       pending: { approved: [], unapproved: [], flagged: [], unflagged: [], comments: {} },
-      user: { userid: 'rubys' }
+      user: { userid: 'rubys', firstname: 'Sam' }
     }));
 
     let agenda = await Agenda.read('board_agenda_2015_01_21.txt');
@@ -38,7 +38,7 @@ describe('header', () => {
   it('should show an index page with pending actions', async () => {
     store.dispatch(Actions.postServer({
       pending: await Pending.read(),
-      user: { userid: 'rubys' }
+      user: { userid: 'rubys', firstname: 'Sam' }
     }));
 
     let agenda = await Agenda.read('board_agenda_2015_02_18.txt');
