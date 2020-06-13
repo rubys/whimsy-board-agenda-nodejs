@@ -56,7 +56,8 @@ let history = null;
 
 export function navigate(path, query) {
   let base = document.getElementsByTagName('base')[0].href;
-  if (path[0] !== '/') path = new URL(path, base).href.slice(base.length - 1);
+  let basePath = '/' + base.split('/').slice(3).join('/');
+  if (path.startsWith(basePath)) path = path.slice(basePath.length - 1);
   history.push(path, { path, query });
 }
 

@@ -10,11 +10,11 @@ import * as Actions from '../../../actions.js';
 jest.mock('../../../server/svn.js');
 jest.mock('../../../server/sources/pending.js');
 
-function renderFooter(item, traversal="") {
+function renderFooter(item, traversal = "") {
   return mount(
     <MemoryRouter>
       <Provider store={store}>
-        <Footer item={store.getState().agenda[item]} traversal={traversal}/>
+        <Footer item={store.getState().agenda[item]} traversal={traversal} />
       </Provider>
     </MemoryRouter>
   )
@@ -74,5 +74,25 @@ describe('footer', () => {
     let changeGeronimoChair = renderFooter('Change-Geronimo-Chair');
     expect(changeGeronimoChair.find('a.backlink').prop('href')).toBe('/flagged/Xerces');
     expect(changeGeronimoChair.find('a.nextlink').prop('href')).toBe('/Change-ServiceMix-Chair');
+  });
+
+  it('should support "shepherd" traversal', async () => {
+    let agenda = await Agenda.read('board_agenda_2015_02_18.txt');
+    store.dispatch(Actions.postAgenda(agenda));
+
+    // first of Sam's shepherd reports
+    let ace = renderFooter('ACE', 'shepherd');
+    expect(ace.find('a.backlink').prop('href')).toBe('/shepherd/Sam');
+    expect(ace.find('a.nextlink').prop('href')).toBe('/shepherd/queue/Axis');
+
+    // report in the middle of Sam's shepherd list
+    let mesos = renderFooter('Mesos', 'shepherd');
+    expect(mesos.find('a.backlink').prop('href')).toBe('/shepherd/queue/Hama');
+    expect(mesos.find('a.nextlink').prop('href')).toBe('/shepherd/queue/Oozie');
+
+    // report in the end of Sam's shepherd list
+    let velocity = renderFooter('Velocity', 'shepherd');
+    expect(velocity.find('a.backlink').prop('href')).toBe('/shepherd/queue/Perl');
+    expect(velocity.find('a.nextlink').prop('href')).toBe('/shepherd/Sam');
   });
 });
