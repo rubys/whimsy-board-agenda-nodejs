@@ -46,6 +46,31 @@ describe('footer', () => {
     expect(adjournment.exists('a.nextlink')).toBe(false);
   });
 
+  it('should support "queue" traversal', async () => {
+    store.dispatch(Actions.postServer({
+      pending: { approved: [], unapproved: [], flagged: [], unflagged: [], comments: {} },
+      user: { userid: 'gstein', firstname: 'Greg', initials: 'gs' }
+    }));
+    
+    let agenda = await Agenda.read('board_agenda_2015_02_18.txt');
+    store.dispatch(Actions.postAgenda(agenda));
+
+    // first of Greg's pending reports
+    let ace = renderFooter('January-21-2015', 'queue');
+    expect(ace.find('a.backlink').prop('href')).toBe('/queue');
+    expect(ace.find('a.nextlink').prop('href')).toBe('/queue/BookKeeper');
+
+    // report in the middle of Greg's pending list
+    let mesos = renderFooter('Creadur', 'queue');
+    expect(mesos.find('a.backlink').prop('href')).toBe('/queue/BookKeeper');
+    expect(mesos.find('a.nextlink').prop('href')).toBe('/queue/Incubator');
+
+    // report in the end of Gregs's pending list
+    let velocity = renderFooter('Tomcat', 'queue');
+    expect(velocity.find('a.backlink').prop('href')).toBe('/queue/Incubator');
+    expect(velocity.find('a.nextlink').prop('href')).toBe('/queue');
+  });
+
   it('should support "flagged" traversal', async () => {
     let agenda = await Agenda.read('board_agenda_2015_02_18.txt');
     store.dispatch(Actions.postAgenda(agenda));

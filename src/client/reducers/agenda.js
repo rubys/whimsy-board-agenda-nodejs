@@ -129,7 +129,7 @@ export default function reduce(state = null, action) {
       }
 
       for (let item of Object.values(state)) {
-        let newStatus = status(item, { pending: attachments[item.attach] });
+        let newStatus = status(item, { pending: attachments[item.attach] || {} });
         if (item.status !== newStatus) state = { ...state, [item.href]: { ...item, status: newStatus } }
       }
 
@@ -174,7 +174,7 @@ function status(item, updates) {
     }
   }
 
-  if (status !== item.status) {
+  if ( status !== item.status) {
     // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
     let flaggedByMe = status.flagged_by?.includes(user.initials);
     status.flagged =
@@ -188,9 +188,9 @@ function status(item, updates) {
       + (!approvedByMe && status.pending?.approve ? +1 : 0)
       + (approvedByMe && status.pending?.unapprove ? -1 : 0) >= 5;
 
-    // ready for review reports are present and not yet approved or flagged  
+    // ready for review reports are present and not yet approved or flagged by me
     if ('approved_by' in status) {
-      status.ready_for_review = !status.missing && !status.pending?.approved && !status.pending?.flagged
+      status.ready_for_review = !status.missing
         && (!approvedByMe || status.pending?.unapproved)
         && (!flaggedByMe || status.pending?.unflagged);
     }
