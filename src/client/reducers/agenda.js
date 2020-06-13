@@ -192,7 +192,7 @@ function status(item, updates) {
     if ('approved_by' in status) {
       status.ready_for_review = !status.missing && !status.pending?.approved && !status.pending?.flagged
         && (!approvedByMe || status.pending?.unapproved)
-        && (!flaggedByMe || status.pending.unflagged);
+        && (!flaggedByMe || status.pending?.unflagged);
     }
 
     // items are skippable if they are preapproved and not flagged  

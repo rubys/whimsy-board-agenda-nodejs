@@ -48,7 +48,7 @@ class Shepherd extends React.Component {
         let mine = shepherd === this.props.user.firstname ? "btn-primary" : "btn-link";
 
         if (item.shepherd && item.shepherd.toLowerCase().startsWith(shepherd)) return <React.Fragment key={item.href}>
-          <Link to={`shepherd/queue/${item.href}`} className={`h3 ${item.status.color}`}>{item.title}</Link>
+          <Link to={`/shepherd/queue/${item.href}`} className={`h3 ${item.status.color}`}>{item.title}</Link>
           <AdditionalInfo item={item} prefix={true} />
 
           {item.missing || item.comments?.length ?

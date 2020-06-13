@@ -72,15 +72,17 @@ class PrevLink extends React.Component {
 
       link = link || { href: "/queue", title: "Queue" }
     } else if (traversal === "shepherd") {
-      prefix = "/shepherd/queue/";
-
       while (link && link.shepherd !== item.shepherd) {
         link = agenda[link.prev]
       };
 
-      link = link || {
-        href: `/${item.shepherd}`,
-        title: "Shepherd"
+      if (link) {
+        prefix = "/shepherd/queue/";
+      } else {
+        link = {
+          href: `shepherd/${item.shepherd}`,
+          title: "Shepherd"
+        }
       }
     } else if (traversal === "flagged") {
       prefix = "/flagged/";
@@ -141,9 +143,13 @@ class NextLink extends React.Component {
         link = agenda[link.next]
       };
 
-      link = link || {
-        href: `/shepherd/${item.shepherd}`,
-        title: "/shepherd"
+      if (link) {
+        prefix = "/shepherd/queue/";
+      } else {
+        link = {
+          href: `shepherd/${item.shepherd}`,
+          title: "Shepherd"
+        }
       }
     } else if (traversal === "flagged") {
       prefix = "/flagged/";
