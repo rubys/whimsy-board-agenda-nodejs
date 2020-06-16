@@ -284,8 +284,8 @@ class Router extends React.Component {
       </Route>
 
       <Route exact path="/search">
-        {({ history: { location: { search } } }) => (
-          main({ view: Search, query: search })
+        {({ history: { location: { query } } }) => (
+          main({ view: Search, query })
         )}
       </Route>
 
