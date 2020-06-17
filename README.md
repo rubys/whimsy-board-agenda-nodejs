@@ -4,7 +4,7 @@
 
 To run this, pick from the following:
 
-* [Docker](./Dockerfile)
+* [Docker](./docker-compose.yml)
 * [MacOS](./MACOSX.md)
 * [Linux](./LINUX.md)
 * [Windows](./WINDOWS.md)

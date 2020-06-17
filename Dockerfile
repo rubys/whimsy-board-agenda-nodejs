@@ -24,7 +24,12 @@
 # Changes to the source files should be taken into 
 # account within a few seconds.
 
-FROM node:14.0.0-alpine3.11
+FROM node:14.0.0-alpine3.11 AS whimsy-board-agenda-base
 RUN apk --no-cache add subversion
 WORKDIR /whimsy-board-agenda
+
+FROM whimsy-board-agenda-base AS whimsy-board-agenda-dev
+COPY package.json yarn.lock /whimsy-board-agenda/
+RUN yarn install --frozen-lockfile
 CMD yarn dev
+

@@ -1,0 +1,32 @@
+# To run a development copy of the whimsy-board-agenda tool
+#
+# docker-compose up --detach --build
+#
+# Then open http://localhost:3000
+#
+# Changes to the source files should be taken into 
+# account within a few seconds.
+version: '3.4'
+
+services:
+  whimsy-board-agenda:
+    image: whimsy-board-agenda-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: whimsy-board-agenda-dev
+
+    volumes:
+      - type: bind
+        source: ./
+        target: /whimsy-board-agenda/
+        consistency: cached
+      - type: volume
+        source: node_modules
+        target: /whimsy-board-agenda/node_modules/
+
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  node_modules:
