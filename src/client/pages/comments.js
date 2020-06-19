@@ -1,4 +1,3 @@
-import Agenda from "../models/agenda.js";
 import { Link } from "react-router-dom";
 import MarkSeen from "../buttons/markseen.js";
 import Pending from "../models/pending.js";
@@ -8,6 +7,7 @@ import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
+    agenda: state.agenda,
     pending: state.server.pending
   }
 };
@@ -16,11 +16,13 @@ function mapStateToProps(state) {
 // A page showing all comments present across all agenda items
 // Conditionally hide comments previously marked as seen.
 //
+// TODO: buttons, showseen (default to false)
+
 class Comments extends React.Component {
-  static get buttons() {
+  static get xbuttons() {
     let buttons = [];
 
-    if (MarkSeen.undo || Agenda.index.some(item => !item.unseen_comments.empty)) {
+    if (MarkSeen.undo || Object.values(this.props.agenda).some(item => !item.unseen_comments.empty)) {
       buttons.push({ button: MarkSeen })
     };
 
@@ -31,7 +33,7 @@ class Comments extends React.Component {
     return buttons
   };
 
-  state = { showseen: false };
+  state = { showseen: true };
 
   toggleseen() {
     this.setState({ showseen: !this.state.showseen })
@@ -41,16 +43,16 @@ class Comments extends React.Component {
     let found = false;
 
     return <>
-      {Agenda.index.map((item) => {
-        if (item.comments.length === 0) return null;
+      {Object.values(this.props.agenda).map(item => {
+        if (!item.comments?.length) return null;
         let visible = this.state.showseen ? item.comments : item.unseen_comments;
 
-        if (visible.length !== 0) {
+        if (visible?.length) {
           found = true;
 
-          return <section>
+          return <section key={item.href}>
             <Link to={item.href} className={`h4 ${item.color}`}>{item.title}</Link>
-            {visible.map(comment => <pre className="comment">{comment}</pre>)}
+            {visible.map(comment => <pre className="comment" key={comment}>{comment}</pre>)}
           </section>
         } else {
           return null
