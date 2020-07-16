@@ -45,4 +45,4 @@ update themselves when this data changes.
 Once you launch the agenda, pressing "D" will bring you to a page where you
 can access developer tools, documentation, and from there, a demo.
 
-The [walk-throughs](.docs/walkthrough) are also available via GitHub.
+The [walk-throughs](./docs/walkthrough) are also available via GitHub.
