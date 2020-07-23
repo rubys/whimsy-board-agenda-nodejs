@@ -24,6 +24,9 @@ just fine.
 
 Download and install [Node](https://nodejs.org/en/download/).
 
+Optional: Check the checkbox for Tools for Native Modules.  Doing so
+will require a reboot.
+
 # Visual Studio Code
 
 Download and install [Visual Studio Code](https://code.visualstudio.com/download)
