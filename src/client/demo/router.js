@@ -12,7 +12,7 @@ import ComponentProps from './component-props.js';
 import ConnectStore from './connect-store.js';
 import Conclusion from './conclusion.js';
 
-export default function (props) {
+export default function router(props) {
   let { main } = props;
 
   return <Switch>

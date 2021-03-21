@@ -9,6 +9,11 @@ import jQuery from "jquery";
 
 jest.mock('../../../server/svn.js');
 
+jest.mock('../../utils.js', () => ({
+  ...jest.requireActual('../../utils.js'),
+  retrieve: jest.fn(),
+}));
+
 describe('post form', () => {
   it('should perform a reflow', async () => {
     // load server state
