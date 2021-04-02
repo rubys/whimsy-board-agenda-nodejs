@@ -1,6 +1,6 @@
 import React from 'react';
 import Comments from '../comments.js';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import * as Agenda from '../../../server/sources/agenda.js';
 import store from '../../store.js';
 import * as Actions from '../../../actions.js';
@@ -13,17 +13,22 @@ it("should support comments", async () => {
     let agenda = await Agenda.read('board_agenda_2015_01_21.txt');
     store.dispatch(Actions.postAgenda(agenda));
 
-    const comments = mount(
+    let container = document.createElement('div');
+
+    let { getByText } = render(
       <MemoryRouter>
         <Provider store={store}>
           <Comments/>
         </Provider>
-      </MemoryRouter>);
+      </MemoryRouter>,
+      { container }
+    );
   
     // unseen items
-    expect(comments.find("a.h4").at(10).text()).toBe("Curator");  
-    expect(comments.find('pre').at(22).text()).toMatch(/last PMC member and committer additions/);
+    expect(container.querySelectorAll("a.h4")[10].textContent).toBe("Curator");  
+    expect(container.querySelectorAll('pre')[22].textContent).toMatch(/last PMC member and committer additions/);
 
+     
     /*
   
     // seen items
