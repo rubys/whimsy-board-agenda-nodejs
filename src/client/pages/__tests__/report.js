@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import store from '../../store.js';
 import { Provider } from 'react-redux';
 import Report from '../report.js';
@@ -19,15 +19,20 @@ describe('filters', () => {
       status: {}
     }
 
-    const report = mount(
-      <Provider store={store}>
-        <Report item={item} />
-      </Provider>
+    let container = document.createElement('div');
+
+    render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Report item={item} />
+        </Provider>
+      </MemoryRouter>,
+      { container }
     );
 
-    let text = report.find('Text span').prop('dangerouslySetInnerHTML').__html;
+    let text = container.querySelector('pre.report').innerHTML;
 
-    expect(text).toContain("<a href='https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0001'>CVE-2020-0001</a>")
+    expect(text).toContain('<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0001">CVE-2020-0001</a>')
   });
 
   it('converts http addresses to links', async () => {
@@ -35,17 +40,20 @@ describe('filters', () => {
     store.dispatch(Actions.postAgenda(agenda));
     let item = store.getState().agenda.Clerezza;
 
-    const report = mount(
+    let container = document.createElement('div');
+
+    render(
       <MemoryRouter>
         <Provider store={store}>
           <Report item={item} />
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
+      { container }
     );
 
-    let text = report.find('Text span').prop('dangerouslySetInnerHTML').__html;
+    let text = container.querySelector('pre.report').innerHTML;
 
-    expect(text).toContain("<a href='http://s.apache.org/EjO'>");
+    expect(text).toContain('<a href="http://s.apache.org/EjO">');
   });
 
   it('converts start time to local time on call to order', async () => {
@@ -53,17 +61,20 @@ describe('filters', () => {
     store.dispatch(Actions.postAgenda(agenda));
     let item = store.getState().agenda['Call-to-order'];
 
-    const report = mount(
+    let container = document.createElement('div');
+
+    render(
       <MemoryRouter>
         <Provider store={store}>
           <Report item={item} />
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
+      { container }
     );
 
-    let text = report.find('Text span').prop('dangerouslySetInnerHTML').__html;
+    let text = container.querySelector('pre.report').innerHTML;
 
-    expect(text).toContain("<span class='hilite'>Local Time: ");
+    expect(text).toContain('<span class="hilite">Local Time: ');
   });
 
 
@@ -72,19 +83,22 @@ describe('filters', () => {
     store.dispatch(Actions.postAgenda(agenda));
     let item = store.getState().agenda['Roll-Call'];
 
-    const rollCall = mount(
+    let container = document.createElement('div');
+
+    render(
       <MemoryRouter>
         <Provider store={store}>
           <Report item={item} />
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
+      { container }
     );
 
-    let text = rollCall.find('Text span').prop('dangerouslySetInnerHTML').__html;
+    let text = container.querySelector('pre.report').innerHTML;
 
-    expect(text).toContain("<a href='/roster/committer/rubys'>");
-    expect(text).toContain("<b>Sam Ruby</b>");
-    expect(text).toContain("<a href='/roster/committer/?q=Unknown Name'>");
-    expect(text).toContain("<span class='commented'>Unknown Name</span>");
+    expect(text).toContain('<a href="/roster/committer/rubys">');
+    expect(text).toContain('<b>Sam Ruby</b>');
+    expect(text).toContain('<a href="/roster/committer/?q=Unknown Name">');
+    expect(text).toContain('<span class="commented">Unknown Name</span>');
   });
 });

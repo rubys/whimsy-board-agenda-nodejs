@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
 import store from '../../store.js';
 import { Provider } from 'react-redux';
 import Index from '../index.js';
@@ -14,29 +14,34 @@ describe('index page', () => {
     let agenda = await Agenda.read('board_agenda_2015_02_18.txt');
     store.dispatch(Actions.postAgenda(agenda));
 
-    const index = mount(
+    let container = document.createElement('div');
+
+    let { getByText, getAllByText } = render(
       <MemoryRouter>
         <Provider store={store}>
           <Index />
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
+      { container }
     );
 
     // rows with colors and titles
-    expect(index.exists('tr.missing td a[children="Abdera"]')).toBe(true);
-    expect(index.exists('tr.reviewed td a[children="Buildr"]')).toBe(true);
-    expect(index.exists('tr.reviewed td a[children="Celix"]')).toBe(true);
-    expect(index.exists('tr.commented td a[children="Lenya"]')).toBe(true);
+    expect(getByText('Abdera').closest('tr')).toHaveClass('missing');
+    expect(getByText('Buildr').closest('tr')).toHaveClass('reviewed');
+    expect(getByText('Celix').closest('tr')).toHaveClass('reviewed');
+    expect(getByText('Lenya').closest('tr')).toHaveClass('commented');
 
     // attach, owner, shepherd columns
-    expect(index.exists('tr.reviewed td[children="CF"]')).toBe(true);
-    expect(index.exists('tr.reviewed td[children="Mark Cox"]')).toBe(true);
-    expect(index.exists('tr.missing td a[children="Sam"]')).toBe(true);
-    expect(index.find('tr').at(10).find('td').at(1).text()).toBe('Executive Assistant');
-    expect(index.find('tr').at(10).find('td').at(3).text()).toBe('Ross');
+    expect(getByText('CF').closest('tr')).toHaveClass('reviewed');
+    expect(getByText('Mark Cox').closest('tr')).toHaveClass('reviewed');
+    expect(getAllByText('Sam')[4].closest('tr')).toHaveClass('missing');
+    expect(container.querySelectorAll('tr')[10].
+      querySelectorAll('td')[1].textContent).toBe('Executive Assistant');
+    expect(container.querySelectorAll('tr')[10].
+      querySelectorAll('td')[3].textContent).toBe('Ross');
 
     // links, flagged and unflagged
-    expect(index.find('a[children="Abdera"]').prop('href')).toBe('/flagged/Abdera');
-    expect(index.find('a[children="ACE"]').prop('href')).toBe('/ACE');
+    expect(getByText('Abdera')).toHaveAttribute('href', '/flagged/Abdera');
+    expect(getByText('ACE')).toHaveAttribute('href', '/ACE');
   });
 });
