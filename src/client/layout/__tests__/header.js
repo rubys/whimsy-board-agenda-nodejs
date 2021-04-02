@@ -1,6 +1,7 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { render } from '@testing-library/react';
+import { within } from '@testing-library/dom';
 import store from '../../store.js';
 import { Provider } from 'react-redux';
 import Header from '../header.js';
@@ -21,18 +22,21 @@ describe('header', () => {
     let agenda = await Agenda.read('board_agenda_2015_01_21.txt');
     store.dispatch(Actions.postAgenda(agenda));
 
-    const header = mount(
+    let container = document.createElement('div');
+
+    render(
       <MemoryRouter>
         <Provider store={store}>
           <Header title="2015-01-21"/>
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
+      { container }
     );
 
     // validate title, lack of pending count
-    expect(header.find('.navbar.fixed-top.blank .navbar-brand').text())
+    expect(container.querySelector('.navbar.fixed-top.blank .navbar-brand').textContent)
       .toBe('2015-01-21');
-    expect(header.exists('span.badge-danger a')).toBe(false);
+    expect(container.querySelector('span.badge-danger a')).toBe(null);
   });
 
   it('should show an index page with pending actions', async () => {
@@ -44,29 +48,37 @@ describe('header', () => {
     let agenda = await Agenda.read('board_agenda_2015_02_18.txt');
     store.dispatch(Actions.postAgenda(agenda));
 
-    const header = mount(
+    let container = document.createElement('div');
+
+    render(
       <MemoryRouter>
         <Provider store={store}>
           <Header title="2015-02-18"/>
         </Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
+      { container }
     );
 
     // validate title, lack of pending count
-    expect(header.find('.navbar.fixed-top.blank .navbar-brand').text())
+    expect(container.querySelector('.navbar.fixed-top.blank .navbar-brand').textContent)
       .toBe('2015-02-18');
-    expect(header.find('span.badge-danger a').text()).toBe("5");
+    expect(container.querySelector('span.badge-danger a').textContent).toBe("5");
 
     // validate summary
-    expect(header.exists('.available a[children=84]')).toBe(true); // commitee
-    expect(header.exists('.available a[children=6]')).toBe(true); // special
-    expect(header.exists('.ready a[children=2]')).toBe(true);
-    expect(header.exists('.commented a[children=1]')).toBe(true);
-    expect(header.exists('.missing a[children=19]')).toBe(true);
+    function summaryCount(label) {
+     return within(container).getByText(label).
+       closest('tr').querySelector('td a').textContent
+    }
+
+    expect(summaryCount('committee reports')).toBe('84');
+    expect(summaryCount('special orders')).toBe('6');
+    expect(summaryCount('awaiting preapprovals')).toBe('2');
+    expect(summaryCount('flagged report')).toBe('1');
+    expect(summaryCount('missing reports')).toBe('19');
 
     // validate navidation
-    expect(header.find('a#agenda').text()).toBe('Agenda');
-    expect(header.find('a[children="Committee Reports"]').prop('href')).toBe('/Abdera');
-    expect(header.find('a[children="Special Orders"]').prop('href')).toBe('/Change-Geronimo-Chair');
+    expect(container.querySelector('a#agenda').textContent).toBe('Agenda');
+    expect(within(container).getByText("Committee Reports")).toHaveAttribute('href', '/Abdera');
+    expect(within(container).getByText("Special Orders")).toHaveAttribute('href', '/Change-Geronimo-Chair');
   });
 });
