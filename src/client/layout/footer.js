@@ -116,8 +116,8 @@ class PrevLink extends React.Component {
       let color = link?.status?.color || 'blank';
 
       return prefix === '/' && link.href.startsWith('../')
-        ? <a className={`navbar-brand backlink ${color}`} rel="prev" href={link.href}>{link.title}</a>
-        : <Link className={`navbar-brand backlink ${color}`} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
+        ? <a aria-label='prev' className={`navbar-brand backlink ${color}`} rel="prev" href={link.href}>{link.title}</a>
+        : <Link aria-label='prev' className={`navbar-brand backlink ${color}`} rel="prev" to={`${prefix}${link.href}`}>{link.title}</Link>
     } else if (item?.prev || item?.next) {
       return <a className="navbar-brand" />
     } else {
@@ -184,8 +184,8 @@ class NextLink extends React.Component {
       let color = link?.status?.color || 'blank';
 
       return prefix === '/' && link.href.startsWith('../')
-        ? <a className={`navbar-brand nextlink ${color}`} rel="next" href={link.href}>{link.title}</a>
-        : <Link className={`navbar-brand nextlink ${color}`} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
+        ? <a aria-label='next' className={`navbar-brand nextlink ${color}`} rel="next" href={link.href}>{link.title}</a>
+        : <Link aria-label='next' className={`navbar-brand nextlink ${color}`} rel="next" to={`${prefix}${link.href}`}>{link.title}</Link>
     } else if (item?.prev || item?.next) {
       return <a className="navbar-brand" />
     } else {
