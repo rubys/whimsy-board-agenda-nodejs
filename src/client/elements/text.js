@@ -1,25 +1,16 @@
-import React from "react";
 import { htmlEscape } from "../utils.js";
 
 //
 // Escape text for inclusion in HTML; optionally apply filters
 //
-class Text extends React.Component {
-  render() {
-    return <span dangerouslySetInnerHTML={{__html: this.text()}}/>
+export default function Text(props) {
+  let text = htmlEscape(props.raw || "");
+
+  if (props.filters) {
+    for (let filter of props.filters) {
+      text = filter(text)
+    }
   };
 
-  text = () => {
-    let result = htmlEscape(this.props.raw || "");
-
-    if (this.props.filters) {
-      for (let filter of this.props.filters) {
-        result = filter(result)
-      }
-    };
-
-    return result
-  }
+  return <span dangerouslySetInnerHTML={{__html: text}}/>
 };
-
-export default Text
