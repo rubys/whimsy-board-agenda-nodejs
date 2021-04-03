@@ -112,13 +112,18 @@ class Header extends React.Component {
                   let href = status.href || status.item?.href
 
                   return <tr className={status.color} key={text}>
-                    <td>
-                      <Link to={href}>{status.count}</Link>
-                    </td>
+                    {href ? <>
+                      <td>
+                        <Link to={href}>{status.count}</Link>
+                      </td>
 
-                    <td>
-                      <Link to={href}>{text}</Link>
-                    </td>
+                      <td>
+                        <Link to={href}>{text}</Link>
+                      </td>
+                    </> : <>
+                      <td>{status.count}</td>
+                      <td>{text}</td>
+                    </>}
                   </tr>
                 })}</tbody>
               </table>
