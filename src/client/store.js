@@ -4,6 +4,7 @@ import agenda from './reducers/agenda.js';
 import client from './reducers/client.js';
 import clockCounter from './reducers/clock-counter.js';
 import historicalComments from './reducers/historical-comments.js';
+import podlingNameSearch from './reducers/podling-name-search.js';
 import reporter from './reducers/reporter.js';
 import responses from './reducers/responses.js';
 import server from './reducers/server.js';
@@ -13,7 +14,10 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-let reducers = { agenda, client, clockCounter, historicalComments, reporter, responses, server };
+let reducers = { 
+  agenda, client, clockCounter, historicalComments,
+  podlingNameSearch, reporter, responses, server
+};
 
 const store = createStore(combineReducers(reducers));
 
