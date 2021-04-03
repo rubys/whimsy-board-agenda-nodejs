@@ -93,6 +93,7 @@ export default async function router(app) {
     if (!file.endsWith(".js")) continue;
     let path = `/api/${file.split('.')[0]}`
     let callback = (await import(`./sources/${file}`)).default;
+    if (!callback) continue;
 
     app.get(path, async (request, response, next) => {
       try {

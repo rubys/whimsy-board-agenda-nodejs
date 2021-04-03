@@ -18,6 +18,7 @@ function Server({ agendas, drafts, env }) {
     '/api/historical-comments',
     '/api/jira',
     ...agendas.map(agenda => `/api/minutes/${agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-")}.json`),
+    '/api/podling-name-search',
     '/api/posted-reports',
     '/api/potential-actions',
     '/api/reporter',
