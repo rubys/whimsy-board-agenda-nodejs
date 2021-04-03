@@ -1,74 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 
-class ComponentProps extends React.Component {
+function ComponentProps() {
+  let [count, setCount] = useState(0);
 
-  state = { count: 0 };
+  function increment() {
+    setCount(count + 1)
+  };
 
-  render() {
-    return <div class="demo container">
-      <h1>Component - Properties</h1>
+  return <div class="demo container">
+    <h1>Component - Properties</h1>
 
-      <p>A React component can pass state as a property to another
-      component.</p>
+    <p>A React component can pass state as a property to another
+    component.</p>
 
-      <p>Modifying the previous example only slightly to introduce a
-      second component:</p>
+    <p>Modifying the previous example only slightly to introduce a
+    second component:</p>
 
-      <pre class="example">
-        <code>{
-          `class Demo extends React.Component {
-  state = { count : 0 };
+    <pre class="example">
+      <code>{
+        `function Demo() {
+  let [count, setCount] = useState(0);
 
-  render() {
-    return <>
-      <button onClick={this.increment}>Increment</button>
-      <DisplayCount count={this.state.count} />
-    </>
+  function increment() {
+    setCount(count + 1)
   }
 
-  increment = () => {
-    setState({ count: this.state.count + 1 })
-  }
+  return <>
+    <button onClick={increment}>Increment</button>
+    <DisplayCount count={count} />
+  </>
 }
 
-class DisplayCount extends React.component {
-  render() {
-    return <p>Current count is: {this.props.count}</p>;
-  }
+function DisplayCount({ count }) {
+  return <p>Current count is: {count}</p>;
 }`
-        }</code>
-      </pre>
+      }</code>
+    </pre>
 
-      <p>In the above, the <tt>Demo</tt> component passes {' '}
-      <tt>this.state.count</tt> as <tt>count</tt> to the {' '}
-      <tt>DisplayCount</tt> component.  The <tt>DisplayCount</tt> {' '}
-      component accesses this value as <tt>this.props.count</tt>.</p>
+    <p>In the above, the <tt>Demo</tt> component passes {' '}
+    <tt>count</tt> as <tt>count</tt> to the {' '}
+    <tt>DisplayCount</tt> component.</p>
 
-      <p>Such a component would render identically as befores:</p>
+    <p>Such a component would render identically as befores:</p>
 
-      <div class="example">
-        <button onClick={this.increment}>Increment</button>
-        <DisplayCount count={this.state.count} />
-      </div>
-
-      <p>Once again, click the button a few times.</p>
-
-      <p>React components are <em>reactive</em> in that they rerender the template
-      any time state <b>or properties</b> are updated.</p>
-
+    <div class="example">
+      <button onClick={increment}>Increment</button>
+      <DisplayCount count={count} />
     </div>
-  }
 
-  increment = () => {
-    this.setState({ count: this.state.count + 1 })
-  }
+    <p>Once again, click the button a few times.</p>
 
+    <p>React components are <em>reactive</em> in that they rerender the template
+    any time state <b>or properties</b> are updated.</p>
+
+  </div>
 }
 
-class DisplayCount extends React.Component {
-  render() {
-    return <p>Current count is: {this.props.count}</p>;
-  }
+function DisplayCount({ count }) {
+  return <p>Current count is: {count}</p>;
 }
 
 export default ComponentProps;

@@ -88,7 +88,7 @@ export default function router(props) {
       {main({
         color: 'docpage',
         view: ConnectStore,
-        title: 'Component Properties',
+        title: 'REDUX Store',
         next: { href: 'demo/conclusion', title: 'Conclusion' },
         prev: { href: 'demo/component-props', title: 'Component Props' },
       })}
