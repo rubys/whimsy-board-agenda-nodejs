@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef} from "react";
 
 //
 // Bootstrap modal dialogs are great, but they require a lot of boilerplate.
@@ -6,7 +6,7 @@ import React from "react";
 // don't have to.  The elements provided by the calling component are
 // distributed to header, body, and footer sections.
 //
-export default function ModalDialog(props) {
+function ModalDialog(props, ref) {
   let header = [];
   let body = [];
   let footer = [];
@@ -57,7 +57,7 @@ export default function ModalDialog(props) {
     }
   };
 
-  return <div className={"fade modal " + props.className} id={props.id}>
+  return <div ref={ref} className={"fade modal " + props.className} id={props.id}>
     <div className="modal-dialog">
       <div className="modal-content">
         <div className={"modal-header " + props.color}>
@@ -85,3 +85,5 @@ function addClass(element, name) {
 
   return element
 }
+
+export default forwardRef(ModalDialog);
