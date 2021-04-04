@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 //
 // An Operating System and shell in dependent launcher of the
 // client (webpack DevServer) and server running in development mode.
