@@ -6,7 +6,7 @@ import { parse, read } from "../sources/agenda.js";
 
 // TODO: add support for posting from reporter.apache.org
 
-export default async function (request) {
+export default async function post(request) {
   let { agenda, message, attach, report, title, digest } = request.body;
 
   // special case for new special orders
@@ -68,7 +68,7 @@ export default async function (request) {
         let discussion = (agenda.match(/ 8\. Discussion Items.*\n 9\./m) || [])[0];
 
         let items = Array.from(
-          discussion.matchAll(/^    ([A-Z]+)\./gm),
+          discussion.matchAll(/^ {4}([A-Z]+)\./gm),
           s => s.slice(1)
         ).flat(Infinity);
 

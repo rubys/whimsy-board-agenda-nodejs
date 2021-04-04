@@ -5,7 +5,7 @@ import * as ldap from "../../ldap.js";
 import CommitteeInfo from "../committee-info.js";
 import { minutesLink } from "../agenda.js";
 
-export default async function (agenda, { request } = {}) {
+export default async function special(agenda, { request } = {}) {
   let orders = agenda.split(/^ \d. Special Orders/ms).pop().split(/^ \d. Discussion Items/ms, 2)[0];
 
   let pattern = /\n+(?<indent>\s{3,5})(?<attach>[A-Z])\.\s(?<title>[^]*?)\n(?<text>[^]*?)(?=\n\s{4}[A-Z]\.\s|$)/sg;

@@ -9,7 +9,7 @@ import moment from 'moment-timezone';
 import { minutesLink } from '../agenda.js';
 import { TIMEZONE } from '../../config.js';
 
-export default async function (agenda) {
+export default async function back(agenda) {
   let pattern = /^(?<attach>(?:\s9|1\d)\.)\s(?<title>.*?)\n(?<text>.*?)(?=\n[\s1]\d\.|\n===)/msg;
 
   let sections = [...agenda.matchAll(pattern)].map(match => match.groups);

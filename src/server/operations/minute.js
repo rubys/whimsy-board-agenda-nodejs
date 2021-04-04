@@ -9,7 +9,7 @@ import * as Agenda from '../sources/agenda.js';
 // Add secretarial minutes to a given agenda item
 //
 
-export default async function (request) {
+export default async function minute(request) {
   let { agenda, action, title, text, reject } = request.body;
 
   if (!/^board_agenda_\d+_\d+_\d+\.txt$/m.test(agenda)) {
@@ -18,20 +18,20 @@ export default async function (request) {
 
   let minutes = await read(agenda, request);
 
-  if (action == "timestamp") {
+  if (action === "timestamp") {
     let timestamp = moment().tz(TIMEZONE);
     text = timestamp.format("HH:MM");
 
-    if (title == "Call to order") {
+    if (title === "Call to order") {
       minutes.started = timestamp.valueOf();
-    } else if (title == "Adjournment") {
+    } else if (title === "Adjournment") {
       minutes.complete = timestamp.valueOf();
     }
-  } else if (action == "attendance") {
+  } else if (action === "attendance") {
     // lazily initialize attendance information
     let attendance = minutes.attendance = minutes.attendance || {};
     let people = Object.values((await Agenda.read(agenda, request))
-      .find(item => item.title == "Roll Call").people);
+      .find(item => item.title === "Roll Call").people);
 
     for (let person of Object.values(people)) {
       attendance[person.name] = attendance[person.name] || { present: false }
@@ -54,7 +54,7 @@ export default async function (request) {
     text = "Directors Present:\n\n";
 
     for (let person of people) {
-      if (person.role != "director") continue;
+      if (person.role !== "director") continue;
       let name = person.name;
       if (!attendance[name].present) continue;
       text += `  ${name}${attendance[name].notes || ''}\n`
@@ -64,7 +64,7 @@ export default async function (request) {
     let first = true;
 
     for (let person of people) {
-      if (person.role != "director") continue;
+      if (person.role !== "director") continue;
       let name = person.name;
       if (attendance[name].present) continue;
       text += `  ${name}${attendance[name].notes || ''}\n`;
@@ -75,7 +75,7 @@ export default async function (request) {
     first = true;
 
     for (let person of people) {
-      if (person.role != "officer") continue;
+      if (person.role !== "officer") continue;
       let name = person.name;
       if (!attendance[name].present) continue;
       if (first) text += "\nExecutive Officers Present:\n\n";
@@ -87,7 +87,7 @@ export default async function (request) {
     first = true;
 
     for (let person of people) {
-      if (person.role != "officer") continue;
+      if (person.role !== "officer") continue;
       let name = person.name;
       if (attendance[name].present) continue;
       text += `  ${name}${attendance[name].notes || ''}\n`;
@@ -99,8 +99,8 @@ export default async function (request) {
 
     for (let [name, records] of Object.entries(attendance).sort((p1, p2) => p1[0].localeCompare(p2[0]))) {
       if (!records.present) continue;
-      let person = people.find(person => person.name == name);
-      if (person?.role != "guest") continue;
+      let person = people.find(person => person.name === name);
+      if (person?.role !== "guest") continue;
       if (first) text += "\nGuests:\n\n";
       text += `  ${name}${attendance[name].notes || ''}\n`;
       first = false
@@ -111,12 +111,12 @@ export default async function (request) {
     text = reflow(text, 0, 78)
   };
 
-  if (text?.length != 0) {
+  if (text?.length !== 0) {
     minutes.items[title] = text
   } else {
     delete minutes.items[title];
-    if (title == "Call to order") delete minutes.started;
-    if (title == "Adjournment") delete minutes.complete
+    if (title === "Call to order") delete minutes.started;
+    if (title === "Adjournment") delete minutes.complete
   };
 
   if (reject) {

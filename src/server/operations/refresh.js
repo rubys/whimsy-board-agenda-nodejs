@@ -4,7 +4,7 @@
 import { reset, Board } from "../svn.js";
 import { read } from "../sources/agenda.js";
 
-export default async function (request) {
+export default async function refresh(request) {
   let { agenda } = request.body;
 
   if (process.env.NODE_ENV === 'development') {

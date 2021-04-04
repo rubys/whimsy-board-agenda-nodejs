@@ -6,7 +6,7 @@ import moment from 'moment-timezone';
 import * as ldap from '../../ldap.js';
 import { TIMEZONE } from '../../config.js';
 
-export default async function (agenda) {
+export default async function front(agenda) {
   let pattern = /^\n\x20(?<attach>[12]\.)\s(?<title>.*?)\n\n+(?<text>.*?)(?=\n\s[23]\.)/msg;
 
   let sections = [...agenda.matchAll(pattern)].map(match => match.groups);

@@ -4,10 +4,10 @@ import * as Agenda from "../sources/agenda.js";
 //
 // Indicate intention to attend / regrets for meeting
 //
-export default async function (request) {
+export default async function attend(request) {
   let { agenda, action, name } = request.body;
 
-  let message = action == "regrets"
+  let message = action === "regrets"
     ? "Regrets for the meeting."
     : "I plan to attend the meeting.";
 
@@ -21,7 +21,7 @@ export default async function (request) {
     if (directors.includes(name)) {
       let updated = directors.replace(new RegExp(`^ .*${name}.*?\\n`, "m"), "");
 
-      if (action == "regrets") {
+      if (action === "regrets") {
         updated = updated
           .replace(/Absent:\n\n.*?\n/, line => `${line.trim()}\n        ${name}\n`)
           .replace(/:\n\n +none\n/, ":\n\n")
@@ -47,7 +47,7 @@ export default async function (request) {
 
       let updated = officers.replace(new RegExp(`^ .*${name}.*?\\n`, "m"), "");
 
-      if (action == "regrets") {
+      if (action === "regrets") {
         updated = updated
           .replace(/Absent:\n\n.*?\n/, line => `${line.trim()}\n        ${name}\n`)
           .replace(/:\n\n +none\n/, ":\n\n")
@@ -60,7 +60,7 @@ export default async function (request) {
 
       rollcall = rollcall.replace(officers, updated)
 
-    } else if (action == "regrets") {
+    } else if (action === "regrets") {
 
       let updated = guests
         .replace(new RegExp(`^ .*${name}.*?\\n`, "m"), "")

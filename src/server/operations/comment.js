@@ -4,7 +4,7 @@ import { update } from '../sources/pending.js'
 // Add comments to an agenda item
 //
 
-export default async function (request) {
+export default async function comment(request) {
   let {agenda, initials, comment, attach} = request.body;
 
   return update(request, agenda, pending => {

@@ -3,7 +3,7 @@
 import CommitteeInfo from "../committee-info.js";
 import md5 from "md5";
 
-export default async function (agenda, { request } = {}) {
+export default async function attachment(agenda, { request } = {}) {
   let pattern = /-{41}\nAttachment\s\s?(?<attach>\w+):\s(?<title>.*?)\n+(?<report>.*?)(?=-{41,}\n(?:End|Attach))/msg;
 
   let sections = [...agenda.matchAll(pattern)].map(match => match.groups);

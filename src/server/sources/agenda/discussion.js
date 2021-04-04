@@ -4,7 +4,7 @@
 
 import { minutesLink } from '../agenda.js';
 
-export default async function (agenda) {
+export default async function discussion(agenda) {
   let discussion = agenda.split(/^ \d. Discussion Items\n/ms).pop().split(/^ \d. .*Action Items/ms)[0];
 
   let sections;

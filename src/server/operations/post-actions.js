@@ -5,7 +5,7 @@ import { Board } from "../svn.js";
 import { reflow } from "../string-utils.js";
 import { parse } from "../sources/agenda.js";
 
-export default async function (request) {
+export default async function postActions(request) {
   let { agenda, message, actions } = request.body;
 
   agenda = await Board.revise(
@@ -23,7 +23,7 @@ export default async function (request) {
         // reflow lines
         let lines = reflow(`* ${action.owner}: ${action.text}`, 0, 78).split("\n");
         text += lines.shift() + "\n";
-        if (lines.length != 0) text += reflow(lines.join("\n"), 6, 72) + "\n";
+        if (lines.length !== 0) text += reflow(lines.join("\n"), 6, 72) + "\n";
 
         // add pmc, date, if present
         if (action.pmc?.toString().length) {
@@ -32,7 +32,7 @@ export default async function (request) {
           } else {
             text += `      [ ${action.pmc} ]\n`
           }
-        } else if (action.date.toString().length != 0) {
+        } else if (action.date.toString().length !== 0) {
           text += `      [ ${action.date} ]\n`
         };
 

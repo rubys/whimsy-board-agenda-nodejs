@@ -14,7 +14,7 @@ describe('roll call', () => {
 
     let { agenda } = await attend(request);
 
-    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    let rollcall = agenda.find(item => item.title === 'Roll Call');
     expect(rollcall.text).toMatch(/Guests.*N\. E\. Member/s);
     expect(rollcall.text).toContain('Shane Curcuru');
   });
@@ -30,7 +30,7 @@ describe('roll call', () => {
 
     let { agenda } = await attend(request);
 
-    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    let rollcall = agenda.find(item => item.title === 'Roll Call');
     expect(rollcall.text).not.toContain('Shane Curcuru');
   });
 
@@ -45,7 +45,7 @@ describe('roll call', () => {
 
     let { agenda } = await attend(request);
 
-    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    let rollcall = agenda.find(item => item.title === 'Roll Call');
     expect(rollcall.text).toMatch(/Directors .* Absent:\s+Sam Ruby/);
   });
 
@@ -60,7 +60,7 @@ describe('roll call', () => {
 
     let { agenda } = await attend(request);
 
-    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    let rollcall = agenda.find(item => item.title === 'Roll Call');
     expect(rollcall.text).toMatch(/Greg Stein\s+Directors .* Absent:/);
   });
 
@@ -75,7 +75,7 @@ describe('roll call', () => {
 
     let { agenda } = await attend(request);
 
-    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    let rollcall = agenda.find(item => item.title === 'Roll Call');
     expect(rollcall.text).toMatch(/Officers .* Present:\s+Craig L Russell/);
     expect(rollcall.text).toMatch(/Officers .* Absent:\s+none/);
   });
@@ -91,7 +91,7 @@ describe('roll call', () => {
 
     let { agenda } = await attend(request);
 
-    let rollcall = agenda.find(item => item.title == 'Roll Call');
+    let rollcall = agenda.find(item => item.title === 'Roll Call');
     expect(rollcall.text).toMatch(/Officers .* Present:\s+none/);
     expect(rollcall.text).toMatch(/Officers .* Absent:\s+Craig L Russell/);
   });

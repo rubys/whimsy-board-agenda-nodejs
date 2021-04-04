@@ -79,7 +79,7 @@ export default async function router(app) {
     }
   });
 
-  app.get('/api/:reminder(reminder[12]|non-responsive)', async (request, response) => {
+  app.get('/api/:reminder(reminder[12]|non-responsive)', async (request, response, next) => {
     try {
       response.json(await reminderText(request));
     } catch (error) {

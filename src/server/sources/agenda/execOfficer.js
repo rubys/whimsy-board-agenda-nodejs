@@ -3,7 +3,7 @@ import md5 from 'md5';
 
 const OFFICER_SEPARATOR = /^\s*4. (Executive )?Officer Reports/m;
 
-export default async function (agenda) {
+export default async function execOfficer(agenda) {
   let reports = agenda.split(OFFICER_SEPARATOR, 3).pop();
   reports = reports.split(/^ 5. (Additional Officer|Committee) Reports/m, 3)[0];
 

@@ -6,7 +6,6 @@ import path from 'path';
 import jwt from 'jwt-simple';
 import crypto from 'crypto';
 import child_process from 'child_process';
-import path from 'path';
 
 // git accepts http[s] credentials in the URL (which is likely
 // to leak in logs), or via a GIT_ASKPASS program.  Such programs

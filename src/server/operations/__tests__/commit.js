@@ -13,16 +13,16 @@ describe('commit changes', () => {
     expect(pending.approved).toContain('7');
     expect(pending.comments['I']).toBe('Nice report!');
 
-    let security = parsed.find(item => item.attach == '9');
+    let security = parsed.find(item => item.attach === '9');
     expect(security.approved).toContain('jt');
 
-    let w3c = parsed.find(item => item.attach == '7');
+    let w3c = parsed.find(item => item.attach === '7');
     expect(w3c.approved).not.toContain('jt');
 
-    let avro = parsed.find(item => item.attach == 'I');
+    let avro = parsed.find(item => item.attach === 'I');
     expect(avro.comments).not.toContain('jt: Nice report!')
 
-    let actions = parsed.find(item => item.title == 'Action Items');
+    let actions = parsed.find(item => item.title === 'Action Items');
     expect(actions.text).not
       .toContain("Clarification provided in this month's report.");
 
@@ -38,16 +38,16 @@ describe('commit changes', () => {
       expect(pending.approved).not.toContain('7');
       expect(pending.comments).not.toContain('I');
 
-      security = agenda.find(item => item.attach == '9');
+      security = agenda.find(item => item.attach === '9');
       expect(security.approved).not.toContain('jt');
 
-      w3c = agenda.find(item => item.attach == '7');
+      w3c = agenda.find(item => item.attach === '7');
       expect(w3c.approved).toContain('jt');
 
-      avro = agenda.find(item => item.attach == 'I');
+      avro = agenda.find(item => item.attach === 'I');
       expect(avro.comments).toContain('jt: Nice report!');
 
-      actions = agenda.find(item => item.title == 'Action Items');
+      actions = agenda.find(item => item.title === 'Action Items');
       expect(actions.text)
         .toContain("Clarification provided in this month's report.");
 

@@ -35,10 +35,10 @@ describe('index page', () => {
     expect(getByText('CF').closest('tr')).toHaveClass('reviewed');
     expect(getByText('Mark Cox').closest('tr')).toHaveClass('reviewed');
     expect(getAllByText('Sam')[4].closest('tr')).toHaveClass('missing');
-    expect(container.querySelectorAll('tr')[10].
-      querySelectorAll('td')[1].textContent).toBe('Executive Assistant');
-    expect(container.querySelectorAll('tr')[10].
-      querySelectorAll('td')[3].textContent).toBe('Ross');
+    expect(container.querySelectorAll('tr')[10]
+      .querySelectorAll('td')[1].textContent).toBe('Executive Assistant');
+    expect(container.querySelectorAll('tr')[10]
+      .querySelectorAll('td')[3].textContent).toBe('Ross');
 
     // links, flagged and unflagged
     expect(getByText('Abdera')).toHaveAttribute('href', '/flagged/Abdera');

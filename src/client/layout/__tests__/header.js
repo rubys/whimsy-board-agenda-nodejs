@@ -1,7 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from '@testing-library/react';
-import { within } from '@testing-library/dom';
+import { render, within } from '@testing-library/react';
 import store from '../../store.js';
 import { Provider } from 'react-redux';
 import Header from '../header.js';
@@ -66,8 +65,8 @@ describe('header', () => {
 
     // validate summary
     function summaryCount(label) {
-     return within(container).getByText(label).
-       closest('tr').querySelector('td a').textContent
+     return within(container).getByText(label)
+       .closest('tr').querySelector('td a').textContent
     }
 
     expect(summaryCount('committee reports')).toBe('84');

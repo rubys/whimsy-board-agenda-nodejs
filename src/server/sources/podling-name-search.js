@@ -24,7 +24,7 @@ export default async function podlingNameSearch() {
       path: '/jira/rest/api/2/search?maxResults=1000&jql=project=PODLINGNAMESEARCH&fields=summary,resolution,customfield_12310521'
     };
 
-    let issues = https.get(options, res => {
+    https.get(options, res => {
       let body = "";
 
       res.on('data', data => {
@@ -48,8 +48,8 @@ export default async function podlingNameSearch() {
 
     // Ignore duplicates and abandoned entries etc.
     // PODLINGNAMESEARCH-9 is resolved as 'Not A Problem': this means it is cleared for use
-    if (!["Fixed", "Unresolved", "Resolved", "Implemented"].includes(resolution) && issue.key != "PODLINGNAMESEARCH-9") {
-      return
+    if (!["Fixed", "Unresolved", "Resolved", "Implemented"].includes(resolution) && issue.key !== "PODLINGNAMESEARCH-9") {
+      return null
     };
 
     let name = issue.fields.customfield_12310521;
@@ -66,14 +66,14 @@ export default async function podlingNameSearch() {
       }
     };
 
-    if (!name) return;
+    if (!name) return null;
     return [name, {issue: issue.key, resolution}]
   });
 
   // drop nulls, sort by name, convert to Object keyed by name
   issues = Object.fromEntries(
-    issues.filter(issue => issue).
-    sort((a, b) => a[0].localeCompare(b[0]))
+    issues.filter(issue => issue)
+    .sort((a, b) => a[0].localeCompare(b[0]))
   );
 
   cache.write(cacheFile, JSON.stringify(issues))

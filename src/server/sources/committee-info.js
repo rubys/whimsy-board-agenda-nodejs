@@ -58,7 +58,7 @@ class CommitteeMap extends Map {
 
 // extract chairs, list of nonpmcs, roster, start date, and reporting
 // information from <tt>committee-info.txt</tt>.
-export default async function (request) {
+export default async function committeeInfo(request) {
   let filename = 'committee-info.txt';
   let mtime = await Committers.mtime(filename, request);
   let cacheFile = filename.replace('.txt', '.json');

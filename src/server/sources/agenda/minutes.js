@@ -2,7 +2,7 @@ import { Board, Minutes } from '../../svn.js'
 
 const OFFICER_SEPARATOR = /^\s*4. (Executive )?Officer Reports/m;
 
-export default async function (agenda, { request }) {
+export default async function minutes(agenda, { request }) {
   let minutes = agenda.split(/^ 3. Minutes from previous meetings/m, 2)
     .pop().split(OFFICER_SEPARATOR)[0];
 

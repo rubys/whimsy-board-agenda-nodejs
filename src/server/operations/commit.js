@@ -6,7 +6,7 @@ import { reflow } from "../string-utils.js";
 //
 // Bulk apply comments and pre-approvals to agenda file
 //
-export default async function (request) {
+export default async function commit(request) {
 
   let { message, initials } = request.body;
   let { agenda } = await Pending.read(request);

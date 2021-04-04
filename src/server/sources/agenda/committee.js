@@ -1,6 +1,6 @@
 // Additional Officer Reports and Committee Reports
 
-export default async function (agenda) {
+export default async function committee(agenda) {
   let pattern = /\[(?<owner>[^\n]+)\]\n\n\s{7}See\sAttachment\s\s?(?<attach>\w+)[^\n]*?\s+\[\s[^\n]*\s*approved:\s*?(?<approved>.*?)\s*comments:(?<comments>.*?)\n\s{9}\]/msg;
 
   let sections = [...agenda.matchAll(pattern)].map(match => match.groups);

@@ -8,6 +8,7 @@ function broadcast(message) {
   channel.postMessage(message);
 };
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('connect', ({ ports: [port] }) => {
   console.log('SharedWorker started');
 

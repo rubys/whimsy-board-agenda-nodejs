@@ -5,7 +5,7 @@ import { read } from '../sources/agenda.js';
 // Flag (or unflag) an agenda item
 //
 
-export default async function (request) {
+export default async function approve(request) {
   let { agenda, initials, attach } = request.body;
 
   let item = (await read(agenda, request)).find(item => item.attach === attach);
