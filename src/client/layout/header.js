@@ -1,7 +1,7 @@
 import Info from "../elements/info.js";
 import { Link } from "react-router-dom";
 import PodlingNameSearch from "../elements/pns.js";
-import React from "react";
+import React, { useState } from "react";
 import { connect } from 'react-redux';
 
 // Header: title on the left, dropdowns on the right
@@ -21,172 +21,12 @@ function mapStateToProps(state) {
   }
 };
 
-class Header extends React.Component {
-  state = { infodropdown: null };
-
-  render() {
-    let { user, offline, forked, pendingCount } = this.props;
-
-    /* eslint-disable jsx-a11y/anchor-is-valid */
-    let props = this.props.item || this.props;
-    let summary = props.summary || this.summary();
-
-    // update title to match the item title whenever page changes
-    if (typeof document !== 'undefined' && props.title) {
-      let title = document.getElementsByTagName("title")[0]
-      if (title && title.textContent !== props.title) {
-        title.textContent = props.title
-      }
-    }
-
-    let color = this.props.color || this.props.item?.status.color || 'blank';
-
-    // find shortest shepherd (for example, "Rich")
-    let shepherd = null;
-    let firstname = user.firstname.toLowerCase();
-
-    for (let item of Object.values(this.props.agenda)) {
-      if (item.shepherd && firstname.startsWith(item.shepherd.toLowerCase()) && (!shepherd || item.shepherd.length < shepherd.lenth)) {
-        shepherd = item.shepherd
-      }
-    };
-
-    return <header className={`navbar fixed-top ${color}`}>
-      <div className="navbar-brand">{props.title}</div>
-
-      {/^7/m.test(props.attach) && /^Establish .* Project/m.test(props.fulltitle)
-        ? <PodlingNameSearch item={props} />
-        : null}
-
-      {this.props.clockCounter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
-
-      <ul className="nav nav-pills navbar-right">
-        {forked ? <li>
-          <span className="badge badge-warning">FORKED</span>
-        </li> : null}
-
-        {pendingCount > 0 || offline ? <li>
-          <h4><span className="badge badge-danger">
-            {offline ? <span>OFFLINE: </span> : null}
-            <Link to="/queue">{pendingCount}</Link>
-          </span></h4>
-        </li> : null}
-
-        {props.attach ?
-          <li className={"report-info dropdown"} data-toggle="dropdown">
-            <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
-              info
-              </button>
-
-            <Info item={props} position="dropdown-menu" />
-          </li>
-
-          : props.online ?
-
-            <li className="dropdown">
-              <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
-                online
-                </button>
-
-              <ul className="online dropdown-menu">
-                {props.online.map(id =>
-                  <li>
-                    <a href={`/roster/committer/${id}`}>{id}</a>
-                  </li>
-                )}
-              </ul>
-            </li>
-
-            :
-
-            <li className="dropdown">
-              <button id="info" className="btn dropdown-toggle" data-toggle="dropdown">
-                summary
-                </button>
-
-              <table className="table-bordered online dropdown-menu">
-                <tbody>{summary.map(status => {
-                  let text = status.text;
-                  if (status.count === 1) text = text.replace(/s$/m, "");
-
-                  let href = status.href || status.item?.href
-
-                  return <tr className={status.color} key={text}>
-                    {href ? <>
-                      <td>
-                        <Link to={href}>{status.count}</Link>
-                      </td>
-
-                      <td>
-                        <Link to={href}>{text}</Link>
-                      </td>
-                    </> : <>
-                      <td>{status.count}</td>
-                      <td>{text}</td>
-                    </>}
-                  </tr>
-                })}</tbody>
-              </table>
-            </li>
-        }
-
-        <li className="dropdown">
-          <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
-            navigation
-            </button>
-
-          <ul className="dropdown-menu">
-            <li>
-              <Link id="agenda" to="/">Agenda</Link>
-            </li>
-
-            {Object.values(this.props.agenda)
-              .filter(item => item.index)
-              .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
-              .map(item => (
-                <li key={item.index}>
-                  <Link to={item.href}>{item.index}</Link>
-                </li>
-              ))
-            }
-
-            <li className="divider" />
-
-            <li>
-              <Link to="/search">Search</Link>
-            </li>
-
-            <li>
-              <Link to="/comments">Comments</Link>
-            </li>
-
-            {shepherd ? <li>
-              <Link id="shepherd" to={`/shepherd/${shepherd}`}>Shepherd</Link>
-            </li> : null}
-
-            <li>
-              <Link id="queue" to="queue">Queue</Link>
-            </li>
-
-            <li className="divider" />
-
-            <li>
-              <Link id="backchannel" to="/backchannel">Backchannel</Link>
-            </li>
-
-            <li>
-              <Link id="help" to="/help">Help</Link>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </header>
-  };
+function Header(props) {
+  let { agenda, clockCounter, user, offline, forked, pendingCount } = props;
+  let [infoToggle, setInfoToggle] = useState('');
 
   // summarize the state of the various reports
-  summary = () => {
-    let agenda = this.props.agenda;
-
+  function makeSummary() {
     let tally = {
       committeeReports: {
         color: "available",
@@ -265,6 +105,164 @@ class Header extends React.Component {
 
     return Object.values(tally)
   };
+
+  function toggleInfo() {
+    setInfoToggle(infoToggle === '' ? 'show' : '')
+  };
+
+  let color = props.color || props.item?.status.color || 'blank';
+
+  props = props.item || props;
+  let summary = props.summary || makeSummary();
+
+  // update title to match the item title whenever page changes
+  if (typeof document !== 'undefined' && props.title) {
+    let title = document.getElementsByTagName("title")[0]
+    if (title && title.textContent !== props.title) {
+      title.textContent = props.title
+    }
+  }
+
+  // find shortest shepherd (for example, "Rich")
+  let shepherd = null;
+  let firstname = user.firstname.toLowerCase();
+
+  for (let item of Object.values(agenda)) {
+    if (item.shepherd && firstname.startsWith(item.shepherd.toLowerCase()) && (!shepherd || item.shepherd.length < shepherd.lenth)) {
+      shepherd = item.shepherd
+    }
+  };
+
+  return <header className={`navbar fixed-top ${color}`}>
+    <div className="navbar-brand">{props.title}</div>
+
+    {/^7/m.test(props.attach) && /^Establish .* Project/m.test(props.fulltitle)
+      ? <PodlingNameSearch item={props} />
+      : null}
+
+    {clockCounter > 0 ? <span role="img" aria-label="clock" id="clock">⌛</span> : null}
+
+    <ul className="nav nav-pills navbar-right">
+      {forked ? <li>
+        <span className="badge badge-warning">FORKED</span>
+      </li> : null}
+
+      {pendingCount > 0 || offline ? <li>
+        <h4><span className="badge badge-danger">
+          {offline ? <span>OFFLINE: </span> : null}
+          <Link to="/queue">{pendingCount}</Link>
+        </span></h4>
+      </li> : null}
+
+      {props.attach ?
+        <li className={"report-info dropdown"}>
+          <button id="info" className="btn dropdown-toggle" onClick={toggleInfo}>
+            info
+            </button>
+
+          <Info item={props} position={`dropdown-menu ${infoToggle}`} />
+        </li>
+
+        : props.online ?
+
+          <li className="dropdown">
+            <button id="info" className="btn dropdown-toggle" onClick={toggleInfo}>
+              online
+              </button>
+
+            <ul className={`online dropdown-menu ${infoToggle}`}>
+              {props.online.map(id =>
+                <li>
+                  <a href={`/roster/committer/${id}`}>{id}</a>
+                </li>
+              )}
+            </ul>
+          </li>
+
+          :
+
+          <li className="dropdown">
+            <button id="info" className="btn dropdown-toggle" onClick={toggleInfo}>
+              summary
+            </button>
+
+            <table className={`table-bordered online dropdown-menu ${infoToggle}`}>
+              <tbody>{summary.map(status => {
+                let text = status.text;
+                if (status.count === 1) text = text.replace(/s$/m, "");
+
+                let href = status.href || status.item?.href
+
+                return <tr className={status.color} key={text}>
+                  {href ? <>
+                    <td>
+                      <Link to={href}>{status.count}</Link>
+                    </td>
+
+                    <td>
+                      <Link to={href}>{text}</Link>
+                    </td>
+                  </> : <>
+                    <td>{status.count}</td>
+                    <td>{text}</td>
+                  </>}
+                </tr>
+              })}</tbody>
+            </table>
+          </li>
+      }
+
+      <li className="dropdown">
+        <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
+          navigation
+          </button>
+
+        <ul className="dropdown-menu">
+          <li>
+            <Link id="agenda" to="/">Agenda</Link>
+          </li>
+
+          {Object.values(agenda)
+            .filter(item => item.index)
+            .sort((item1, item2) => item1.sortOrder - item2.sortOrder)
+            .map(item => (
+              <li key={item.index}>
+                <Link to={item.href}>{item.index}</Link>
+              </li>
+            ))
+          }
+
+          <li className="divider" />
+
+          <li>
+            <Link to="/search">Search</Link>
+          </li>
+
+          <li>
+            <Link to="/comments">Comments</Link>
+          </li>
+
+          {shepherd ? <li>
+            <Link id="shepherd" to={`/shepherd/${shepherd}`}>Shepherd</Link>
+          </li> : null}
+
+          <li>
+            <Link id="queue" to="queue">Queue</Link>
+          </li>
+
+          <li className="divider" />
+
+          <li>
+            <Link id="backchannel" to="/backchannel">Backchannel</Link>
+          </li>
+
+          <li>
+            <Link id="help" to="/help">Help</Link>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </header>
 };
 
 export default connect(mapStateToProps)(Header)
