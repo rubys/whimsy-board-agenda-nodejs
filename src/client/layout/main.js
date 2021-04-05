@@ -1,6 +1,6 @@
 import Footer from "./footer.js";
 import Header from "./header.js";
-import React from "react";
+import React, { useEffect } from "react";
 import jQuery from "jquery";
 import logo from "../react-logo.svg";
 import "../App.css";
@@ -14,56 +14,9 @@ import "../App.css";
 //
 //  * Resizing view to leave room for the Header and Footer
 //
-class Main extends React.Component {
-  // common layout for all pages: header, main, footer, and forms
-  render() {
-    if (!this.props.view) {
-      if (this.props.server) {
-        return <p>Page not found</p>
-      } else {
-        return <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>Fetching board agenda...</p>
-          </header>
-        </div>
-      }
-    };
-
-    return <>
-      <Header {...this.props}/>
-
-      <main>{React.createElement( this.props.view, this.props)}</main>
-
-      <Footer {...this.props} />
-
-      {this.props.buttons ? this.props.buttons.map(button => {
-        if (button.form && !button.type) {
-          return React.createElement(
-            button.form,
-            { item: this.props.item, key: button.text, button }
-          )
-        } else {
-          return null
-        }
-      }) : null}
-    </>
-  };
-
-  // navigation method that updates history (back button) information
-  navigate = (path, query) => {
-    let history = window.history;
-    history.state.scrollY = window.scrollY;
-    history.replaceState(history.state, null, history.path);
-    Main.scrollTo = 0;
-    // this.route(path, query);
-    history.pushState({ path, query }, null, path);
-    window.onresize();
-    if (path) Main.latest = false
-  };
-
+function Main(props) {
   // additional client side initialization
-  componentDidMount() {
+  useEffect(() => {
     // whenever the window is resized, adjust margins of the main area to
     // avoid overlapping the header and footer areas
     window.onresize = () => {
@@ -97,19 +50,59 @@ class Main extends React.Component {
       }
     };
 
-    // do an initial resize
+    // scroll to top
     Main.scrollTo = 0;
     window.onresize();
+  }, []);
+
+  // after each rendering, resize main window
+  useEffect(() => {
+    window.onresize()
+  });
+
+  // common layout for all pages: header, main, footer, and forms
+  if (!props.view) {
+    if (props.server) {
+      return <p>Page not found</p>
+    } else {
+      return <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>Fetching board agenda...</p>
+        </header>
+      </div>
+    }
   };
 
-  componentDidUpdate() {
-    window.onresize()
-  }
+  return <>
+    <Header {...props}/>
 
-  // after each subsequent re-rendering, resize main window
-  updated() {
-    window.onresize()
-  }
+    <main>{React.createElement( props.view, props)}</main>
+
+    <Footer {...props} />
+
+    {props.buttons ? props.buttons.map(button => {
+      if (button.form && !button.type) {
+        return React.createElement(
+          button.form,
+          { item: props.item, key: button.text, button }
+        )
+      } else {
+        return null
+      }
+    }) : null}
+  </>
+};
+
+// navigation method that updates history (back button) information
+Main.navigate = function(path, query) {
+  let history = window.history;
+  history.state.scrollY = window.scrollY;
+  history.replaceState(history.state, null, history.path);
+  Main.scrollTo = 0;
+  history.pushState({ path, query }, null, path);
+  window.onresize();
+  if (path) Main.latest = false
 };
 
 export default Main
