@@ -83,8 +83,8 @@ called [reconciliation](https://reactjs.org/docs/reconciliation.html).
 When coupled with a client side cache, this can make startup happen virtually
 instantly.  Before the client requests the latest data from the server and
 displays the response the client can proceed to render the pages using data
-from its cache and then updating the results once data is received from the
-server.
+from its cache. This result will later be updated once data is received from
+the server.
 
 You may have seen cases where you have navigated to the main agenda page and
 before you select where you are going the colors of a few pages are updated.
