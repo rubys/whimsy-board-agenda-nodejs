@@ -8,66 +8,64 @@ function mapStateToProps(state) {
   }
 };
 
-class TemplateCondition extends React.Component {
-  render() {
-    let people = Object.entries(this.props.people)
-      .map(([id, person]) => ({ ...person, id }));
+function TemplateCondition(props) {
+  let people = Object.entries(props.people)
+    .map(([id, person]) => ({ ...person, id }));
 
-    return <div class="demo container">
-      <h1>JSX Templates - Conditions</h1>
+  return <div class="demo container">
+    <h1>JSX Templates - Conditions</h1>
 
-      <p>With JSX, conditional processing can be done using the
-      JavaScript {' '}
-      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator">Conditional (ternary) operator</a>:
-      </p>
+    <p>With JSX, conditional processing can be done using the
+    JavaScript {' '}
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator">Conditional (ternary) operator</a>:
+    </p>
 
-      <p>Consider the following:</p>
+    <p>Consider the following:</p>
 
-      <pre class="example">
-        <code>{
-          `<ul>
+    <pre class="example">
+      <code>{
+        `<ul>
   {people.map(person => (
     person.role === 'director' ? <li>{person.name}</li> : null
   ))}
 </ul>`
-        }</code>
-      </pre>
+      }</code>
+    </pre>
 
-      <p>Given the same array of people from the Roll Call, JSX
-      templates would render the above as follows:</p>
+    <p>Given the same array of people from the Roll Call, JSX
+    templates would render the above as follows:</p>
 
-      <ul class="example">
-        {people.map(person => (
-          person.role === 'director'
-            ? <li key={person.id}>{person.name}</li>
-            : null
-        ))}
-      </ul>
+    <ul class="example">
+      {people.map(person => (
+        person.role === 'director'
+          ? <li key={person.id}>{person.name}</li>
+          : null
+      ))}
+    </ul>
 
-      <p>
-        While at first using <tt>map</tt> methods and ternary operators may seem, well, <em>klunky</em>,
-        the focus of JSX seems to be to make easy things easy and hard things possible:
-      </p>
+    <p>
+      While at first using <tt>map</tt> methods and ternary operators may seem, well, <em>klunky</em>,
+      the focus of JSX seems to be to make easy things easy and hard things possible:
+    </p>
 
-      <ul>
-        <li>
-          <p>
-            Most templates should not need more than simple variable substitution, conditions,
-            and iteration.  If you find yourself needing more than that, that often is an indication
-            that the component that defines the template should be broken up into multiple components.
-          </p>
-        </li>
+    <ul>
+      <li>
+        <p>
+          Most templates should not need more than simple variable substitution, conditions,
+          and iteration.  If you find yourself needing more than that, that often is an indication
+          that the component that defines the template should be broken up into multiple components.
+        </p>
+      </li>
 
-        <li>
-          <p>
-            Should you happen to need it, the full power of JavaScript is available.  In particular, you
-            can call methods and functions.  This is particularly handy when defining <tt>onClick</tt> {' '}
-            and <tt>onChange</tt> event handlers.
-          </p>
-        </li>
-      </ul>
-    </div>
-  }
+      <li>
+        <p>
+          Should you happen to need it, the full power of JavaScript is available.  In particular, you
+          can call methods and functions.  This is particularly handy when defining <tt>onClick</tt> {' '}
+          and <tt>onChange</tt> event handlers.
+        </p>
+      </li>
+    </ul>
+  </div>
 }
 
 export default connect(mapStateToProps)(TemplateCondition);

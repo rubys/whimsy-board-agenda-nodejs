@@ -9,26 +9,25 @@ function mapStateToProps(state) {
   }
 };
 
-class TemplateIteration extends React.Component {
+function TemplateIteration(props) {
 
-  render() {
-    let people = Object.entries(this.props.people)
-      .map(([id, person]) => ({ ...person, id }));
+  let people = Object.entries(props.people)
+    .map(([id, person]) => ({ ...person, id }));
 
-    return <div class="demo container">
-      <h1>JSX Templates - Iteration</h1>
+  return <div class="demo container">
+    <h1>JSX Templates - Iteration</h1>
 
-      <p>Now consider an array of objects.  Wih JSX, iteration is done using the
-      JavaScript {' '}
-      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map">Array.map</a>
-      {' '} method:
-      </p>
+    <p>Now consider an array of objects.  Wih JSX, iteration is done using the
+    JavaScript {' '}
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map">Array.map</a>
+    {' '} method:
+    </p>
 
-      <p>Consider the following:</p>
+    <p>Consider the following:</p>
 
-      <pre class="example">
-        <code>{
-          `<table>
+    <pre class="example">
+      <code>{
+        `<table>
   <thead>
     <tr>
       <th>id</th>
@@ -47,40 +46,39 @@ class TemplateIteration extends React.Component {
      ))}
   </tbody>
 </table>`
-        }</code>
-      </pre>
+      }</code>
+    </pre>
 
-      <p>Given an array of people, for example from the {' '}
-      <Link to="/Roll-Call">Roll Call</Link> of the current agenda,
-      {' '} JSX templates would render the above as follows:</p>
+    <p>Given an array of people, for example from the {' '}
+    <Link to="/Roll-Call">Roll Call</Link> of the current agenda,
+    {' '} JSX templates would render the above as follows:</p>
 
-      <table class="example table">
-        <thead>
-          <tr>
-            <th>id</th>
-            <th>name</th>
-            <th>role</th>
+    <table class="example table">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>name</th>
+          <th>role</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {people.map(person => (
+          <tr key={person.id}>
+            <td>{person.id}</td>
+            <td>{person.name}</td>
+            <td>{person.role}</td>
           </tr>
-        </thead>
+        ))}
+      </tbody>
+    </table>
 
-        <tbody>
-          {people.map(person => (
-            <tr key={person.id}>
-              <td>{person.id}</td>
-              <td>{person.name}</td>
-              <td>{person.role}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <p>Observant readers will have noted a <tt>key</tt> attribute on the
-       {' '}<tt>&lt;tr&gt;</tt> element. {' '}
-      <a href="https://reactjs.org/docs/lists-and-keys.html#keys">keys</a>
-       {' '}help React identify which items have changed, are added, or
-      are removed.</p>
-    </div>
-  }
+    <p>Observant readers will have noted a <tt>key</tt> attribute on the
+     {' '}<tt>&lt;tr&gt;</tt> element. {' '}
+    <a href="https://reactjs.org/docs/lists-and-keys.html#keys">keys</a>
+     {' '}help React identify which items have changed, are added, or
+    are removed.</p>
+  </div>
 }
 
 export default connect(mapStateToProps)(TemplateIteration);

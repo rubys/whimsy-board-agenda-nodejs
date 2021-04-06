@@ -7,24 +7,23 @@ function mapStateToProps(state) {
   }
 };
 
-class TemplateVariable extends React.Component {
-  render() {
-    let { userid, username, role } = this.props.user;
+function TemplateVariable(props) {
+  let { userid, username, role } = props.user;
 
-    return <div class="demo container">
-      <h1>JSX Templates - variable substitution</h1>
+  return <div class="demo container">
+    <h1>JSX Templates - variable substitution</h1>
 
-      <p>While syntaxes vary, templating engines in general take as input an
-      object and a string.</p>
+    <p>While syntaxes vary, templating engines in general take as input an
+    object and a string.</p>
 
-      <p>What templating engines do is to substitute identified marked sections
-      in the string with values from the object.</p>
+    <p>What templating engines do is to substitute identified marked sections
+    in the string with values from the object.</p>
 
-      <p>Consider the following:</p>
+    <p>Consider the following:</p>
 
-      <pre class="example">
-        <code>{
-          `<dl>
+    <pre class="example">
+      <code>{
+        `<dl>
   <dt>id</dt>
   <dd>{ userid }</dd>
   <dt>name</dt>
@@ -32,23 +31,22 @@ class TemplateVariable extends React.Component {
   <dt>role</dt>
   <dd>{ role }</dd>
 </dl>`
-        }</code>
-      </pre>
+      }</code>
+    </pre>
 
-      <p><a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a> {' '}
-      templates would render this as follows:</p>
+    <p><a href="https://reactjs.org/docs/introducing-jsx.html">JSX</a> {' '}
+    templates would render this as follows:</p>
 
-      <dl class="example">
-        <dt>id</dt>
-        <dd>{userid}</dd>
-        <dt>name</dt>
-        <dd>{username}</dd>
-        <dt>role</dt>
-        <dd>{role}</dd>
-      </dl>
+    <dl class="example">
+      <dt>id</dt>
+      <dd>{userid}</dd>
+      <dt>name</dt>
+      <dd>{username}</dd>
+      <dt>role</dt>
+      <dd>{role}</dd>
+    </dl>
 
-    </div>
-  }
+  </div>
 }
 
 export default connect(mapStateToProps)(TemplateVariable);
