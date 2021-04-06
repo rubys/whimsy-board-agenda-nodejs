@@ -27,7 +27,7 @@ import PageCache from "./models/pagecache.js";
 import Queue from "./pages/queue.js";
 import Post from "./buttons/post.js";
 import PublishMinutes from "./buttons/publish-minutes.js";
-import React from "react";
+import { useEffect } from "react";
 import Refresh from "./buttons/refresh.js";
 import Rejected from "./pages/rejected.js";
 import RollCall from "./pages/roll-call.js";
@@ -71,11 +71,10 @@ function mapStateToProps(state) {
   }
 };
 
-class Router extends React.Component {
+function Router(props) {
 
-  state = {};
-
-  static getDerivedStateFromProps(props) {
+  // maintain history
+  useEffect(() => {
     history = props.history;
 
     let path = props.location.pathname;
@@ -96,12 +95,89 @@ class Router extends React.Component {
 
       props.history.replace(path, { path });
     };
+  });
 
-    return {}
-  }
+  // scroll to top of window when path changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [props.location.pathname]);
+
+  // start watching keystrokes and fingers
+  useEffect(() => {
+    if (!props.staticContext) {
+      Keyboard.initEventHandlers();
+      Touch.initEventHandlers();
+    }
+  }, [props.staticContext]);
+
+  // buttons and forms to show with this report
+  function itemButtons(item) {
+    let list = [];
+
+    if (!(!/^\d+$/m.test(item.attach) && item.comments === undefined) && !Minutes.complete) {
+      // some reports don't have comments
+      if (item.status?.pending?.comments) {
+        list.push({ form: AddComment, text: "edit comment" })
+      } else {
+        list.push({ form: AddComment, text: "add comment" })
+      }
+    };
+
+    if (item.title === "Roll Call") list.push({ button: Attend });
+
+    if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(item.attach)) {
+      if (props.role === "secretary" || !Minutes.complete) {
+        if (!Minutes.draft_posted) {
+          if (/^8[.A-Z]/m.test(item.attach)) {
+            if (/^8[A-Z]/m.test(item.attach)) {
+              list.push({ form: Post, text: "edit item" })
+            } else if (!item.text || item.text.trim().length === 0) {
+              list.push({ form: Post, text: "post item" })
+            } else {
+              list.push({ form: Post, text: "edit items" })
+            }
+          } else if (item.status.missing) {
+            list.push({ form: Post, text: "post report" })
+          } else if (/^7\w/m.test(item.attach)) {
+            list.push({ form: Post, text: "edit resolution" })
+          } else {
+            list.push({ form: Post, text: "edit report" })
+          }
+        }
+      }
+    };
+
+    if (props.role === "director") {
+      if (!item.missing && item.comments !== undefined && !Minutes.complete) {
+        if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(item.attach)) list.push({ button: Approve })
+      }
+    } else if (props.role === "secretary") {
+      if (!Minutes.draft_posted) {
+        if (/^7\w/m.test(item.attach)) {
+          list.push({ form: Vote })
+        } else if (Minutes.get(item.title)) {
+          list.push({ form: AddMinutes, text: "edit minutes" })
+        } else if (["Call to order", "Adjournment"].includes(item.title)) {
+          list.push({ button: Timestamp })
+        } else {
+          list.push({ form: AddMinutes, text: "add minutes" })
+        }
+      };
+
+      if (/^3\w/m.test(item.attach)) {
+        if (Minutes.get(item.title) === "approved" && Server.drafts.includes((item.text.match(/board_minutes_\w+\.txt/) || [])[0])) {
+          list.push({ form: PublishMinutes })
+        }
+      } else if (item.title === "Adjournment") {
+        if (Minutes.ready_to_post_draft) list.push({ form: DraftMinutes })
+      }
+    };
+
+    return list
+  };
 
   // helper to construct a call to <Main> with the proper buttons and options
-  main = (page, options = {}) => {
+  function main(page, options = {}) {
     // bail unless an page was found
     if (!page) return <Main />;
 
@@ -120,7 +196,7 @@ class Router extends React.Component {
     // determine what buttons are required, merging defaults, form provided
     // overrides, and any overrides provided by the agenda item itself
     let buttons = page.buttons || [];
-    if (page.item) buttons = [...this.buttons(page.item), ...buttons];
+    if (page.item) buttons = [...itemButtons(page.item), ...buttons];
     if (view.buttons) buttons = [...view.buttons, ...buttons];
 
     if (buttons.length) {
@@ -176,351 +252,266 @@ class Router extends React.Component {
     return <Main {...props} />
   }
 
-  // buttons and forms to show with this report
-  buttons(item) {
-    let list = [];
+  // find an agenda item that matches the path
+  function find(path) {
+    return props.agenda[path];
+  }
 
-    if (!(!/^\d+$/m.test(item.attach) && item.comments === undefined) && !Minutes.complete) {
-      // some reports don't have comments
-      if (item.status?.pending?.comments) {
-        list.push({ form: AddComment, text: "edit comment" })
-      } else {
-        list.push({ form: AddComment, text: "add comment" })
-      }
-    };
+  if (!Object.keys(props.agenda || {}).length) return main(null);
 
-    if (item.title === "Roll Call") list.push({ button: Attend });
+  // route request based on path and query from the window location (URL)
+  return <Switch>
 
-    if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(item.attach)) {
-      if (this.props.role === "secretary" || !Minutes.complete) {
-        if (!Minutes.draft_posted) {
-          if (/^8[.A-Z]/m.test(item.attach)) {
-            if (/^8[A-Z]/m.test(item.attach)) {
-              list.push({ form: Post, text: "edit item" })
-            } else if (!this.text || item.text.trim().length === 0) {
-              list.push({ form: Post, text: "post item" })
-            } else {
-              list.push({ form: Post, text: "edit items" })
-            }
-          } else if (item.status.missing) {
-            list.push({ form: Post, text: "post report" })
-          } else if (/^7\w/m.test(item.attach)) {
-            list.push({ form: Post, text: "edit resolution" })
-          } else {
-            list.push({ form: Post, text: "edit report" })
+    <Route exact path={['/', '/.']}>
+      {() => {
+        let prev = { title: "Help", href: "help" };
+        let next = prev;
+
+        for (let agenda of props.agendas) {
+          let date = (agenda.match(/(\d+_\d+_\d+)/) || [])[1].replace(/_/g, "-");
+
+          if (date < props.meetingDate && (prev.title === "Help" || date > prev.title)) {
+            prev = { title: date, href: `../${date}/` }
+          } else if (date > props.meetingDate && (next.title === "Help" || date < next.title)) {
+            next = { title: date, href: `../${date}/` }
           }
-        }
-      }
-    };
+        };
 
-    if (this.props.role === "director") {
-      if (!this.missing && item.comments !== undefined && !Minutes.complete) {
-        if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(item.attach)) list.push({ button: Approve })
-      }
-    } else if (this.props.role === "secretary") {
-      if (!Minutes.draft_posted) {
-        if (/^7\w/m.test(item.attach)) {
-          list.push({ form: Vote })
-        } else if (Minutes.get(item.title)) {
-          list.push({ form: AddMinutes, text: "edit minutes" })
-        } else if (["Call to order", "Adjournment"].includes(item.title)) {
-          list.push({ button: Timestamp })
-        } else {
-          list.push({ form: AddMinutes, text: "add minutes" })
-        }
-      };
+        let buttons = [{ button: Refresh }];
 
-      if (/^3\w/m.test(item.attach)) {
-        if (Minutes.get(item.title) === "approved" && Server.drafts.includes((item.text.match(/board_minutes_\w+\.txt/) || [])[0])) {
-          list.push({ form: PublishMinutes })
-        }
-      } else if (item.title === "Adjournment") {
-        if (Minutes.ready_to_post_draft) list.push({ form: DraftMinutes })
-      }
-    };
+        if (!Minutes.complete) {
+          buttons.push({ form: Post, text: "add item" })
+        } else if (["director", "secretary"].includes(props.role)) {
+          if (!Minutes.summary_sent) buttons.push({ form: Summary })
+        };
 
-    return list
-  };
+        if (props.role === "secretary") {
+          if (Minutes.ready_to_post_draft) {
+            buttons.push({ form: DraftMinutes })
+          }
+        };
 
-  render() {
-    let main = this.main;
+        return main({ view: Index, title: props.meetingDate, buttons, prev, next })
+      }}
+    </Route>
 
-    if (!Object.keys(this.props.agenda || {}).length) return main(null);
+    <Route exact path="/search">
+      {({ history: { location: { query } } }) => (
+        main({ view: Search, query })
+      )}
+    </Route>
 
-    // route request based on path and query from the window location (URL)
-    return <Switch>
+    <Route exact path="/comments">
+      {main({ view: Comments })}
+    </Route>
 
-      <Route exact path={['/', '/.']}>
-        {() => {
-          let prev = { title: "Help", href: "help" };
-          let next = prev;
+    <Route exact path="/backchannel">
+      {main({
+        view: Backchannel,
+        title: "Agenda Backchannel",
+        online: Server.online
+      })}
+    </Route>
 
-          for (let agenda of this.props.agendas) {
-            let date = (agenda.match(/(\d+_\d+_\d+)/) || [])[1].replace(/_/g, "-");
+    <Route exact path="/queue">
+      {() => {
+        let page = { view: Queue, title: "Queued approvals and comments" };
+        if (props.role !== "director") page.title = "Queued comments";
 
-            if (date < this.props.meetingDate && (prev.title === "Help" || date > prev.title)) {
-              prev = { title: date, href: `../${date}/` }
-            } else if (date > this.props.meetingDate && (next.title === "Help" || date < next.title)) {
-              next = { title: date, href: `../${date}/` }
-            }
-          };
+        page.buttons = [{ button: Refresh }];
+        if (props.pending.count > 0) page.buttons.push({ form: Commit });
+        if (PageCache.enabled) page.buttons.push({ button: Offline });
 
-          let buttons = [{ button: Refresh }];
+        return main(page);
+      }}
+    </Route>
 
-          if (!Minutes.complete) {
-            buttons.push({ form: Post, text: "add item" })
-          } else if (["director", "secretary"].includes(this.props.role)) {
-            if (!Minutes.summary_sent) buttons.push({ form: Summary })
-          };
+    <Route exact path="/flagged">
+      {main({ view: Flagged, title: "Flagged reports" })}
+    </Route>
 
-          if (this.props.role === "secretary") {
-            if (Minutes.ready_to_post_draft) {
-              buttons.push({ form: DraftMinutes })
-            }
-          };
+    <Route exact path="/rejected">
+      {main({ view: Rejected, title: "Reports which were NOT accepted" })}
+    </Route>
 
-          return main({ view: Index, title: this.props.meetingDate, buttons, prev, next })
-        }}
-      </Route>
+    <Route exact path="/missing">
+      {() => {
+        let buttons = [{ form: InitialReminder }, { button: FinalReminder }];
 
-      <Route exact path="/search">
-        {({ history: { location: { query } } }) => (
-          main({ view: Search, query })
-        )}
-      </Route>
+        if (Object.values(props.agenda).some(item => item.status.nonresponsive)) {
+          buttons.push({ form: ProdReminder })
+        };
 
-      <Route exact path="/comments">
-        {main({ view: Comments })}
-      </Route>
+        return main({ view: Missing, title: "Missing reports", buttons })
+      }}
+    </Route>
 
-      <Route exact path="/backchannel">
-        {main({
-          view: Backchannel,
-          title: "Agenda Backchannel",
-          online: Server.online
-        })}
-      </Route>
+    <Route path="/flagged/:path">
+      {({ match: { params: { path } } }) => (
+        main({ view: Report, item: find(path), traversal: "flagged" })
+      )}
+    </Route>
 
-      <Route exact path="/queue">
-        {() => {
-          let page = { view: Queue, title: "Queued approvals and comments" };
-          if (this.props.role !== "director") page.title = "Queued comments";
+    <Route path="/queue/:path">
+      {({ match: { params: { path } } }) => (
+        main({ view: Report, item: find(path), traversal: "queue" })
+      )}
+    </Route>
 
-          page.buttons = [{ button: Refresh }];
-          if (this.props.pending.count > 0) page.buttons.push({ form: Commit });
-          if (PageCache.enabled) page.buttons.push({ button: Offline });
+    <Route path="/shepherd/queue/:path">
+      {({ match: { params: { path } } }) => (
+        main({ view: Report, item: find(path), traversal: "shepherd" })
+      )}
+    </Route>
 
-          return main(page);
-        }}
-      </Route>
+    <Route path="/shepherd/:shepherd">
+      {({ match: { params: { shepherd } } }) => {
+        let page = {
+          view: Shepherd,
+          shepherd,
+          next: null,
+          prev: null,
+          title: `Shepherded by ${shepherd}`
+        };
 
-      <Route exact path="/flagged">
-        {main({ view: Flagged, title: "Flagged reports" })}
-      </Route>
+        // determine next/previous links
+        for (let i of Object.values(props.agenda)) {
+          if (i.shepherd && 'comments' in i) {
+            if (i.shepherd.includes(" ")) continue;
+            let href = `shepherd/${i.shepherd}`;
 
-      <Route exact path="/rejected">
-        {main({ view: Rejected, title: "Reports which were NOT accepted" })}
-      </Route>
-
-      <Route exact path="/missing">
-        {() => {
-          let buttons = [{ form: InitialReminder }, { button: FinalReminder }];
-
-          if (Object.values(this.props.agenda).some(item => item.status.nonresponsive)) {
-            buttons.push({ form: ProdReminder })
-          };
-
-          return main({ view: Missing, title: "Missing reports", buttons })
-        }}
-      </Route>
-
-      <Route path="/flagged/:path">
-        {({ match: { params: { path } } }) => (
-          main({ view: Report, item: this.find(path), traversal: "flagged" })
-        )}
-      </Route>
-
-      <Route path="/queue/:path">
-        {({ match: { params: { path } } }) => (
-          main({ view: Report, item: this.find(path), traversal: "queue" })
-        )}
-      </Route>
-
-      <Route path="/shepherd/queue/:path">
-        {({ match: { params: { path } } }) => (
-          main({ view: Report, item: this.find(path), traversal: "shepherd" })
-        )}
-      </Route>
-
-      <Route path="/shepherd/:shepherd">
-        {({ match: { params: { shepherd } } }) => {
-          let page = {
-            view: Shepherd,
-            shepherd,
-            next: null,
-            prev: null,
-            title: `Shepherded by ${shepherd}`
-          };
-
-          // determine next/previous links
-          for (let i of Object.values(this.props.agenda)) {
-            if (i.shepherd && 'comments' in i) {
-              if (i.shepherd.includes(" ")) continue;
-              let href = `shepherd/${i.shepherd}`;
-
-              if (i.shepherd > shepherd) {
-                if (!page.next || page.next.href > href) {
-                  page.next = { title: i.shepherd, href }
-                }
-              } else if (i.shepherd < shepherd) {
-                if (!page.prev || page.prev.href < href) {
-                  page.prev = { title: i.shepherd, href }
-                }
+            if (i.shepherd > shepherd) {
+              if (!page.next || page.next.href > href) {
+                page.next = { title: i.shepherd, href }
+              }
+            } else if (i.shepherd < shepherd) {
+              if (!page.prev || page.prev.href < href) {
+                page.prev = { title: i.shepherd, href }
               }
             }
-          };
-
-          return main(page)
-        }}
-      </Route>
-
-      <Route exact path="/feedback">
-        {main({ view: Feedback, title: "Send Feedback" })}
-      </Route>
-
-      <Route exact path="/help">
-        {() => {
-          let item = { view: Help };
-
-          // Progressive Web Application 'Add to Home Screen' support
-          if (PageCache.installPrompt) item.buttons = [{ button: Install }];
-
-          return main(item)
-        }}
-      </Route>
-
-      <Route exact path="/secrets">
-        {main({ view: InsiderSecrets })}
-      </Route>
-
-      <Route exact path="/bootstrap.html">
-        {main({ view: BootStrapPage, title: " " })}
-      </Route>
-
-      <Route exact path="/cache/">
-        {main({
-          view: CacheStatus,
-          color: "devpage",
-          next: { href: 'server/', title: 'Server' },
-          prev: { href: 'store/', title: 'Store' }
-        })}
-      </Route>
-
-      <Route path="/cache/client/:page(.*)">
-        {({ match: { params: { page } } }) => (
-          main({ view: CacheClientPage, title: "Client Cache", color: "devpage", page })
-        )}
-      </Route>
-
-      <Route path="/cache/server/:page(.*)">
-        {({ match: { params: { page } } }) => (
-          main({ view: CacheServerPage, title: "Server Cache", color: "devpage", page })
-        )}
-      </Route>
-
-      <Route exact path="/server/">
-        {main({
-          view: Server,
-          color: "devpage",
-          next: { href: 'store/', title: 'Store' },
-          prev: { href: 'cache/', title: 'Cache' }
-        })}
-      </Route>
-
-      <Route exact path="/store/">
-        {main({
-          view: Store,
-          color: "devpage",
-          next: { href: 'cache/', title: 'Cache' },
-          prev: { href: 'server/', title: 'Server' }
-        })}
-      </Route>
-
-      <Route exact path="/store/:table">
-        {({ match: { params: { table } } }) => (
-          main({ view: Store, table })
-        )}
-      </Route>
-
-      <Route exact path="/store/:table/:id">
-        {({ match: { params: { table, id } } }) => (
-          main({ view: Store, table, id })
-        )}
-      </Route>
-
-      <Route exact path="/Discussion-Items">
-        {() => {
-          let item = Object.entries(this.props.agenda).find(item => /^8[.A-Z]/m.test(item.attach))
-            || this.props.agenda['Discussion-Items'];
-
-          return main({ view: Report, item })
-        }}
-      </Route>
-
-      <Route path="/developer">
-        {main({
-          view: Developer,
-          color: "devpage",
-          next: { href: 'store/', title: 'Store' },
-          prev: { href: 'cache/', title: 'Cache' }
-        })}
-      </Route>
-
-      <Route path="/docs">
-        {main({
-          view: Docs,
-          color: "docpage",
-          next: { href: 'demo', title: 'Demo' }
-        })}      </Route>
-
-      <Route path="/demo">
-        <Demo main={main} />
-      </Route>
-
-      <Route path="/:path">
-        {({ match: { params: { path } } }) => {
-          let view = Report;
-
-          if (this.props.role === 'secretary') {
-            if (path === 'Roll-Call') view = RollCall;
-            if (path === 'Adjournment') view = Adjournment;
           }
+        };
 
-          return main({ view, item: this.find(path) })
-        }}
-      </Route>
-    </Switch>
-  }
+        return main(page)
+      }}
+    </Route>
 
-  // find an agenda item that matches the path
-  find = (path) => {
-    return this.props.agenda[path];
-  }
+    <Route exact path="/feedback">
+      {main({ view: Feedback, title: "Send Feedback" })}
+    </Route>
 
-  componentDidMount() {
-    if (!this.props.staticContext) {
-      // start watching keystrokes and fingers
-      Keyboard.initEventHandlers();
-      Touch.initEventHandlers();
-    }
-  };
+    <Route exact path="/help">
+      {() => {
+        let item = { view: Help };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
-      window.scrollTo(0, 0);
-    }
-  }
+        // Progressive Web Application 'Add to Home Screen' support
+        if (PageCache.installPrompt) item.buttons = [{ button: Install }];
 
+        return main(item)
+      }}
+    </Route>
+
+    <Route exact path="/secrets">
+      {main({ view: InsiderSecrets })}
+    </Route>
+
+    <Route exact path="/bootstrap.html">
+      {main({ view: BootStrapPage, title: " " })}
+    </Route>
+
+    <Route exact path="/cache/">
+      {main({
+        view: CacheStatus,
+        color: "devpage",
+        next: { href: 'server/', title: 'Server' },
+        prev: { href: 'store/', title: 'Store' }
+      })}
+    </Route>
+
+    <Route path="/cache/client/:page(.*)">
+      {({ match: { params: { page } } }) => (
+        main({ view: CacheClientPage, title: "Client Cache", color: "devpage", page })
+      )}
+    </Route>
+
+    <Route path="/cache/server/:page(.*)">
+      {({ match: { params: { page } } }) => (
+        main({ view: CacheServerPage, title: "Server Cache", color: "devpage", page })
+      )}
+    </Route>
+
+    <Route exact path="/server/">
+      {main({
+        view: Server,
+        color: "devpage",
+        next: { href: 'store/', title: 'Store' },
+        prev: { href: 'cache/', title: 'Cache' }
+      })}
+    </Route>
+
+    <Route exact path="/store/">
+      {main({
+        view: Store,
+        color: "devpage",
+        next: { href: 'cache/', title: 'Cache' },
+        prev: { href: 'server/', title: 'Server' }
+      })}
+    </Route>
+
+    <Route exact path="/store/:table">
+      {({ match: { params: { table } } }) => (
+        main({ view: Store, table })
+      )}
+    </Route>
+
+    <Route exact path="/store/:table/:id">
+      {({ match: { params: { table, id } } }) => (
+        main({ view: Store, table, id })
+      )}
+    </Route>
+
+    <Route exact path="/Discussion-Items">
+      {() => {
+        let item = Object.entries(props.agenda).find(item => /^8[.A-Z]/m.test(item.attach))
+          || props.agenda['Discussion-Items'];
+
+        return main({ view: Report, item })
+      }}
+    </Route>
+
+    <Route path="/developer">
+      {main({
+        view: Developer,
+        color: "devpage",
+        next: { href: 'store/', title: 'Store' },
+        prev: { href: 'cache/', title: 'Cache' }
+      })}
+    </Route>
+
+    <Route path="/docs">
+      {main({
+        view: Docs,
+        color: "docpage",
+        next: { href: 'demo', title: 'Demo' }
+      })}      </Route>
+
+    <Route path="/demo">
+      <Demo main={main} />
+    </Route>
+
+    <Route path="/:path">
+      {({ match: { params: { path } } }) => {
+        let view = Report;
+
+        if (props.role === 'secretary') {
+          if (path === 'Roll-Call') view = RollCall;
+          if (path === 'Adjournment') view = Adjournment;
+        }
+
+        return main({ view, item: find(path) })
+      }}
+    </Route>
+  </Switch>
 }
 
 export default connect(mapStateToProps)(withRouter(Router))
