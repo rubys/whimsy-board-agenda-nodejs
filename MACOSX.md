@@ -1,7 +1,7 @@
 # Quick Start
 
     brew install node yarn subversion
-    brew cask install visual-studio-code
+    brew install --cask visual-studio-code
     git clone https://github.com/rubys/whimsy-board-agenda-nodejs
     cd whimsy-board-agenda-nodejs
     yarn install
