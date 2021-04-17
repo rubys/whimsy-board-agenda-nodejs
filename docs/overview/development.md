@@ -73,6 +73,10 @@ immediately.
 ## client code
 
 Webpack's [Hot Module Replacement](https://webpack.js.org/guides/hot-module-replacement/) works with modules too.
+In fact, in many cases the
+[https://github.com/pmmmwh/react-refresh-webpack-plugin](react refresh webpack
+plugin) will allow the code to be updated without a full page refresh or
+affecting transient state like form values.
 
 ## server code
 
