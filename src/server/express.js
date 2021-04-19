@@ -8,6 +8,7 @@ import * as watcher from './watcher.js';
 import router from './router.js';
 import bodyParser from 'body-parser';
 import { promises as fs } from "fs";
+import path from 'path';
 
 const app = express();
 app.use(compression());
@@ -59,6 +60,13 @@ app.use('/', (request, response, next) => {
   if (process.env.NODE_ENV === 'test') {
     const svn = await import('./svn.js');
     await svn.demoMode();
+  } else if (process.env.NODE_ENV !== 'development') {
+    app.use(express.static('build'));
+
+    app.get(/^\/\d{4}-\d\d-\d\d\/.*$/, (req, res) => {
+      // TODO: replace with SSR
+      res.sendFile(path.join(__dirname, '../../build', 'index.html'));
+    });
   }
 
   app.listen(port, () => {
