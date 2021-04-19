@@ -9,6 +9,7 @@ import router from './router.js';
 import bodyParser from 'body-parser';
 import { promises as fs } from "fs";
 import path from 'path';
+import { Board } from './svn.js';
 
 const app = express();
 app.use(compression());
@@ -60,9 +61,15 @@ app.use('/', (request, response, next) => {
   if (process.env.NODE_ENV === 'test') {
     const svn = await import('./svn.js');
     await svn.demoMode();
-  } else if (process.env.NODE_ENV !== 'development') {
-    app.use(express.static('build'));
+  } else {
+    // route '/' to latest agenda
+    app.get('/', async (req, res) => {
+      let agenda = (await Board.agendas()).pop();
+      let date = agenda.match(/\d\w+/)[0].replace(/_/g, '-');
+      res.redirect(`/${date}/`);
+    });
 
+    // serve application pages
     app.get(/^\/\d{4}-\d\d-\d\d\/.*$/, (req, res) => {
       // TODO: replace with SSR
       res.sendFile(path.join(__dirname, '../../build', 'index.html'));
