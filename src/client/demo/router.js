@@ -1,7 +1,5 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import './demo.css';
-
 import Index from './index.js';
 import DemoObject from './object.js';
 import TemplateVariable from './template-variable.js';

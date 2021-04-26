@@ -14,7 +14,7 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-let reducers = { 
+export let reducers = {
   agenda, client, clockCounter, historicalComments,
   podlingNameSearch, reporter, responses, server
 };

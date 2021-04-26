@@ -14,7 +14,7 @@ function mapStateToProps(state) {
   return {
     agenda: state.agenda,
     clockCounter: state.clockCounter,
-    pendingCount: state.server.pending.count,
+    pendingCount: state.server.pending?.count || 0,
     user: state.server.user,
     offline: state.client.offline,
     forked: state.server.forked
@@ -125,7 +125,7 @@ function Header(props) {
 
   // find shortest shepherd (for example, "Rich")
   let shepherd = null;
-  let firstname = user.firstname.toLowerCase();
+  let firstname = user?.firstname?.toLowerCase() || '';
 
   for (let item of Object.values(agenda)) {
     if (item.shepherd && firstname.startsWith(item.shepherd.toLowerCase()) && (!shepherd || item.shepherd.length < shepherd.lenth)) {

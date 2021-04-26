@@ -18,7 +18,6 @@ import Help from "./pages/help.js";
 import Index from "./pages/index.js";
 import InsiderSecrets from "./pages/secrets.js";
 import Install from "./buttons/install.js";
-import Keyboard from "./keyboard.js";
 import Main from "./layout/main.js";
 import Minutes from "./models/minutes.js";
 import Missing from "./pages/missing.js";
@@ -27,7 +26,7 @@ import PageCache from "./models/pagecache.js";
 import Queue from "./pages/queue.js";
 import Post from "./buttons/post.js";
 import PublishMinutes from "./buttons/publish-minutes.js";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Refresh from "./buttons/refresh.js";
 import Rejected from "./pages/rejected.js";
 import RollCall from "./pages/roll-call.js";
@@ -37,7 +36,6 @@ import Server from "./pages/server.js";
 import Summary from "./buttons/summary.js";
 import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
-import Touch from "./touch.js";
 import Vote from "./buttons/vote.js";
 import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
@@ -64,10 +62,10 @@ export function navigate(path, query) {
 function mapStateToProps(state) {
   return {
     agenda: state.agenda,
-    agendas: state.server.agendas || {},
+    agendas: state.server.agendas || [],
     meetingDate: state.client.meetingDate,
     pending: state.server.pending,
-    role: state.server?.user?.role
+    role: state.server.user?.role
   }
 };
 
@@ -101,14 +99,6 @@ function Router(props) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [props.location.pathname]);
-
-  // start watching keystrokes and fingers
-  useEffect(() => {
-    if (!props.staticContext) {
-      Keyboard.initEventHandlers();
-      Touch.initEventHandlers();
-    }
-  }, [props.staticContext]);
 
   // buttons and forms to show with this report
   function itemButtons(item) {

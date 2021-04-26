@@ -1,18 +1,13 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router-dom';
 import store from '../store';
-import Router from '../router.js';
+import ClientContainer from '../container.js';
 import TestRenderer from 'react-test-renderer';
 
 test('renders welcome splash screen', () => {
-  const context = {};
-
   let root = TestRenderer.create(<>
     <Provider store={store}>
-      <StaticRouter location='/' context={context}>
-        <Router />
-      </StaticRouter>
+      <ClientContainer/>
     </Provider>
   </>).root;
 

@@ -11,7 +11,7 @@ import * as Actions from "../../actions.js";
 function mapStateToProps(state) {
   return {
     agendaFile: state.client.agendaFile,
-    userid: state.server.user.userid,
+    userid: state.server.user?.userid,
     agenda: state.agenda
   }
 };

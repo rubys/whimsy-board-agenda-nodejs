@@ -4,15 +4,10 @@ import * as Actions from "./actions.js";
 import JSONStorage from "./client/models/jsonstorage.js";
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Router from './client/router.js';
+import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import store from './client/store';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './client/agenda.css';
+import ClientContainer from './client/container.js';
 
 let base = window.location.pathname.match(/\/(\d\d\d\d-\d\d-\d\d\/)?/)[0];
 
@@ -21,15 +16,14 @@ document.getElementsByTagName('base')[0].href = base;
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter basename={base}>
-        <Router />
-      </BrowserRouter>
+      <ClientContainer base={base} />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
 (async () => {
+  // load server information
   let server = await new Promise((resolve, reject) => {
     JSONStorage.fetch('../api/server', (error, response, final) => {
       if (error) {
