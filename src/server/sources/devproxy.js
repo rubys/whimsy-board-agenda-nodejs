@@ -7,15 +7,19 @@ import * as cache from '../cache.js';
 
 export default async function devproxy(request, path, method = "get", data) {
 
+  let { username, password } = credentials(request);
+
   let cacheFile = path.split('/').pop();
-  if (!cacheFile.includes('.')) cacheFile += '.json';
+  if (!cacheFile.includes('.')) {
+    cacheFile += '.json';
+  } else if (cacheFile === 'server.json') {
+    cacheFile = `server-${username}.json`;
+  }
 
   if (method === "get") {
     let data = await cache.read(cacheFile, 5 * 60 * 1000);
     if (data) return data;
   }
-
-  let { username, password } = credentials(request);
 
   return new Promise((resolve, reject) => {
     let options = {
