@@ -29,6 +29,7 @@ import PublishMinutes from "./buttons/publish-minutes.js";
 import React, { useEffect } from "react";
 import Refresh from "./buttons/refresh.js";
 import Rejected from "./pages/rejected.js";
+import Report from "./pages/report.js";
 import RollCall from "./pages/roll-call.js";
 import Timestamp from "./buttons/timestamp.js";
 import Search from "./pages/search.js";
@@ -37,11 +38,11 @@ import Summary from "./buttons/summary.js";
 import Shepherd from "./pages/shepherd.js";
 import Store from "./pages/store.js";
 import Vote from "./buttons/vote.js";
+import Xref from "./pages/xref.js";
 import * as Utils from "./utils.js";
 import { InitialReminder, FinalReminder, ProdReminder } from "./buttons/reminders.js";
 import { connect } from 'react-redux';
 import { Switch, Route, withRouter } from "react-router-dom";
-import Report from "./pages/report.js";
 
 //
 // Route request based on path and query information in the URL
@@ -443,8 +444,17 @@ function Router(props) {
       {main({
         view: Store,
         color: "devpage",
-        next: { href: 'cache/', title: 'Cache' },
+        next: { href: 'xref/', title: 'Xref' },
         prev: { href: 'server/', title: 'Server' }
+      })}
+    </Route>
+
+    <Route exact path="/xref/">
+      {main({
+        view: Xref,
+        color: "devpage",
+        next: { href: 'cache/', title: 'Cache' },
+        prev: { href: 'store/', title: 'Store' }
       })}
     </Route>
 

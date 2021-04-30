@@ -8,6 +8,7 @@ import podlingNameSearch from './reducers/podling-name-search.js';
 import reporter from './reducers/reporter.js';
 import responses from './reducers/responses.js';
 import server from './reducers/server.js';
+import xref from './reducers/xref.js';
 import JSONStorage from "./models/jsonstorage.js"
 
 // temporary staging grounds for now, will migrate into the redux store
@@ -16,7 +17,7 @@ export let date = '';
 
 export let reducers = {
   agenda, client, clockCounter, historicalComments,
-  podlingNameSearch, reporter, responses, server
+  podlingNameSearch, reporter, responses, server, xref
 };
 
 const store = createStore(combineReducers(reducers));
