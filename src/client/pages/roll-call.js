@@ -8,7 +8,7 @@ import * as Actions from "../../actions.js";
 import { connect } from 'react-redux'
 
 function mapStateToProps(state) {
-  return { clock_counter: state.clock_counter }
+  return { clock_counter: state.clockCounter }
 };
 
 //
