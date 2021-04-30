@@ -24,7 +24,8 @@ function Server({ agendas, drafts, env }) {
     '/api/reporter',
     '/api/responses',
     '/api/server',
-    ...(env === 'development' ? ['/api/websocket'] : [])
+    ...(env === 'development' ? ['/api/websocket'] : []),
+    '/api/xref',
   ];
 
   return <>
