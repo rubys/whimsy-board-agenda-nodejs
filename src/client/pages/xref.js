@@ -24,7 +24,10 @@ function Xref( { xref }) {
       <tbody>
         {Object.entries(xref).map(([state, sources]) => (
            <tr key={state}>
-             <td>{state}</td>
+             <td>
+               <a href={`store/${state.replace(/[.]/g, '/')}`}>{state}</a>
+             </td>
+
              <td>
                <ul>{sources.map(source => (
                  <li>
