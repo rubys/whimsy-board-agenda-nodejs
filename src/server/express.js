@@ -63,10 +63,10 @@ app.use('/', (request, response, next) => {
     await svn.demoMode();
   } else {
     // route '/' to latest agenda
-    app.get('/', async (req, res) => {
-      let agenda = (await Board.agendas()).pop();
+    app.get('/', async (request, response) => {
+      let agenda = (await Board.agendas(request)).pop();
       let date = agenda.match(/\d\w+/)[0].replace(/_/g, '-');
-      res.redirect(`/${date}/`);
+      response.redirect(`/${date}/`);
     });
 
     // serve application pages
