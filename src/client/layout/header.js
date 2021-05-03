@@ -213,7 +213,7 @@ function Header(props) {
       }
 
       <li className="dropdown">
-        <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
+        <button id="nav" className="btn dropdown-large dropdown-toggle" data-toggle="dropdown">
           navigation
           </button>
 
