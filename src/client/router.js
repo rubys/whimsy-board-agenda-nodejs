@@ -413,6 +413,7 @@ function Router(props) {
     <Route exact path="/cache/">
       {main({
         view: CacheStatus,
+        title: 'Cache Status',
         color: "devpage",
         next: { href: 'server/', title: 'Server' },
         prev: { href: 'store/', title: 'Store' }
@@ -434,6 +435,7 @@ function Router(props) {
     <Route exact path="/server/">
       {main({
         view: Server,
+        title: 'Server',
         color: "devpage",
         next: { href: 'store/', title: 'Store' },
         prev: { href: 'cache/', title: 'Cache' }
@@ -443,6 +445,7 @@ function Router(props) {
     <Route exact path="/store/">
       {main({
         view: Store,
+        title: 'Store',
         color: "devpage",
         next: { href: 'xref/', title: 'Xref' },
         prev: { href: 'server/', title: 'Server' }
@@ -452,6 +455,7 @@ function Router(props) {
     <Route exact path="/xref/">
       {main({
         view: Xref,
+        title: 'Xref',
         color: "devpage",
         next: { href: 'cache/', title: 'Cache' },
         prev: { href: 'store/', title: 'Store' }
@@ -482,6 +486,7 @@ function Router(props) {
     <Route path="/developer">
       {main({
         view: Developer,
+        title: 'Developer',
         color: "devpage",
         next: { href: 'store/', title: 'Store' },
         prev: { href: 'cache/', title: 'Cache' }
@@ -491,6 +496,7 @@ function Router(props) {
     <Route path="/docs">
       {main({
         view: Docs,
+        title: 'Documentation',
         color: "docpage",
         next: { href: 'demo', title: 'Demo' }
       })}      </Route>

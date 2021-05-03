@@ -18,6 +18,7 @@ export default function router(props) {
       {main({
         color: 'docpage',
         view: Index,
+        title: 'Demo',
         next: { href: 'demo/object', title: 'Object' },
       })}
     </Route>
