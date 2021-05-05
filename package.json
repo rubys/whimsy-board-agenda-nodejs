@@ -16,6 +16,7 @@
     "express-ws": "^4.0.0",
     "jquery": "^3.4.1",
     "ldapjs": "^2.0.0",
+    "luxon": "^1.26.0",
     "md5": "^2.2.1",
     "moment-timezone": "^0.5.28",
     "mustache": "^4.0.1",
