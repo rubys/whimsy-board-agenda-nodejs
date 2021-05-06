@@ -1,10 +1,10 @@
 import { nextMeeting } from './calendar.js';
 import { Board, Templates } from '../svn.js';
-import moment from 'moment';
+import { dayjs } from '../config.js';
 import Mustache from 'mustache';
 
 export default async function reminderText(request) {
-  let meeting = moment(new Date(await nextMeeting(request))).tz('UTC');
+  let meeting = dayjs(await nextMeeting(request)).utc();
   let due = meeting.subtract(1, 'week');
 
   let file = (await Board.agendas(request)).sort().pop();
@@ -14,7 +14,7 @@ export default async function reminderText(request) {
   let view = {
     project: '{{{project}}}',
     link: '{{{link}}}',
-    meetingDate: meeting.format('ddd, DD MMM YYYY [at] hh:mm a z'),
+    meetingDate: meeting.format('ddd, DD MMM YYYY [at] HH:mm [UTC]'),
     month: meeting.format('MMMM'),
     year: meeting.format('YYYY'),
     timeZoneInfo,

@@ -56,7 +56,8 @@ class Repository {
 
 export const Board = new Repository('foundation_board');
 export const Minutes = new Repository('minutes');
-export const Committers  = new Repository('board');
+export const Committers = new Repository('board');
+export const Templates = new Repository('templates');
 
 // return a list of agendas
 Board.agendas = async function (request) {
