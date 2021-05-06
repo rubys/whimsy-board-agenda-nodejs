@@ -4,7 +4,7 @@ import { dayjs } from '../config.js';
 import Mustache from 'mustache';
 
 export default async function reminderText(request) {
-  let meeting = dayjs(await nextMeeting(request)).utc();
+  let meeting = dayjs.utc(await nextMeeting(request));
   let due = meeting.subtract(1, 'week');
 
   let file = (await Board.agendas(request)).sort().pop();

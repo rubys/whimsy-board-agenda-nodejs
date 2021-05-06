@@ -14,12 +14,12 @@ describe("calendar", () => {
 
     let meeting = times[0];
 
-    expect(meeting.time).toBe("2021-03-17T20:00:00.000Z");
+    expect(meeting.time).toBe("2021-03-17T20:00:00Z");
     expect(meeting.int).toBe(1616011200000);
 
     meeting = times.pop();
 
-    expect(meeting.time).toBe("2022-04-20T22:00:00.000Z");
+    expect(meeting.time).toBe("2022-04-20T22:00:00Z");
     expect(meeting.int).toBe(1650492000000);
   });
 });

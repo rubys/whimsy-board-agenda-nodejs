@@ -1,5 +1,5 @@
 import { Committers } from "../svn.js";
-import { DateTime } from 'luxon';
+import { dayjs } from '../config.js';
 
 // return parsed calendar
 
@@ -10,13 +10,9 @@ export default async function calendar(request) {
   let times = Array.from(source.matchAll(/^\s+\*\)\s(.*?) (\w+)$/gm), match => {
     let zone = match[2] === 'Pacific' ? "America/Los_Angeles" : 'UTC';
 
-    let time = DateTime.fromFormat(
-      match[1],
-      'EEE, dd MMMM yyyy, HH:mm',
-      { zone: match[2] }
-    );
+    let time = dayjs(match[1], 'ddd, DD MMMM YYYY, hh:mm').tz('UTC', true).utc();
 
-    return { time: time.toISO(), int: time.valueOf() };
+    return { time: time.format('YYYY-MM-DD[T]HH:mm:ss[Z]'), int: time.valueOf() };
   })
 
   return times;
@@ -37,23 +33,19 @@ export async function nextMeeting(request) {
 
   // try 20:00 UTC on the third Wednesday of this month
   now = new Date(now);
-  let month = now.getMonth()+1;
+  let month = now.getMonth();
   let year = now.getFullYear();
-  let day = 14 + (11 - DateTime.fromObject({ month, day: 1, year }).weekday) % 7;
+  let day = 14 + (11 - dayjs({ month, day: 1, year }).day()) % 7;
 
-  meeting = DateTime.fromObject({ month, day, year, hour: 20, zone: 'UTC' });
+  meeting = dayjs.utc({ month, day, year, hour: 20 });
 
   if (meeting.valueOf() > now.valueOf()) return meeting.valueOf();
 
   // chose 20:00 UTC on the third Wednesday of next month
-  if (month == 12) {
-    month = 1;
-    year++;
-  } else {
-    month ++;
-  };
+  month = ++month % 12;
+  if (month === 0) year++;
 
-  day = 14 + (11 - DateTime.fromObject({ month, day: 1, year }).weekday) % 7;
-  meeting = DateTime.fromObject({ month, day, year, hour: 20, zone: 'UTC' });
+  day = 14 + (11 - dayjs({ month, day: 1, year }).day()) % 7;
+  meeting = dayjs.utc({ month, day, year, hour: 20 });
   return meeting.valueOf();
 }
