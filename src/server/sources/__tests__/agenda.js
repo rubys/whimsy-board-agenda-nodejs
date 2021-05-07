@@ -13,7 +13,7 @@ describe("parse", () => (
     expect(ace.attach).toBe("C");
     expect(ace.owner).toBe("Marcel Offermans");
     expect(ace.missing).toBe(true);
-    expect(ace.comments).toBe("\ncm: Reminder email sent");
+    expect(ace.comments).toBe("cm: Reminder email sent");
     expect(ace.shepherd).toBe("Brett");
 
     let avro = parsed.find(item => item.title == "Avro");
