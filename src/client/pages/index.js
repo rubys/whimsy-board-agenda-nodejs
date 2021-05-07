@@ -37,8 +37,11 @@ class Index extends React.Component {
         </thead>
 
         <tbody>
-          {agenda.map(item => (
-            <tr className={item.status.color} key={item.attach}>
+          {agenda.map(item => {
+            let owner = item.owner;
+            if (!owner && item.chair) owner = item.people[item.chair].name;
+
+            return <tr className={item.status.color} key={item.attach}>
               <td>{item.attach}</td>
 
               {meetingDay && /^(\d+|[A-Z]+)$/m.test(item.attach) && !item.status.skippable
@@ -49,14 +52,14 @@ class Index extends React.Component {
                   <Link to={item.href}>{item.title}</Link>
                 </td>}
 
-              <td>{item.owner || item.chair_name}</td>
+              <td>{owner}</td>
 
               <td>{item.shepherd
                 ? <Link to={`shepherd/${item.shepherd.split(" ")[0]}`}>{item.shepherd}</Link>
                 : null
               }</td>
             </tr>
-          ))}
+          })}
         </tbody>
       </table>
     </>

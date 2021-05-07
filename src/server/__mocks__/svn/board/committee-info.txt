@@ -10,6 +10,7 @@ Committees (PMCs):
 
     NAME                    CHAIR
     ----------              ---------------
+    Geronimo                Romain Manni-Bucau <rmannibucau@apache.org>
     Whimsy                  Sam Ruby <rubys@apache.org>
 
 
@@ -75,4 +76,6 @@ Next month
     Sebastian Bazley           <sebb@apache.org>                [2015-11-16]
     Shane Curcuru              <curcuru@apache.org>             [2015-05-20]
 
+* Geronimo  (est. 05/2004)
+    Alan Cabrera               <adc@apache.org>                 [2006-08-10]
 =============================================================================

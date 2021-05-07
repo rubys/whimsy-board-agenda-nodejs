@@ -43,5 +43,9 @@ describe('index page', () => {
     // links, flagged and unflagged
     expect(getByText('Abdera')).toHaveAttribute('href', '/flagged/Abdera');
     expect(getByText('ACE')).toHaveAttribute('href', '/ACE');
+
+    // change chair resolution - chair name
+    expect(getByText('Change Geronimo Chair').closest('tr')
+      .querySelectorAll('td')[2].textContent).toBe('Alan Cabrera');
   });
 });
