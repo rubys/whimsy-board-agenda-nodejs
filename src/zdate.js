@@ -4,17 +4,17 @@
 
 import { add, set, sub, format, parse as lparse } from 'date-fns';
 
-export { sub, nextWednesday } from 'date-fns';
+export { add, sub, nextWednesday } from 'date-fns';
 
 function zformat(localDate, formatString) {
-  let utcDate = add(localDate, { minutes: localDate.getTimezoneOffset ()});
+  let utcDate = add(localDate, { minutes: localDate.getTimezoneOffset() });
   return format(utcDate, formatString)
 }
 
 export function zset(localDate, object) {
-  let utcDate = add(localDate, { minutes: localDate.getTimezoneOffset ()})
+  let utcDate = add(localDate, { minutes: localDate.getTimezoneOffset() })
   utcDate = set(utcDate, object);
-  return sub(utcDate, { minutes: localDate.getTimezoneOffset ()});
+  return sub(utcDate, { minutes: utcDate.getTimezoneOffset() });
 }
 
 export function formatDate(date) {
@@ -45,7 +45,7 @@ export function agendaLink(date) {
   return zformat(date, "'https://whimsy.apache.org/board/agenda/'yyyy-MM-dd/")
 }
 
-export function parse(string, date=new Date()) {
+export function parse(string, date = new Date()) {
   let utcDate, format;
 
   if (string.match(/^\w+,/)) {
@@ -61,5 +61,5 @@ export function parse(string, date=new Date()) {
   };
 
   utcDate = lparse(string, format, date);
-  return sub(utcDate, { minutes: utcDate.getTimezoneOffset ()});
+  return sub(utcDate, { minutes: utcDate.getTimezoneOffset() });
 }
