@@ -1,11 +1,11 @@
 import { nextMeeting } from './calendar.js';
 import { Board, Templates } from '../svn.js';
-import { dayjs } from '../config.js';
+import { sub, formatDate, formatMonth, formatYear, formatMonthDay, agendaLink } from '../../zdate.js';
 import Mustache from 'mustache';
 
 export default async function reminderText(request) {
-  let meeting = dayjs.utc(await nextMeeting(request));
-  let due = meeting.subtract(1, 'week');
+  let meeting = new Date(await nextMeeting(request));
+  let due = sub(meeting, {weeks: 1});
 
   let file = (await Board.agendas(request)).sort().pop();
   let agenda = await Board.read(file, request);
@@ -14,12 +14,12 @@ export default async function reminderText(request) {
   let view = {
     project: '{{{project}}}',
     link: '{{{link}}}',
-    meetingDate: meeting.format('ddd, DD MMM YYYY [at] HH:mm [UTC]'),
-    month: meeting.format('MMMM'),
-    year: meeting.format('YYYY'),
+    meetingDate: formatDate(meeting),
+    month: formatMonth(meeting),
+    year: formatYear(meeting),
     timeZoneInfo,
-    dueDate: due.format('ddd, MMM Do'),
-    agenda: meeting.format('[https://whimsy.apache.org/board/agenda/]YYYY-MM-DD/')
+    dueDate: formatMonthDay(due),
+    agenda: agendaLink(meeting)
   };
 
   let { reminder } = request.params;

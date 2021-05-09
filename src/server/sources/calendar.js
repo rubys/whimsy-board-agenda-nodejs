@@ -1,5 +1,5 @@
 import { Committers } from "../svn.js";
-import { dayjs } from '../config.js';
+import { parse, formatISO, zset, sub, nextWednesday } from '../../zdate.js';
 
 // return parsed calendar
 
@@ -8,11 +8,10 @@ export default async function calendar(request) {
   let source = await Committers.read('calendar.txt', request);
 
   let times = Array.from(source.matchAll(/^\s+\*\)\s(.*?) (\w+)$/gm), match => {
-    let zone = match[2] === 'Pacific' ? "America/Los_Angeles" : 'UTC';
+    // match[2] == zone, ignored for now
 
-    let time = dayjs(match[1], 'ddd, DD MMMM YYYY, hh:mm').tz('UTC', true).utc();
-
-    return { time: time.format('YYYY-MM-DD[T]HH:mm:ss[Z]'), int: time.valueOf() };
+    let time = parse(match[1]);
+    return { time: formatISO(time), int: time.valueOf() };
   })
 
   return times;
@@ -31,21 +30,13 @@ export async function nextMeeting(request) {
 
   if (meeting) return meeting;
 
-  // try 20:00 UTC on the third Wednesday of this month
-  now = new Date(now);
-  let month = now.getMonth();
-  let year = now.getFullYear();
-  let day = 14 + (11 - dayjs({ month, day: 1, year }).day()) % 7;
+  // find the next wednesday that falls on the third week of the month
+  meeting = zset(new Date(now), { hours: 20, minutes: 0, seconds: 0, milliseconds: 0});
+  if (meeting.valueOf() > now) meeting = sub(meeting, {days: 1});
+  meeting = nextWednesday(meeting);
+  while (meeting.getDate() <= 14 || meeting.getDate() > 21) {
+    meeting = nextWednesday(meeting);
+  }
 
-  meeting = dayjs.utc({ month, day, year, hour: 20 });
-
-  if (meeting.valueOf() > now.valueOf()) return meeting.valueOf();
-
-  // chose 20:00 UTC on the third Wednesday of next month
-  month = ++month % 12;
-  if (month === 0) year++;
-
-  day = 14 + (11 - dayjs({ month, day: 1, year }).day()) % 7;
-  meeting = dayjs.utc({ month, day, year, hour: 20 });
   return meeting.valueOf();
 }

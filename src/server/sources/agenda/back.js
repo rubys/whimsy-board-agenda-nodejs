@@ -5,7 +5,7 @@
 // * Announcements
 // * Adjournment
 
-import moment from 'moment-timezone';
+import { parse } from '../../../zdate.js';
 import { minutesLink } from '../agenda.js';
 import { TIMEZONE } from '../../config.js';
 
@@ -24,7 +24,7 @@ export default async function back(agenda) {
       let date = (agenda.match(/\w+ \d+, \d+/) || [])[0];
       let time = (attrs.text.match(/\d+:\d+([ap]m)?/) || [])[0];
       if (date && time) {
-        attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', TIMEZONE).valueOf();
+        attrs.timestamp = parse(`${date} ${time}`).valueOf()
       }
     };
 

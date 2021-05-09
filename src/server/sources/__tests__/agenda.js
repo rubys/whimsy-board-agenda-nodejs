@@ -28,6 +28,9 @@ describe("parse", () => {
     let lenya_action = actions.actions.find(action => action.pmc == "Lenya");
     expect(lenya_action.owner).toBe("Chris");
     expect(lenya_action.text).toBe("Summarize comments and follow on the dev list.")
+
+    expect(parsed[0].timestamp).toBe(1421865000000);
+    expect(parsed[parsed.length-1].timestamp).toBe(1421874000000);
   });
 
   it("should parse a chair change resolution", async () => {
