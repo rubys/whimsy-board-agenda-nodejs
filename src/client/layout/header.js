@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
-    agenda: state.agenda,
+    agenda: state.agenda || {},
     clockCounter: state.clockCounter,
     pendingCount: state.server.pending?.count || 0,
     user: state.server.user,

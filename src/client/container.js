@@ -31,14 +31,16 @@ function Container({ agenda, user, base }) {
     Touch.initEventHandlers();
   }, []);
 
-  if (!agenda || !user) {
-    // show logo while waiting...
-    return <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Fetching board agenda...</p>
-      </header>
-    </div>
+  if (base !== '/' || window.location.pathname === '/') {
+    if (!agenda || !user) {
+      // show logo while waiting...
+      return <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>Fetching board agenda...</p>
+        </header>
+      </div>
+    }
   }
 
   // route request based on path and query from the window location (URL)

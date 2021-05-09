@@ -39,12 +39,12 @@ ReactDOM.render(
     })
   });
 
-  if (base === '/') {
+  if (window.location.pathname === '/') {
     // emulate the server side redirect to the latest agenda
     let latest = [...server.agendas].sort().pop();
     let date = latest.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-");
     window.location.href = `/${date}/`;
-  } else {
+  } else if (base !== '/') {
     // fetch and store agenda information
     await new Promise((resolve, reject) => {
       JSONStorage.fetch(`${base.slice(1, -1)}.json`, (error, agenda) => {

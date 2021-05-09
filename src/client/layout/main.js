@@ -1,5 +1,6 @@
 import Footer from "./footer.js";
 import Header from "./header.js";
+import NotFound from "./not-found.js";
 import React, { useEffect } from "react";
 import jQuery from "jquery";
 
@@ -59,9 +60,7 @@ function Main(props) {
   });
 
   // common layout for all pages: header, main, footer, and forms
-  if (!props.view) {
-    return <p>Page not found</p>
-  };
+  if (!props.view) return <NotFound location={props.location}/>;
 
   return <>
     <Header {...props} />

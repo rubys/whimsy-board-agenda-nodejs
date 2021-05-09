@@ -72,14 +72,16 @@ function mapStateToProps(state) {
 
 function Router(props) {
 
+  let { agenda, agendas, location, meetingDate, pending, role } = props;
+
   // maintain history
   useEffect(() => {
     history = props.history;
 
-    let path = props.location.pathname;
+    let path = location.pathname;
 
     // store initial state in history
-    if (!props.location.state) {
+    if (!location.state) {
       if (path === "/bootstrap.html") {
         path = document.location.href;
         let base = document.getElementsByTagName("base")[0].href;
@@ -99,7 +101,7 @@ function Router(props) {
   // scroll to top of window when path changes
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [props.location.pathname]);
+  }, [location.pathname]);
 
   // buttons and forms to show with this report
   function itemButtons(item) {
@@ -117,7 +119,7 @@ function Router(props) {
     if (item.title === "Roll Call") list.push({ button: Attend });
 
     if (/^(\d+|7?[A-Z]+|4[A-Z]|8[.A-Z])$/m.test(item.attach)) {
-      if (props.role === "secretary" || !Minutes.complete) {
+      if (role === "secretary" || !Minutes.complete) {
         if (!Minutes.draft_posted) {
           if (/^8[.A-Z]/m.test(item.attach)) {
             if (/^8[A-Z]/m.test(item.attach)) {
@@ -138,11 +140,11 @@ function Router(props) {
       }
     };
 
-    if (props.role === "director") {
+    if (role === "director") {
       if (!item.missing && item.comments !== undefined && !Minutes.complete) {
         if (/^(3[A-Z]|\d+|[A-Z]+)$/m.test(item.attach)) list.push({ button: Approve })
       }
-    } else if (props.role === "secretary") {
+    } else if (role === "secretary") {
       if (!Minutes.draft_posted) {
         if (/^7\w/m.test(item.attach)) {
           list.push({ form: Vote })
@@ -243,12 +245,11 @@ function Router(props) {
     return <Main {...props} />
   }
 
-  // find an agenda item that matches the path
-  function find(path) {
-    return props.agenda[path];
+  if (location.pathname === '/help') {
+    return <Main view={Help}/>
+  } else if (!agenda || !Object.keys(agenda).length) {
+    return <Main location={location}/>
   }
-
-  if (!Object.keys(props.agenda || {}).length) return main(null);
 
   // route request based on path and query from the window location (URL)
   return <Switch>
@@ -258,12 +259,12 @@ function Router(props) {
         let prev = { title: "Help", href: "help" };
         let next = prev;
 
-        for (let agenda of props.agendas) {
+        for (let agenda of agendas) {
           let date = (agenda.match(/(\d+_\d+_\d+)/) || [])[1].replace(/_/g, "-");
 
-          if (date < props.meetingDate && (prev.title === "Help" || date > prev.title)) {
+          if (date < meetingDate && (prev.title === "Help" || date > prev.title)) {
             prev = { title: date, href: `../${date}/` }
-          } else if (date > props.meetingDate && (next.title === "Help" || date < next.title)) {
+          } else if (date > meetingDate && (next.title === "Help" || date < next.title)) {
             next = { title: date, href: `../${date}/` }
           }
         };
@@ -272,17 +273,17 @@ function Router(props) {
 
         if (!Minutes.complete) {
           buttons.push({ form: Post, text: "add item" })
-        } else if (["director", "secretary"].includes(props.role)) {
+        } else if (["director", "secretary"].includes(role)) {
           if (!Minutes.summary_sent) buttons.push({ form: Summary })
         };
 
-        if (props.role === "secretary") {
+        if (role === "secretary") {
           if (Minutes.ready_to_post_draft) {
             buttons.push({ form: DraftMinutes })
           }
         };
 
-        return main({ view: Index, title: props.meetingDate, buttons, prev, next })
+        return main({ view: Index, title: meetingDate, buttons, prev, next })
       }}
     </Route>
 
@@ -307,10 +308,10 @@ function Router(props) {
     <Route exact path="/queue">
       {() => {
         let page = { view: Queue, title: "Queued approvals and comments" };
-        if (props.role !== "director") page.title = "Queued comments";
+        if (role !== "director") page.title = "Queued comments";
 
         page.buttons = [{ button: Refresh }];
-        if (props.pending.count > 0) page.buttons.push({ form: Commit });
+        if (pending.count > 0) page.buttons.push({ form: Commit });
         if (PageCache.enabled) page.buttons.push({ button: Offline });
 
         return main(page);
@@ -329,7 +330,7 @@ function Router(props) {
       {() => {
         let buttons = [{ form: InitialReminder }, { button: FinalReminder }];
 
-        if (Object.values(props.agenda).some(item => item.status.nonresponsive)) {
+        if (Object.values(agenda).some(item => item.status.nonresponsive)) {
           buttons.push({ form: ProdReminder })
         };
 
@@ -339,19 +340,19 @@ function Router(props) {
 
     <Route path="/flagged/:path">
       {({ match: { params: { path } } }) => (
-        main({ view: Report, item: find(path), traversal: "flagged" })
+        main({ view: Report, item: agenda[path], traversal: "flagged" })
       )}
     </Route>
 
     <Route path="/queue/:path">
       {({ match: { params: { path } } }) => (
-        main({ view: Report, item: find(path), traversal: "queue" })
+        main({ view: Report, item: agenda[path], traversal: "queue" })
       )}
     </Route>
 
     <Route path="/shepherd/queue/:path">
       {({ match: { params: { path } } }) => (
-        main({ view: Report, item: find(path), traversal: "shepherd" })
+        main({ view: Report, item: agenda[path], traversal: "shepherd" })
       )}
     </Route>
 
@@ -366,7 +367,7 @@ function Router(props) {
         };
 
         // determine next/previous links
-        for (let i of Object.values(props.agenda)) {
+        for (let i of Object.values(agenda)) {
           if (i.shepherd && 'comments' in i) {
             if (i.shepherd.includes(" ")) continue;
             let href = `shepherd/${i.shepherd}`;
@@ -476,8 +477,8 @@ function Router(props) {
 
     <Route exact path="/Discussion-Items">
       {() => {
-        let item = Object.entries(props.agenda).find(item => /^8[.A-Z]/m.test(item.attach))
-          || props.agenda['Discussion-Items'];
+        let item = Object.entries(agenda).find(item => /^8[.A-Z]/m.test(item.attach))
+          || agenda['Discussion-Items'];
 
         return main({ view: Report, item })
       }}
@@ -509,12 +510,12 @@ function Router(props) {
       {({ match: { params: { path } } }) => {
         let view = Report;
 
-        if (props.role === 'secretary') {
+        if (role === 'secretary') {
           if (path === 'Roll-Call') view = RollCall;
           if (path === 'Adjournment') view = Adjournment;
         }
 
-        return main({ view, item: find(path) })
+        return main({ view, item: agenda[path] })
       }}
     </Route>
   </Switch>
