@@ -10,6 +10,7 @@ import bodyParser from 'body-parser';
 import { promises as fs } from "fs";
 import path from 'path';
 import { Board } from './svn.js';
+import ssr from './ssr.js';
 
 const app = express();
 app.use(compression());
@@ -75,6 +76,10 @@ app.use('/', (request, response, next) => {
       res.sendFile(path.join(__dirname, '../../build', 'index.html'));
     });
   }
+
+  app.get('/*', async (req, res) => {
+    await ssr(req, res);
+  });
 
   app.listen(port, () => {
     console.log(`Whimsy board agenda app listening on port ${port}`);
