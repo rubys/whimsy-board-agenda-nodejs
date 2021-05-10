@@ -246,7 +246,7 @@ function Router(props) {
   }
 
   if (location.pathname === '/help') {
-    return <Main view={Help}/>
+    return <Main title="Help" view={Help}/>
   } else if (!agenda || !Object.keys(agenda).length) {
     return <Main location={location}/>
   }
@@ -394,7 +394,8 @@ function Router(props) {
 
     <Route exact path="/help">
       {() => {
-        let item = { view: Help };
+        let item = { title: 'Help', view: Help };
+console.log(item);
 
         // Progressive Web Application 'Add to Home Screen' support
         if (PageCache.installPrompt) item.buttons = [{ button: Install }];

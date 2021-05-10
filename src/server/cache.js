@@ -2,6 +2,9 @@ import { cachePath } from './config.js';
 import fs, { promises as fsp } from 'fs';
 import md5 from "md5";
 
+// in memory contents of cache, for synchronous access
+export let values = {};
+
 // return contents of cache file if exist and is not stale
 export async function read(file, ttl, mtime) {
   try {
@@ -13,11 +16,13 @@ export async function read(file, ttl, mtime) {
     throw error;
   }
 
-  return fsp.readFile(`${cachePath}/${file}`, 'utf8');
+  values[file] = await fsp.readFile(`${cachePath}/${file}`, 'utf8');
+  return values[file];
 };
 
 export async function write(file, data) {
   await fsp.mkdir(cachePath, { recursive: true });
+  values[file] = data;
 
   await new Promise((resolve, reject) => {
     let wstream = fs.createWriteStream(`${cachePath}/${file}`);
@@ -28,6 +33,7 @@ export async function write(file, data) {
 };
 
 export async function decache(file) {
+  delete values[file];
   return fsp.unlink(`${cachePath}/${file}`).catch(() => {});
 }
 

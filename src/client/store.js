@@ -20,7 +20,18 @@ export let reducers = {
   podlingNameSearch, reporter, responses, server, xref
 };
 
-const store = createStore(combineReducers(reducers));
+// load initial state for hydration
+let state;
+if (typeof window !== 'undefined' && 'REDUX_STATE' in window) {
+  state = window.REDUX_STATE;
+}
+
+const store = createStore(combineReducers(reducers), state);
+
+// on the client, serverCache will forever remain null.  On the server,
+// however, it will be replaced with a function which returns cached results.
+let serverCache = null;
+export function setCache(fn) {serverCache = fn}
 
 // for reducers that provide lookup functions,
 // load data from the server, caching it using JSONStorage, and save
@@ -42,21 +53,25 @@ export function lookup(name) {
   if (!path) return initialValue;
 
   if (!fetched[path]) {
-    Promise.resolve().then(() => {
-      if (!action) action = Actions['post' + name.replace(/^\w/, c => c.toUpperCase())];
-      if (!filter) filter = value => value;
-
-      store.dispatch(action(initialValue));
-
-      JSONStorage.fetch(path, (error, value) => {
-        if (!error && value) store.dispatch(action(filter(value)));
-      })
-    });
-
     fetched[path] = true;
+
+    if (!action) action = Actions['post' + name.replace(/^\w/, c => c.toUpperCase())];
+    if (!filter) filter = value => value;
+
+    if (serverCache) {
+      initialValue = serverCache(path) || initialValue
+    } else {
+      Promise.resolve().then(() => {
+        JSONStorage.fetch(path, (error, value) => {
+          if (!error && value) store.dispatch(action(filter(value)));
+        })
+      })
+    };
+
+    store.dispatch(action(initialValue));
   };
 
-  return initialValue
+  return initialValue;
 }
 
 export default store;

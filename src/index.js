@@ -6,14 +6,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
-import store from './client/store';
+import store from './client/store.js';
 import ClientContainer from './client/container.js';
 
 let base = window.location.pathname.match(/\/(\d\d\d\d-\d\d-\d\d\/)?/)[0];
 
 document.getElementsByTagName('base')[0].href = base;
 
-ReactDOM.render(
+// chose between rendering and hydrating based on whether or not
+// there is REDUX_STATE present
+let render = ReactDOM.render;
+if (window.REDUX_STATE) {
+  render = ReactDOM.hydrate;
+  delete window.REDUX_STATE
+}
+
+// update the DOM
+render(
   <React.StrictMode>
     <Provider store={store}>
       <ClientContainer base={base} />

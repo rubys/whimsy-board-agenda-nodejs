@@ -28,7 +28,7 @@ function NotFound(props) {
          <ul>
            {agendas.map(agenda => {
              agenda = agenda.match(/\d+_\d+_\d+/)[0].replace(/_/g, '-');
-             return <li><a href={`/${agenda}/`}>{agenda}</a></li>
+             return <li key={agenda}><a href={`/${agenda}/`}>{agenda}</a></li>
            })}
          </ul>
       </>}
