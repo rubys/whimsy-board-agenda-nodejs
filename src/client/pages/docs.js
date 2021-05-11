@@ -32,7 +32,7 @@ function Docs() {
       </dd>
 
       <dt className="col-sm-2">
-        <a href={`development`}>Setup</a>
+        <a href={development}>Setup</a>
       </dt>
       <dd className="col-sm-10">
         <p>Instructions on how to set up a development environment on MacOS,
