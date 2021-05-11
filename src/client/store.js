@@ -15,18 +15,30 @@ import JSONStorage from "./models/jsonstorage.js"
 export let file = '';
 export let date = '';
 
-export let reducers = {
+const reducers = {
   agenda, client, clockCounter, historicalComments,
   podlingNameSearch, reporter, responses, server, xref
 };
 
-// load initial state for hydration
-let state;
-if (typeof window !== 'undefined' && 'REDUX_STATE' in window) {
-  state = window.REDUX_STATE;
+const appReducer = combineReducers(reducers);
+let fetched = {};
+
+const rootReducer = (state, action) => {
+  if (action.type === Actions.RESET_STORE) {
+    state = undefined;
+    fetched = {};
+  }
+  return appReducer(state, action);
 }
 
-const store = createStore(combineReducers(reducers), state);
+let store;
+if (typeof window !== 'undefined' && 'REDUX_STATE' in window) {
+  // load initial state for hydration
+  store = createStore(rootReducer, window.REDUX_STATE);
+} else {
+  // start fresh
+  store = createStore(rootReducer)
+}
 
 // on the client, serverCache will forever remain null.  On the server,
 // however, it will be replaced with a function which returns cached results.
@@ -40,7 +52,6 @@ export function setCache(fn) {serverCache = fn}
 // Note that this implies that the store may be dispatched twice:
 // once with slightly stale data from the client and possibly once
 // again with fresh data from the server.
-let fetched = {};
 export function lookup(name) {
   let state = store.getState();
   if (state[name]) return state[name];

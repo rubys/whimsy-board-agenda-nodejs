@@ -71,9 +71,8 @@ app.use('/', (request, response, next) => {
     });
 
     // serve application pages
-    app.get(/^\/\d{4}-\d\d-\d\d\/.*$/, (req, res) => {
-      // TODO: replace with SSR
-      res.sendFile(path.join(__dirname, '../../build', 'index.html'));
+    app.get(/^(\/\d{4}-\d\d-\d\d)\/.*$/, async (req, res) => {
+      await ssr(req, res, req.params[0]);
     });
   }
 
@@ -82,7 +81,7 @@ app.use('/', (request, response, next) => {
   });
 
   app.listen(port, () => {
-    console.log(`Whimsy board agenda app listening on port ${port}`);
+    console.log(`Infrastructure board agenda app listening on port ${port}`);
   })
 })();
 

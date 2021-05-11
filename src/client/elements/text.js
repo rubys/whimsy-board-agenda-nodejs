@@ -1,4 +1,5 @@
 import { htmlEscape } from "../utils.js";
+import React from "react";
 
 //
 // Escape text for inclusion in HTML; optionally apply filters

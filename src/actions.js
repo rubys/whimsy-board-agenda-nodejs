@@ -15,6 +15,8 @@
 // 3) this source file has no dependencies on either the client or the server
 //    as actions can be dispatched from the client or broadcast from the server.
 
+export const RESET_STORE = 'RESET_STORE';
+
 export const CLOCK_DECREMENT = 'CLOCK_DECREMENT';
 export const CLOCK_INCREMENT = 'CLOCK_INCREMENT';
 export const POST_AGENDA = 'POST_AGENDA';
@@ -35,6 +37,7 @@ export const POST_XREF = 'POST_XREF';
 export const clockDecrement = () => ({ type: CLOCK_DECREMENT });
 export const clockIncrement = () => ({ type: CLOCK_INCREMENT });
 
+export const resetStore = () => ({ type: RESET_STORE });
 export const postAgenda = index => ({ type: POST_AGENDA, index });
 export const postDigest = files => ({ type: POST_DIGEST, files });
 export const postHistoricalComments = comments => ({ type: POST_HISTORICAL_COMMENTS, comments });
