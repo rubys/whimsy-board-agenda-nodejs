@@ -36,7 +36,7 @@ There is a source code control icon third from the top on the left.  If you
 push it, you will see a button to Clone Repository.  Pushing that gives you
 an input field at the top where you can copy and paste the following URL:
 
-    https://github.com/rubys/whimsy-board-agenda-nodejs.git
+    https://github.com/apache/infrastructure-agenda.git
 
 # Yarn
 

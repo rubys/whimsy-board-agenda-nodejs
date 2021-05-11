@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Docs() {
-  let overview = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/overview"
-  let walkthrough = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/walkthrough"
+  let overview = "https://github.com/apache/infrastructure-agenda/blob/master/docs/overview"
+  let walkthrough = "https://github.com/apache/infrastructure-agenda/blob/master/docs/walkthrough"
 
   return <div className="container">
     <h1>Documentation/Guides</h1>

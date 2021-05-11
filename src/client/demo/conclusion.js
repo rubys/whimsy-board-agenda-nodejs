@@ -27,13 +27,13 @@ function Conclusion() {
     </ul>
 
     <p>You may be interested in perusing the {' '}
-    <a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/demo">source</a> {' '}
+    <a href="https://github.com/apache/infrastructure-agenda/tree/master/src/client/demo">source</a> {' '}
     to this demo.  The demo is implemented using the techniques described in the demo itself.  In particular,
     it pulled your information from the server, the list of attendees from this month's roll call,
     and the pending count is based on whatever comments, approvals, etc. you may have pending at this time.</p>
 
     <p>The <tt>add comment</tt> button on the previous page is the {' '}
-    <a href="https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client/buttons/add-comment.js">add-comment.js</a>
+    <a href="https://github.com/apache/infrastructure-agenda/tree/master/src/client/buttons/add-comment.js">add-comment.js</a>
     {' '} component used in the board agenda application, and the <tt>item</tt> that is passed to this component
     is the <tt>Incubator</tt> item from the Redux store.
     </p>
