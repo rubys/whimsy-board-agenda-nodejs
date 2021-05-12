@@ -26,7 +26,8 @@ export default async function discussion(agenda) {
     sections = [...discussion.matchAll(pattern)].map(match => match.groups);
 
     for (let attrs of sections) {
-      attrs.attach = "8" + attrs.attach
+      attrs.attach = "8" + attrs.attach;
+      if (attrs.text.trim().length === 0) attrs.warnings = ["Body is missing"]
     };
   }
 
