@@ -28,12 +28,14 @@ function Server({ agendas, drafts, env }) {
     '/api/xref',
   ];
 
+  let base = (env === 'production') ? '' : 'http://localhost:3001';
+
   return <>
     <p>A list of server links:</p>
 
     <ul>
       {links.map(link =>
-        <li key={link}><a href={`http://localhost:3001${link}`}>{link}</a></li>
+        <li key={link}><a href={`${base}${link}`}>{link}</a></li>
       )}
     </ul>
   </>;
