@@ -38,6 +38,7 @@ export default async function ssr(request, response, basename) {
     );
 
     let state = JSON.stringify(store.getState());
+    delete state.xref; // not cached, so don't include
 
     html = html.replace(
       '<div id="root"></div>',
