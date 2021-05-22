@@ -16,7 +16,7 @@ let empty = {
 
 export async function read(request) {
   let { username } = credentials(request);
-  let agenda = request.body.agenda || (await Board.agendas()).sort().pop();
+  let agenda = request.body.agenda || (await Board.agendas(request)).sort().pop();
 
   let pending = {};
 
