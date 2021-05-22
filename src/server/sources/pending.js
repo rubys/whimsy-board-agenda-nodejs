@@ -4,16 +4,6 @@ import { promises as fs } from 'fs';
 import yaml from 'yaml';
 import { Board } from "../svn.js";
 
-let empty = {
-  approved: [],
-  comments: {},
-  flagged: [],
-  seen: {},
-  status: [],
-  unapproved: [],
-  unflagged: []
-}
-
 export async function read(request) {
   let { username } = credentials(request);
   let agenda = request.body.agenda || (await Board.agendas(request)).sort().pop();
@@ -27,9 +17,17 @@ export async function read(request) {
     if (error.code !== 'ENOENT') throw error;
   }
 
-  pending = { ...empty, agenda, ...pending };
+  let empty = {
+    approved: [],
+    comments: {},
+    flagged: [],
+    seen: {},
+    status: [],
+    unapproved: [],
+    unflagged: []
+  }
 
-  return pending;
+  return { ...empty, agenda, ...pending };
 }
 
 export async function write(request, pending) {
