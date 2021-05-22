@@ -8,6 +8,10 @@ afterEach(() => {
 
 describe("reminder text", () => {
   it("should parse the calendar", async () => {
+    jest.spyOn(global.Date, 'now').mockImplementation(() =>
+      new Date('2021-05-01T11:01:58.135Z').valueOf()
+    );
+
     let request = {params: {reminder: 'reminder1'}};
     let { subject, body } = await reminderText(request);
 
