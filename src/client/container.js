@@ -1,5 +1,5 @@
 import Keyboard from "./keyboard.js";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './router.js';
@@ -24,6 +24,22 @@ function mapStateToProps(state) {
 };
 
 function Container({ agenda, user, base }) {
+  let [showSpinner, setSpinner] = useState(false);
+
+  // set waiting to be true if we are on an agenda page
+  // and we don't yet have an agenda or user.
+  let waiting = false;
+  if (base !== '/' || window.location.pathname === '/') {
+    if (!agenda || !user) {
+      waiting = true;
+    }
+  };
+
+  // delay showing spinner for 0.5 seconds to prevent flashing
+  // when content can be served from the browser cache.
+  useEffect(() => {
+    if (waiting) setTimeout(() => setSpinner(true), 500);
+  }, []);
 
   // start watching keystrokes and fingers
   useEffect(() => {
@@ -31,16 +47,16 @@ function Container({ agenda, user, base }) {
     Touch.initEventHandlers();
   }, []);
 
-  if (base !== '/' || window.location.pathname === '/') {
-    if (!agenda || !user) {
-      // show logo while waiting...
-      return <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Fetching board agenda...</p>
-        </header>
-      </div>
-    }
+  if (waiting) {
+    // show logo while waiting...
+    return <div className="App">
+      {showSpinner ?
+	<header className="App-header">
+	  <img src={logo} className="App-logo" alt="logo" />
+	  <p>Fetching board agenda...</p>
+	</header>
+	: <></>}
+    </div>
   }
 
   // route request based on path and query from the window location (URL)
