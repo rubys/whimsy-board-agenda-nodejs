@@ -20,8 +20,8 @@ export default async function ssr(request, response, basename) {
   let html = await fs.readFile(path.join(__dirname, '../../build', 'index.html'), 'utf8');
 
   try {
-  store.dispatch(Actions.resetStore());
-  store.dispatch(Actions.postServer(await server(request)));
+    store.dispatch(Actions.resetStore());
+    store.dispatch(Actions.postServer(await server(request)));
 
     if (basename) {
       let agenda = `board_agenda_${basename.slice(1).replace(/-/g, '_')}.txt`;
@@ -44,7 +44,7 @@ export default async function ssr(request, response, basename) {
       '<div id="root"></div>',
       `<div id="root">${app}</div><script>window.REDUX_STATE=${state}</script>`
     );
-  } catch(error) {
+  } catch (error) {
     console.error(error)
   }
 
