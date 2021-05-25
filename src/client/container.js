@@ -39,7 +39,7 @@ function Container({ agenda, user, base }) {
   // when content can be served from the browser cache.
   useEffect(() => {
     if (waiting) setTimeout(() => setSpinner(true), 500);
-  }, []);
+  }, [waiting]);
 
   // start watching keystrokes and fingers
   useEffect(() => {
