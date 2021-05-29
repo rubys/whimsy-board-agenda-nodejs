@@ -2,7 +2,7 @@
 // * Call to Order
 // * Roll Call
 
-import moment from 'moment-timezone';
+import { parse } from '../../../zdate.js';
 import * as ldap from '../../ldap.js';
 import { TIMEZONE } from '../../config.js';
 
@@ -78,9 +78,9 @@ export default async function front(agenda) {
       }
     } else if (attrs.title === "Call to order") {
       let date = (agenda.match(/\w+ \d+, \d+/) || [])[0];
-      let time = (attrs.text.match(/\d+:\d+([ap]m)?/) || [])[0];
+      let time = (attrs.text.match(/(\d+:\d+)([ap]m)?/) || [])[0];
       if (date && time) {
-        attrs.timestamp = moment.tz(`${date} ${time}`, 'LLL', TIMEZONE).valueOf();
+        attrs.timestamp = parse(`${date} ${time}`).valueOf();
       }
     }
   };

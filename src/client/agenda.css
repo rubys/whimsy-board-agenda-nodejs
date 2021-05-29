@@ -247,7 +247,6 @@ footer .btn {
 }
 
 .modal-header button {
-
   order: 2;
 }
 
@@ -383,6 +382,14 @@ li.dropdown table tr td:last-of-type {
 
 li.dropdown table td {
   padding: 0 0.4em;
+}
+
+.dropdown-large {
+  min-width: 9em
+}
+
+.dropdown-menu li {
+  padding-left: 0.5em
 }
 
 @media only screen and (max-height: 600px) {

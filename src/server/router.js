@@ -10,7 +10,7 @@ import yaml from 'yaml';
 
 export default async function router(app) {
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'test') {
     app.get('/api/websocket', (request, response) => {
       response.json(websocket.debug_status());
     })

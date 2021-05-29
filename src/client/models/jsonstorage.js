@@ -49,12 +49,11 @@ class JSONStorage {
     }
   };
 
-  // retrieve a cached object.  Note: callback may be dispatched twice,
-  // once with slightly stale data and once with current data
-  //
-  // Note: caches only work currently on Firefox and Chrome.  All
-  // other browsers fall back to XMLHttpRequest (AJAX).
-  static fetch(name, callback) {
+  // retrieve a cached object.  If onlyFinal is true, callback will only be
+  // called with fresh data received from the server.  Otherwise callback may
+  // be dispatched twice, once with slightly stale data and once with current
+  // data if it is different.
+  static fetch(name, callback, onlyFresh=false) {
     if (typeof fetch !== 'undefined' && typeof caches !== 'undefined' && (window.location.protocol === "https:" || window.location.hostname === "localhost")) {
       caches.open("board/agenda").then((cache) => {
         let fetched = undefined;
@@ -88,19 +87,23 @@ class JSONStorage {
         });
 
         // check cache
-        cache.match(`../api/${name}`).then(response => {
-          if (response && fetched === undefined) {
-            try {
-              response.json().then(json => {
-                Store.dispatch(Actions.clockDecrement());
-                fetched = json;
-                if (json) callback(null, json, false)
-              })
-            } catch (error) {
-              if (error.name !== 'SyntaxError') throw error;
+        if (!onlyFresh) {
+          cache.match(`../api/${name}`).then(response => {
+            if (response && fetched === undefined) {
+              try {
+                response.json().then(json => {
+                  if (fetched === undefined) Store.dispatch(Actions.clockDecrement());
+                  if (json) {
+                    callback(null, json, false)
+                    fetched = json;
+                  }
+                })
+              } catch (error) {
+                if (error.name !== 'SyntaxError') callback(error);
+              }
             }
-          }
-        })
+          })
+        }
       })
     } else if (typeof XMLHttpRequest !== 'undefined') {
       // retrieve from the network only

@@ -4,32 +4,34 @@ import * as Actions from "./actions.js";
 import JSONStorage from "./client/models/jsonstorage.js";
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Router from './client/router.js';
-import * as serviceWorker from './serviceWorker';
-import store from './client/store';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './client/agenda.css';
+import store from './client/store.js';
+import ClientContainer from './client/container.js';
 
 let base = window.location.pathname.match(/\/(\d\d\d\d-\d\d-\d\d\/)?/)[0];
 
 document.getElementsByTagName('base')[0].href = base;
 
-ReactDOM.render(
+// chose between rendering and hydrating based on whether or not
+// there is REDUX_STATE present
+let render = ReactDOM.render;
+if (window.REDUX_STATE) {
+  render = ReactDOM.hydrate;
+  delete window.REDUX_STATE
+}
+
+// update the DOM
+render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter basename={base}>
-        <Router />
-      </BrowserRouter>
+      <ClientContainer base={base} />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
 (async () => {
+  // load server information
   let server = await new Promise((resolve, reject) => {
     JSONStorage.fetch('../api/server', (error, response, final) => {
       if (error) {
@@ -42,15 +44,15 @@ ReactDOM.render(
       };
 
       resolve = reject = null;
-    })
+    }, true)
   });
 
-  if (base === '/') {
+  if (window.location.pathname === '/') {
     // emulate the server side redirect to the latest agenda
     let latest = [...server.agendas].sort().pop();
     let date = latest.match(/\d+_\d+_\d+/)[0].replace(/_/g, "-");
     window.location.href = `/${date}/`;
-  } else {
+  } else if (base !== '/') {
     // fetch and store agenda information
     await new Promise((resolve, reject) => {
       JSONStorage.fetch(`${base.slice(1, -1)}.json`, (error, agenda) => {
@@ -78,8 +80,3 @@ ReactDOM.render(
     // if (PageCache.enabled) PageCache.register(); TODO!
   }
 })();
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

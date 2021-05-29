@@ -117,14 +117,16 @@ export default function reduce(state = null, action) {
 
       let attachments = {};
 
-      for (let [attachment, comments] of Object.entries(pending.comments)) {
-        attachments[attachment] = { comments };
-      }
+      if (pending) {
+        for (let [attachment, comments] of Object.entries(pending.comments)) {
+          attachments[attachment] = { comments };
+        }
 
-      for (let prop of ['approved', 'unapproved', 'flagged', 'unflagged']) {
-        for (let attachment of pending[prop]) {
-          if (!attachments[attachment]) attachments[attachment] = {};
-          attachments[attachment][prop] = true;
+        for (let prop of ['approved', 'unapproved', 'flagged', 'unflagged']) {
+          for (let attachment of pending[prop]) {
+            if (!attachments[attachment]) attachments[attachment] = {};
+            attachments[attachment][prop] = true;
+          }
         }
       }
 
@@ -174,7 +176,7 @@ function status(item, updates) {
     }
   }
 
-  if ( status !== item.status) {
+  if (status !== item.status) {
     // items are flagged if pending flagged, or somebody flagged it and it wasn't me or I didn't unflag it
     let flaggedByMe = status.flagged_by?.includes(user.initials);
     status.flagged =

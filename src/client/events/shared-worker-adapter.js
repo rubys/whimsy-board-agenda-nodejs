@@ -18,7 +18,7 @@ import * as Events from "../events.js";
 //
 // See: https://stackoverflow.com/a/45578811
 
-export const available = window.SharedWorker && window.BroadcastChannel && true;
+export const available = typeof window !== 'undefined' && window.SharedWorker && window.BroadcastChannel && true;
 
 const channel = available && new BroadcastChannel('shared-worker');
 

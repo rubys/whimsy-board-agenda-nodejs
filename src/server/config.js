@@ -10,6 +10,6 @@ export const workPath = rootPath + '/work';
 export const cachePath = workPath + '/cache';
 export const agendaPath = workPath + '/agenda';
 
-export const TIMEZONE = 'UTC'; // 'America/Los_Angeles'
+export const TIMEZONE = 'UTC'; // was: 'America/Los_Angeles'
 
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'production';

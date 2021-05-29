@@ -1,6 +1,5 @@
 import { members } from '../ldap.js';
-import { TIMEZONE } from '../config.js';
-import moment from 'moment-timezone';
+import { formatTime } from '../../zdate.js';
 import { reflow } from '../string-utils.js';
 import { read, write } from '../sources/minutes.js';
 import * as Agenda from '../sources/agenda.js';
@@ -19,8 +18,8 @@ export default async function minute(request) {
   let minutes = await read(agenda, request);
 
   if (action === "timestamp") {
-    let timestamp = moment().tz(TIMEZONE);
-    text = timestamp.format("HH:MM");
+    let timestamp = new Date();
+    text = formatTime(timestamp);
 
     if (title === "Call to order") {
       minutes.started = timestamp.valueOf();

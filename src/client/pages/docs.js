@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Docs() {
-  let overview = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/overview"
-  let walkthrough = "https://github.com/rubys/whimsy-board-agenda-nodejs/blob/master/docs/walkthrough"
+  let development = "https://github.com/apache/infrastructure-agenda/blob/master/DEVELOPMENT.md#infrastructure-agenda"
+  let overview = "https://github.com/apache/infrastructure-agenda/blob/master/docs/overview"
+  let walkthrough = "https://github.com/apache/infrastructure-agenda/blob/master/docs/walkthrough"
 
   return <div className="container">
     <h1>Documentation/Guides</h1>
@@ -28,6 +29,14 @@ function Docs() {
       </dt>
       <dd className="col-sm-10">
         <p>A high level description of the major architectural components</p>
+      </dd>
+
+      <dt className="col-sm-2">
+        <a href={development}>Setup</a>
+      </dt>
+      <dd className="col-sm-10">
+        <p>Instructions on how to set up a development environment on MacOS,
+           Linux, Windows, and Docker.</p>
       </dd>
 
       <dt className="col-sm-2">

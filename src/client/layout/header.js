@@ -12,9 +12,9 @@ import { connect } from 'react-redux';
 
 function mapStateToProps(state) {
   return {
-    agenda: state.agenda,
+    agenda: state.agenda || {},
     clockCounter: state.clockCounter,
-    pendingCount: state.server.pending.count,
+    pendingCount: state.server.pending?.count || 0,
     user: state.server.user,
     offline: state.client.offline,
     forked: state.server.forked
@@ -125,7 +125,7 @@ function Header(props) {
 
   // find shortest shepherd (for example, "Rich")
   let shepherd = null;
-  let firstname = user.firstname.toLowerCase();
+  let firstname = user?.firstname?.toLowerCase() || '';
 
   for (let item of Object.values(agenda)) {
     if (item.shepherd && firstname.startsWith(item.shepherd.toLowerCase()) && (!shepherd || item.shepherd.length < shepherd.lenth)) {
@@ -213,7 +213,7 @@ function Header(props) {
       }
 
       <li className="dropdown">
-        <button id="nav" className="btn dropdown-toggle" data-toggle="dropdown">
+        <button id="nav" className="btn dropdown-large dropdown-toggle" data-toggle="dropdown">
           navigation
           </button>
 

@@ -8,6 +8,7 @@ import discussion from './agenda/discussion.js';
 import back from './agenda/back.js';
 import * as cache from '../cache.js';
 import { Board } from "../svn.js"
+import { add } from "../../zdate.js";
 
 export function minutesLink(title) {
   return "https://whimsy.apache.org/board/minutes/" + title.replace(/\W/g, "_")
@@ -114,6 +115,13 @@ export async function parse(agenda, request) {
       section.text ? section.text = text : section.report = text;
     };
   };
+
+  // handle meetings that cross a day boundary
+  let callToOrder = items[0];
+  let adjournment = items[items.length - 1];
+  if (callToOrder.timestamp > adjournment.timestamp) {
+    adjournment.timestamp += add(new Date(adjournment.timestamp), {days: 1}).valueOf()
+  }
 
   return items;
 }

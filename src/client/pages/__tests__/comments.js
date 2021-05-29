@@ -26,7 +26,7 @@ it("should support comments", async () => {
   
     // unseen items
     expect(container.querySelectorAll("a.h4")[10].textContent).toBe("Curator");  
-    expect(container.querySelectorAll('pre')[22].textContent).toMatch(/last PMC member and committer additions/);
+    expect(container.querySelectorAll('pre')[21].textContent).toMatch(/last PMC member and committer additions/);
 
     /*
   

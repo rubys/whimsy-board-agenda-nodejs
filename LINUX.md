@@ -26,7 +26,7 @@ you can use that version of npm to install yarn.
 
 # Common across all Linux platforms:
 
-    git clone https://github.com/rubys/whimsy-board-agenda-nodejs.git
+    git clone https://github.com/apache/infrastructure-agenda.git
     cd whimsy-board-agenda-nodejs
     yarn install
     yarn dev

@@ -45,7 +45,7 @@ the data that is available to render pages.
 React components generally consist of functions that return a JSX template.
 In the board agenda application there are on the order of one hundred source
 files in
-[src/client](https://github.com/rubys/whimsy-board-agenda-nodejs/tree/master/src/client),
+[src/client](https://github.com/apache/infrastructure-agenda/tree/master/src/client),
 again totalling hundreds of kilobytes *uncompressed*.  In production, this
 code can be run through [terser](https://terser.org/), reducing this
 considerably.

@@ -25,7 +25,7 @@ export default function reduce(state = { offline: false }, action) {
         if (!meetingDay) {
           intervalID = setInterval(
             () => reduce(state, Actions.setMeetingDate(action.timestamp)),
-            action.timestamp - OneDay - now
+            Math.min(action.timestamp - OneDay - now, OneDay)
           )
         }
 

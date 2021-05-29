@@ -8,6 +8,9 @@ import * as watcher from './watcher.js';
 import router from './router.js';
 import bodyParser from 'body-parser';
 import { promises as fs } from "fs";
+import path from 'path';
+import { Board } from './svn.js';
+import ssr from './ssr.js';
 
 const app = express();
 app.use(compression());
@@ -59,10 +62,26 @@ app.use('/', (request, response, next) => {
   if (process.env.NODE_ENV === 'test') {
     const svn = await import('./svn.js');
     await svn.demoMode();
+  } else {
+    // route '/' to latest agenda
+    app.get('/', async (request, response) => {
+      let agenda = (await Board.agendas(request)).pop();
+      let date = agenda.match(/\d\w+/)[0].replace(/_/g, '-');
+      response.redirect(`/${date}/`);
+    });
+
+    // serve application pages
+    app.get(/^(\/\d{4}-\d\d-\d\d)\/.*$/, async (req, res) => {
+      await ssr(req, res, req.params[0]);
+    });
   }
 
+  app.get('/*', async (req, res) => {
+    await ssr(req, res);
+  });
+
   app.listen(port, () => {
-    console.log(`Whimsy board agenda app listening on port ${port}`);
+    console.log(`Infrastructure board agenda app listening on port ${port}`);
   })
 })();
 

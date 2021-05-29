@@ -1,9 +1,8 @@
 import Footer from "./footer.js";
 import Header from "./header.js";
+import NotFound from "./not-found.js";
 import React, { useEffect } from "react";
 import jQuery from "jquery";
-import logo from "../react-logo.svg";
-import "../App.css";
 
 //
 // Main component, responsible for:
@@ -61,23 +60,12 @@ function Main(props) {
   });
 
   // common layout for all pages: header, main, footer, and forms
-  if (!props.view) {
-    if (props.server) {
-      return <p>Page not found</p>
-    } else {
-      return <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Fetching board agenda...</p>
-        </header>
-      </div>
-    }
-  };
+  if (!props.view) return <NotFound location={props.location}/>;
 
   return <>
-    <Header {...props}/>
+    <Header {...props} />
 
-    <main>{React.createElement( props.view, props)}</main>
+    <main>{React.createElement(props.view, props)}</main>
 
     <Footer {...props} />
 
@@ -95,7 +83,7 @@ function Main(props) {
 };
 
 // navigation method that updates history (back button) information
-Main.navigate = function(path, query) {
+Main.navigate = function (path, query) {
   let history = window.history;
   history.state.scrollY = window.scrollY;
   history.replaceState(history.state, null, history.path);

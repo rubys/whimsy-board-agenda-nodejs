@@ -6,7 +6,7 @@ import * as Actions from "../../actions.js";
 
 function mapStateToProps(state) {
   return {
-    role: state.server.user.role,
+    role: state.server.user?.role,
     env: state.server.env
   }
 };

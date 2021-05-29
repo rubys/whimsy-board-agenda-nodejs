@@ -7,7 +7,7 @@
 
  1. Call to order
 
-    The meeting is scheduled for 10:30am Pacific and will begin as
+    The meeting is scheduled for 18:30 UTC and will begin as
     soon thereafter that a sufficient attendance to constitute a
     quorum is recognized by the chairman. 
 
@@ -1266,7 +1266,7 @@
 
 13. Adjournment
 
-    Scheduled to adjourn by 12:00pm (Pacific)
+    Scheduled to adjourn by 21:00
 
 
 ============

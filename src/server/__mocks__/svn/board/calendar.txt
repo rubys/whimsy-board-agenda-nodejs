@@ -1,0 +1,51 @@
+The Apache Software Foundation                                  -*-text-*-
+Board of Directors meeting calendar           $Date: 2021-03-18 18:08:21 -0400 (Thu, 18 Mar 2021) $
+
+
+The Board of Directors regularly meets each month. From April 2021 on, we
+schedule them for the third Wednesday of each month at 22:00 UTC.
+This will occasionally vary, and any change will be reflected
+here. The regular schedule is usually decided upon as each new Board
+begins its terms.
+
+The Board Chair and/or Directors can call for special board meetings
+under various circumstances (determined by the Bylaws). The special
+meeting may not end up in the calendar, in advance.
+
+Minutes from all meetings will always be produced. The Board must
+approve the minutes, so any minutes will typically show up one or two
+board meetings later. The minutes are posted to the Foundation area of
+the web site (http://www.apache.org/foundation/records/).
+
+
+Meeting Calendar
+================
+
+  *) Wed, 17 March 2021, 20:00 UTC
+
+  *) Wed, 21 April 2021, 22:00 UTC
+
+  *) Wed, 19 May 2021, 22:00 UTC
+
+  *) Wed, 16 June 2021, 22:00 UTC
+
+  *) Wed, 21 July 2021, 22:00 UTC
+
+  *) Wed, 18 August 2021, 22:00 UTC
+
+  *) Wed, 15 September 2021, 22:00 UTC
+
+  *) Wed, 20 October 2021, 22:00 UTC
+
+  *) Wed, 17 November 2021, 22:00 UTC
+
+  *) Wed, 15 December 2021, 22:00 UTC
+
+  *) Wed, 19 January 2022, 22:00 UTC
+
+  *) Wed, 16 February 2022, 22:00 UTC
+
+  *) Wed, 16 March 2022, 22:00 UTC
+
+  *) Wed, 20 April 2022, 22:00 UTC
+

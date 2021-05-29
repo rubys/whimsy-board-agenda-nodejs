@@ -15,6 +15,8 @@
 // 3) this source file has no dependencies on either the client or the server
 //    as actions can be dispatched from the client or broadcast from the server.
 
+export const RESET_STORE = 'RESET_STORE';
+
 export const CLOCK_DECREMENT = 'CLOCK_DECREMENT';
 export const CLOCK_INCREMENT = 'CLOCK_INCREMENT';
 export const POST_AGENDA = 'POST_AGENDA';
@@ -30,10 +32,12 @@ export const POST_SERVER = 'POST_SERVER';
 export const SET_FORKED = "SET_FORKED";
 export const SET_MEETING_DATE = "SET_MEETING_DATE";
 export const SET_ROLE = "SET_ROLE";
+export const POST_XREF = 'POST_XREF';
 
 export const clockDecrement = () => ({ type: CLOCK_DECREMENT });
 export const clockIncrement = () => ({ type: CLOCK_INCREMENT });
 
+export const resetStore = () => ({ type: RESET_STORE });
 export const postAgenda = index => ({ type: POST_AGENDA, index });
 export const postDigest = files => ({ type: POST_DIGEST, files });
 export const postHistoricalComments = comments => ({ type: POST_HISTORICAL_COMMENTS, comments });
@@ -44,6 +48,7 @@ export const postReporter = drafts => ({ type: POST_REPORTER, drafts });
 export const postResponses = messages => ({ type: POST_RESPONSES, messages });
 export const postSecretaryMinutes = minutes => ({ type: POST_SECRETARY_MINUTES, minutes })
 export const postServer = server => ({ type: POST_SERVER, server });
+export const postXref = xref => ({ type: POST_XREF, xref });
 
 export const setRole = role => ({ type: SET_ROLE, role });
 export const setMeetingDate = timestamp => ({ type: SET_MEETING_DATE, timestamp })
